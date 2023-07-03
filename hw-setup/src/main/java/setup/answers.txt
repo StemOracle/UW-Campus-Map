@@ -3,32 +3,45 @@
 
 1. Why did Fibonacci fail the testThrowsIllegalArgumentException< test? What (if anything) did
 you have to do to fix it? If you did not have to change anything to fix this issue, explain why.
-
+According to the spec, Fibonacci is supposed to throw IllegalArgumentException when n is negative,
+but the code threw the exception when n <= 0. This caused an exception to be thrown when n = 0.
+I fixed this by modifying the if condition to be n < 0.
 
 
 2. Why did Fibonacci fail the testBaseCase test? What (if anything) did you have to do to fix
 it? If you did not have to change anything to fix this issue, explain why.
-
+The condition for the base case was faulty as it allowed for ints 0, 1, and 2.
+As the fibonacci sequence is 1, 1, 2, 3, 5, etc, an index of 2 shouldn't yield 1, which the
+base case was returning. Instead, 2 belongs in the recursive case, so I modified the if condition
+to be n < 2.
 
 
 3.Why did Fibonacci fail the testInductiveCase test? What (if anything) did you have to do to
 fix it? If you did not have to change anything to fix this issue, explain why.
-
+The recursive case had no problems, but it relied on the base case being correct. Once I fixed
+the base case, the recursive case behaved as intended.
 
 
 ## Part 8: Debugger Tutorial
 
 1. What are the values of "x", "y", and "sum" printed by your statement? Why was x not equal 
 to the first integer entered here, and how could we fix this?
+x was 4, y was 4, and sum was 0. This is because x was stored as the input divded by 2 and then multiplied by 2.
+Since java's integer division truncates, multiplying by 2 didnt undo the division as the remainder was lost.
+In other words, 5 / 2 became 2. Then after multiplying by 2, it became 4. I fixed this by removing the
+division and multiplication operations to prevent any information from being lost.
 
 
 
 2. What are all the names and values listed in the “Variables” panel? What does the “frames” 
 tab list as the current method and line number? (Write down the text that was highlighted when 
 the Debug perspective first opened.)
+Unfortunately, I'm on Attu, so I don't have the Intellij debugger. I've been given permission by
+Mr. Pardeshi to skip this question. https://edstem.org/us/courses/40568/discussion/3232235?comment=7413254
 
 
 
 3. What are all the names and values listed in the “Variables” panel after each of the two step overs?
+Ditto. Pardeshi has given me permission to skip this. https://edstem.org/us/courses/40568/discussion/3232235?comment=7413254
 
 
