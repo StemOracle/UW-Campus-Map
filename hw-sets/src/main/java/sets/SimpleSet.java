@@ -22,9 +22,9 @@ import java.util.List;
  */
 public class SimpleSet {
 
-  // TODO: fill in and document the representation
-  //       Make sure to include the representation invariant (RI)
-  //       and the abstraction function (AF).
+  // RI: valSet != null and this != null
+  // AF: If isComplement is false, this = valSet
+  //     If isComplement is true,  this = R \ valSet
 
   /**
    * Creates a simple set containing only the given points.
@@ -33,11 +33,19 @@ public class SimpleSet {
    * @spec.effects this = {vals[0], vals[1], ..., vals[vals.length-1]}
    */
   public SimpleSet(float[] vals) {
-    // TODO: implement this
-
+    this(FiniteSet.of(vals), false);
   }
 
-  // HINT: feel free to create other constructors!
+  public SimpleSet(FiniteSet valSet, boolean isComplement) {
+    this.valSet = valSet;
+    this.isComplement = isComplement;
+  }
+  
+  // The FiniteSet of all points either in or NOT in the set.
+  private final FiniteSet valSet;
+
+  // True iff FiniteSet represents all points NOT in the set.
+  private final boolean isComplement;
 
   @Override
   public boolean equals(Object o) {
@@ -45,7 +53,7 @@ public class SimpleSet {
       return false;
 
     SimpleSet other = (SimpleSet) o;
-    return this == other;  // TODO: replace this with a correct check
+    return this.valSet.equals(other.valSet) && this.isComplement == other.isComplement;
   }
 
   @Override
@@ -59,9 +67,13 @@ public class SimpleSet {
    *         infty  if this = R \ {p1, p2, ..., pN}
    */
   public float size() {
-    // TODO: implement this
-
-    return -1;  // TODO: you should replace this value
+    // If true, this is a finite complement of the set of all real numbers.
+    // If false, this is a finite set.
+    if(this.isComplement) {
+      return Float.POSITIVE_INFINITY;
+    } else {
+      return this.valSet.size();
+    }
   }
 
   /**
@@ -76,10 +88,33 @@ public class SimpleSet {
    *     done by, e.g., String.valueOf(float)).
    */
   public String toString() {
-    // TODO: implement this with a loop. document its invariant
-    //       a StringBuilder may be useful for creating the string
+    if(this.isComplement && this.valSet.size() == 0) {
+      return "R";
+    } else if(this.valSet.size() == 0) {
+      return "{}";
+    }
 
-    return null;  // TODO: you should replace this value
+    // From here, we now the val set isn't empty.
+    StringBuilder buf = new StringBuilder();
+    List<Float> vals = this.valSet.getPoints();
+    // If a complement, we do R \ FiniteSet.
+    if(isComplement) {
+      buf.append("R \\ ");
+    }
+    buf.append("{");
+    buf.append(vals.get(0));
+    int i = 1;
+
+    // Inv: buf = "{vals.get(0), vals.get(1), ..., vals.get(i-1)"
+    while(i < vals.size()) {
+      buf.append(", ");
+      buf.append(vals.get(i));
+      i = i+1;
+    }
+
+    buf.append("}");
+    // Post: Returns "{vals.get(0), vals.get(1), ..., vals.get(n-1)}"
+    return buf.toString();
   }
 
   /**
@@ -87,10 +122,9 @@ public class SimpleSet {
    * @return R \ this
    */
   public SimpleSet complement() {
-    // TODO: implement this method
-    //       include sufficient comments to see why it is correct (hint: cases)
-
-    return null;  // TODO: you should replace this value
+    // If a finite set, taking the complement,would make this a finite complement of all real numbers.
+    // If a finite complement of all real numbers, taking the complement would make this a finite set.
+    return new SimpleSet(this.valSet, !this.isComplement);
   }
 
   /**
@@ -100,10 +134,29 @@ public class SimpleSet {
    * @return this union other
    */
   public SimpleSet union(SimpleSet other) {
-    // TODO: implement this method
-    //       include sufficient comments to see why it is correct (hint: cases)
+    FiniteSet Tvals = this.valSet;
+    FiniteSet Svals = other.valSet;
 
-    return null;  // TODO: you should replace this value
+    boolean isTC = this.isComplement;
+    boolean isSC = other.isComplement;
+    // If both finite sets, use the finite set union method.
+    if(!isTC && !isSC) {
+      return new SimpleSet(Tvals.union(Svals), false);
+    // If both finite complement sets, then the only elements that should remain in the
+    // resulting set should be in both complement sets. In other words, in order for an
+    // element to NOT be in the unioned SimpleSet, it cannot be in either S or T.
+    } else if(isTC && isSC) {
+      return new SimpleSet(Tvals.intersection(Svals), true);
+    // Elements appearing in the complement set do not exist in the infinite set. If the element
+    // appears in the finite set, it no longer exists in the complement set as it's now part of
+    // the infinite set. We're essentially subtracting elements from the finite complement set.
+    } else if(isTC && !isSC) {
+      return new SimpleSet(Tvals.difference(Svals), true);
+    // Same logic as before, as one of the sets is infinite and the other is finite. We subtract
+    // elements in the finite set from the finite complement set.
+    } else {
+      return new SimpleSet(Svals.difference(Tvals), true);
+    }
   }
 
   /**
@@ -113,11 +166,11 @@ public class SimpleSet {
    * @return this intersected with other
    */
   public SimpleSet intersection(SimpleSet other) {
-    // TODO: implement this method
-    //       include sufficient comments to see why it is correct
-    // NOTE: There is more than one correct way to implement this.
-
-    return null;  // TODO: you should replace this value
+    // Using set theory, let +, *, and ^C be shorthand for union, intersection, and complement, respectively.
+    // T * S = ((T^C) + (S^C))^C
+    SimpleSet TC = this.complement();
+    SimpleSet SC = other.complement();
+    return (TC.union(SC)).complement();
   }
 
   /**
@@ -127,11 +180,10 @@ public class SimpleSet {
    * @return this minus other
    */
   public SimpleSet difference(SimpleSet other) {
-    // TODO: implement this method
-    //       include sufficient comments to see why it is correct
-    // NOTE: There is more than one correct way to implement this.
-
-    return null;  // TODO: you should replace this value
+    // Using set theory, let *, ^C, and \ be shorthand for intersection, complement, and difference, respectively.
+    // T \ S = T * (S^C)
+    SimpleSet T = this;
+    SimpleSet SC = other.complement();
+    return T.intersection(SC);
   }
-
 }

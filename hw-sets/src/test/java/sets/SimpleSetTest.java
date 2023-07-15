@@ -46,6 +46,10 @@ public class SimpleSetTest {
   private static SimpleSet S23 = new SimpleSet(new float[] {2, 3});
   private static SimpleSet S123 = new SimpleSet(new float[] {1, 2, 3});
 
+  /** Some of my own! */
+  private static SimpleSet Sm6m5m4 = new SimpleSet(new float[] {-6, -5, -4});
+  private static SimpleSet Sm73 = new SimpleSet(new float[] {-7, 3});
+
   // Note:
   // The following are complements of the above sets used throughout the
   // rest of the tests. Each set S has a corresponding R counterpart below.
@@ -66,6 +70,10 @@ public class SimpleSetTest {
   private static SimpleSet R13 = S13.complement();
   private static SimpleSet R23 = S23.complement();
   private static SimpleSet R123 = S123.complement();
+
+  /** Some of my own! */
+  private static SimpleSet Rm6m5m4 = Sm6m5m4.complement();
+  private static SimpleSet Rm73 = Sm73.complement();
 
   ///////////////////////////////////////////////////////////////////////////
   /// SimpleSet.equals() Tests
@@ -121,8 +129,32 @@ public class SimpleSetTest {
    */
   @Test
   public void testSize() {
-    // TODO: implement tests for SimpleSet.size()
+    // Empty set & 0, 1, 2 (0)
+    assertEquals(S.size(), 0, 0);
+    
+    // Empty complement
+    assertEquals(R.size(), Float.POSITIVE_INFINITY, 0);
 
+    // 0, 1, 2 (1)
+    assertEquals(S3.size(), 1, 0);
+
+    // 0, 1, 2 (2)
+    assertEquals(S123.size(), 3, 0);
+
+    // Nonempty complement
+    assertEquals(R12.size(), Float.POSITIVE_INFINITY, 0);
+
+    // Strictly negative numbers
+    assertEquals(Sm6m5m4.size(), 3, 0);
+    
+    // Strictly negative numbers in a complement
+    assertEquals(Rm6m5m4.size(), Float.POSITIVE_INFINITY, 0);
+
+    // Positive and negative numbers
+    assertEquals(Sm73.size(), 2, 0);
+
+    // Positive and negative numbers in a complement
+    assertEquals(Rm73.size(), Float.POSITIVE_INFINITY, 0);
   }
 
   ///////////////////////////////////////////////////////////////////////////
@@ -134,8 +166,35 @@ public class SimpleSetTest {
    */
   @Test
   public void testToString() {
-    // TODO: implement tests for SimpleSet.toString()
+    // Empty set & 0, 1, 2 (0)
+    assertEquals(S.toString(), "{}");
 
+    // Empty complement
+    assertEquals(R.toString(), "R");
+
+    // 0, 1, 2 (1)
+    assertEquals(S3.toString(), "{3.0}");
+
+    // 0, 1, 2 (2)
+    assertEquals(S123.toString(), "{1.0, 2.0, 3.0}");
+
+    // 0, 1, 2 (1) for complement
+    assertEquals(R1.toString(), "R \\ {1.0}");
+    
+    // 0, 1, 2 (2) for complement
+    assertEquals(R12.toString(), "R \\ {1.0, 2.0}");
+
+    // Strictly negative numbers
+    assertEquals(Sm6m5m4.toString(), "{-6.0, -5.0, -4.0}");
+
+    // Strictly negative numbers in a complement
+    assertEquals(Rm6m5m4.toString(), "R \\ {-6.0, -5.0, -4.0}");
+
+    // Positive and negative numbers
+    assertEquals(Sm73.toString(), "{-7.0, 3.0}");
+
+    // Positive and negative numbers in a complement
+    assertEquals(Rm73.toString(), "R \\ {-7.0, 3.0}");
   }
 
   ///////////////////////////////////////////////////////////////////////////

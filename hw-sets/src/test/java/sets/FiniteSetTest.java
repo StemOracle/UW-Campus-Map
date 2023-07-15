@@ -67,9 +67,28 @@ public class FiniteSetTest {
   /** A "complex" set. Or, a set that contains more than one value. */
   private static FiniteSet S12 = FiniteSet.of(new float[] {1, 2});
 
-  // TODO: Feel free to initialize additional (private static) FiniteSet
-  //       objects here if you plan to use more of them for the tests you
-  //       need to implement below.
+  /** A few of my sets! */
+  private static FiniteSet S2 = FiniteSet.of(new float[] {2});
+  private static FiniteSet S3 = FiniteSet.of(new float[] {3});
+  private static FiniteSet S7 = FiniteSet.of(new float[] {7});
+  private static FiniteSet S37 = FiniteSet.of(new float[] {3, 7});
+  private static FiniteSet S38 = FiniteSet.of(new float[] {3, 8});
+  private static FiniteSet S378 = FiniteSet.of(new float[] {3, 7, 8});
+  private static FiniteSet S367 = FiniteSet.of(new float[] {3, 6, 7});
+  private static FiniteSet Sm8m5 = FiniteSet.of(new float[] {-5, -8});
+  private static FiniteSet Sm9m8 = FiniteSet.of(new float[] {-8, -9});
+  private static FiniteSet Sm8 = FiniteSet.of(new float[] {-8});
+  private static FiniteSet Sm838 = FiniteSet.of(new float[] {-8, 3, 8});
+  private static FiniteSet S1378 = FiniteSet.of(new float[] {1, 3, 7, 8});
+  private static FiniteSet S3678 = FiniteSet.of(new float[] {3, 6, 7, 8});
+  private static FiniteSet Sm9m8m5 = FiniteSet.of(new float[] {-9, -8, -5});
+  private static FiniteSet Sm9m838 = FiniteSet.of(new float[] {-9, -8, 3, 8});
+  private static FiniteSet S123 = FiniteSet.of(new float[] {1, 2, 3});
+  private static FiniteSet S6 = FiniteSet.of(new float[] {6});
+  private static FiniteSet Sm9m88 = FiniteSet.of(new float[] {-9, -8, 8});
+  private static FiniteSet Sm9 = FiniteSet.of(new float[] {-9});
+  private static FiniteSet S78 = FiniteSet.of(new float[] {7, 8});
+  private static FiniteSet Sm5 = FiniteSet.of(new float[] {-5});
 
   ///////////////////////////////////////////////////////////////////////////
   /// FiniteSet.equals() Tests
@@ -128,8 +147,29 @@ public class FiniteSetTest {
    */
   @Test
   public void testUnion() {
-    // TODO: implement tests for FiniteSet.union()
+    // Special case (both sets empty) & 0, 1, 2 (0)
+    assertEquals(S0.union(S0), S0);
 
+    // Special case (one set empty) & 0, 1, 2 (1)
+    assertEquals(S38.union(S0), S38);
+
+    // No overlap between sets
+    assertEquals(S1.union(S378), S1378);
+
+    // 0, 1, 2 (2)
+    assertEquals(S378.union(S367), S3678);
+
+    // Total overlap/subset
+    assertEquals(S1.union(S12), S12);
+
+    // Identical
+    assertEquals(S378.union(S378), S378);
+
+    // Strictly negative values
+    assertEquals(Sm8m5.union(Sm9m8), Sm9m8m5);
+
+    // Positive and negative
+    assertEquals(Sm9m8.union(Sm838), Sm9m838);
   }
 
   ///////////////////////////////////////////////////////////////////////////
@@ -141,8 +181,32 @@ public class FiniteSetTest {
    */
   @Test
   public void testIntersection() {
-    // TODO: implement tests for FiniteSet.intersection()
+    // Special case (both sets empty) & 0, 1, 2 (0)
+    assertEquals(S0.intersection(S0), S0);
 
+    // Special case (one set empty)
+    assertEquals(S38.intersection(S0), S0);
+
+    // No overlap between sets
+    assertEquals(S1.intersection(S378), S0);
+
+    // 0, 1, 2 (1)
+    assertEquals(S37.intersection(S38), S3);
+
+    // 0, 1, 2 (2)
+    assertEquals(S378.intersection(S367), S37);
+
+    // Total overlap/subset
+    assertEquals(S1.intersection(S12), S1);
+
+    // Identical
+    assertEquals(S378.intersection(S378), S378);
+
+    // Strictly negative values
+    assertEquals(Sm8m5.intersection(Sm9m8), Sm8);
+
+    // Positive and negative
+    assertEquals(Sm9m8.intersection(Sm838), Sm8);
   }
 
   ///////////////////////////////////////////////////////////////////////////
@@ -154,8 +218,37 @@ public class FiniteSetTest {
    */
   @Test
   public void testDifference() {
-    // TODO: implement tests for FiniteSet.difference()
+    // Special case (both sets empty) & 0, 1, 2 (0)
+    assertEquals(S0.difference(S0), S0);
 
+    // Special case (subtract empty)
+    assertEquals(S38.difference(S0), S38);
+
+    // Special case (subtract FROM empty)
+    assertEquals(S0.difference(S38), S0);
+
+    // No overlap between sets
+    assertEquals(S1.difference(S378), S1);
+
+    // 0, 1, 2 (1)
+    assertEquals(S37.difference(S38), S7);
+
+    // 0, 1, 2 (2)
+    assertEquals(S378.difference(S123), S78);
+
+    // Subtract subset
+    assertEquals(S3678.difference(S378), S6);
+
+    // Subract FROM subset
+    assertEquals(S378.difference(S3678), S0);
+
+    // Identical
+    assertEquals(S378.difference(S378), S0);
+
+    // Strictly negative values
+    assertEquals(Sm8m5.difference(Sm9m8), Sm5);
+
+    // Positive and negative
+    assertEquals(Sm9m88.difference(Sm838), Sm9);
   }
-
 }
