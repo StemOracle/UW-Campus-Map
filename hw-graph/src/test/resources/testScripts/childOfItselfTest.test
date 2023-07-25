@@ -1,0 +1,14 @@
+# Tests listChildren operation on node that has edge pointing to itself
+# Special case
+
+# Create graph
+CreateGraph giraffe3
+
+# Add node
+AddNode giraffe3 fee
+
+# Add edge pointing from node to itself
+AddEdge giraffe3 fee fee yeet
+
+# List node's children
+ListChildren giraffe3 fee

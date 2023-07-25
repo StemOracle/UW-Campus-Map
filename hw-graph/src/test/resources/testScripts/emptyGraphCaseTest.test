@@ -1,0 +1,8 @@
+# Tests the listNodes operation on a graph with no nodes
+# 0, 1, 2 heuristic (0)
+
+# Create graph
+CreateGraph giraffe1
+
+# Print the nodes in the graph
+ListNodes giraffe1 

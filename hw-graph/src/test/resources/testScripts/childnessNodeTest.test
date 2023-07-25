@@ -1,0 +1,11 @@
+# Tests listChildren operation of node with no children
+# 0, 1, 2 heuristic (0)
+
+# Create graph
+CreateGraph giraffe4
+
+# Add node
+AddNode giraffe4 hello
+
+# List node's children
+ListChildren giraffe4 hello

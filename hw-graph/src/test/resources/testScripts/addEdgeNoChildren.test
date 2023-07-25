@@ -1,0 +1,12 @@
+# Adding edge to node with no children
+# 0, 1, 2 heuristic (0)
+
+# Create graph
+CreateGraph hippo
+
+# Add nodes
+AddNode hippo hoof
+AddNode hippo snout
+
+# Add edge
+AddEdge hippo hoof snout up

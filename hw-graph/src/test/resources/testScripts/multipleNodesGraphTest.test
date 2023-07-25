@@ -1,0 +1,12 @@
+# Tests listNodes on a graph with multiple nodes
+# 0, 1, 2 heuristic (2)
+
+# Create graph
+CreateGraph giraffe7
+
+# Add nodes
+AddNode giraffe7 nodeA
+AddNode giraffe7 nodeB
+
+# Print list of nodes
+ListNodes giraffe7

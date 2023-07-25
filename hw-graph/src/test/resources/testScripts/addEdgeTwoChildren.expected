@@ -1,0 +1,16 @@
+# Adding child node with two existing children
+# 0, 1, 2 heuristic (2)
+
+# Create graph
+created graph madagascar
+
+# Add nodes
+added node herbivore to madagascar
+added node melman to madagascar
+added node gloria to madagascar
+added node marty to madagascar
+
+# Add edges
+added edge giraffe from herbivore to melman in madagascar
+added edge hippo from herbivore to gloria in madagascar
+added edge zebra from herbivore to marty in madagascar

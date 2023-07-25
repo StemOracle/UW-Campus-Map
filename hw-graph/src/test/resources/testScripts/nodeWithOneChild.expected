@@ -1,0 +1,15 @@
+# Tests listChildren operation on node with one child
+# 0, 1, 2 heuristic (1)
+
+# Create graph
+created graph giraffe5
+
+# Add two nodes
+added node bar to giraffe5
+added node baz to giraffe5
+
+# Add edge pointing from node to itself
+added edge blame from bar to baz in giraffe5
+
+# List node's children
+the children of bar in giraffe5 are: baz(blame)

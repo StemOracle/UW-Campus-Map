@@ -1,0 +1,16 @@
+# Tests listChildren operation on two nodes with bidirectional edges to each other
+
+# Create graph
+CreateGraph bison
+
+# Add nodes
+AddNode cow
+AddNode pig
+
+# Add edges
+AddEdge bison cow pig cowToPig
+AddEdge bison pig cow pigToCow
+
+# Print out children of each
+ListChildren bison cow
+ListChildren bison pig

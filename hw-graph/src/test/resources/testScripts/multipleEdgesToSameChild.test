@@ -1,0 +1,15 @@
+# Tests listChildren operation when multiple edges point from same parent to child
+
+# Create graph
+CreateGraph horse
+
+# Add nodes
+AddNode horse n1
+AddNode horse n2
+
+# Add edges
+AddEdge horse n1 n2 e1
+AddEdge horse n1 n2 e2
+
+# Print out children of n1
+ListChildren horse n1

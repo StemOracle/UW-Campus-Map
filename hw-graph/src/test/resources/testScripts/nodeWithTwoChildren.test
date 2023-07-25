@@ -1,0 +1,17 @@
+# Testing listChildren of a node with multiple children
+# 0, 1, 2 heuristic (2)
+
+# Create graph
+Create Graph giraffe6
+
+# Add nodes
+AddNode giraffe6 node1
+AddNode giraffe6 node2
+AddNode giraffe6 node3
+
+# Add edges, with node 3 being the parent
+AddEdge giraffe6 node3 node1 edge1
+AddEdge giraffe6 node3 node2 edge2
+
+# Print children nodes
+ListChildren giraffe6 node3
