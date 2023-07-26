@@ -2,64 +2,64 @@
  * My testing strategy was to use the 0, 1, 2 heuristic as the base of my tests (if applicable)
  * and then look for any wonky special cases to try out.
  */
-import graph.*;
+package graph.junitTests;
+import graph.Graph;
 
 import org.junit.Test;
-import static org.junit.Assert.*
+import static org.junit.Assert.*;
 
 public class GraphTest {
-  Graph giraffe = new Graph();
-  giraffe.addNode("leg");
-
-  Graph hippo = new Graph();
-  hippo.addNode("leg");
-
-  Graph spider = new Graph();
-  spider.addNode("eye");
-  spider.addNode("fang");
-
-  Graph flea = new Graph();
-  flea.addNode("eye");
-  flea.addNode("fang");
-
-  Graph frog = new Graph();
-  frog.addNode("tongue");
-  frog.addNode("scales");
-  frog.addEdge("tongue", "scales", "gorf");
-
-  Graph turtle = new Graph();
-  turtle.addNode("tongue");
-  turtle.addNode("scales");
-  turtle.addEdge("tongue", "scales", "gorf");
-
-  Graph turtles = new Graph();
-  turtles.addNode("Splinter");
-  turtles.addNode("Leonardo");
-  turtles.addNode("Donatello");
-  turtles.addEdge("Splinter", "Leonardo", "sensei");
-  turtles.addEdge("Splinter", "Donatello", "father");
-
-  Graph ninjas = new Graph();
-  ninjas.addNode("Splinter");
-  ninjas.addNode("Leonardo");
-  ninjas.addNode("Donatello");
-  ninjas.addEdge("Splinter", "Leonardo", "sensei");
-  ninjas.addEdge("Splinter", "Donatello", "father");
-
-  Graph amoeba = new Graph();
-  amoeba.addNode("blob");
-  amoeba.addEdge("blob", "blob", "self");
-
-  Graph plankton = new Graph();
-  plankton.addNode("blob");
-  plankton.addEdge("blob", "blob", "self");
-
-  
   /**
    * Tests that illegal inputs don't change the graph.
    */
   @Test
-  public void testBenignInputs {
+  public void testBenignInputs() {
+    Graph giraffe = new Graph();
+    giraffe.addNode("leg");
+
+    Graph hippo = new Graph();
+    hippo.addNode("leg");
+
+    Graph spider = new Graph();
+    spider.addNode("eye");
+    spider.addNode("fang");
+
+    Graph flea = new Graph();
+    flea.addNode("eye");
+    flea.addNode("fang");
+
+    Graph frog = new Graph();
+    frog.addNode("tongue");
+    frog.addNode("scales");
+    frog.addEdge("tongue", "scales", "gorf");
+
+    Graph turtle = new Graph();
+    turtle.addNode("tongue");
+    turtle.addNode("scales");
+    turtle.addEdge("tongue", "scales", "gorf");
+
+    Graph turtles = new Graph();
+    turtles.addNode("Splinter");
+    turtles.addNode("Leonardo");
+    turtles.addNode("Donatello");
+    turtles.addEdge("Splinter", "Leonardo", "sensei");
+    turtles.addEdge("Splinter", "Donatello", "father");
+
+    Graph ninjas = new Graph();
+    ninjas.addNode("Splinter");
+    ninjas.addNode("Leonardo");
+    ninjas.addNode("Donatello");
+    ninjas.addEdge("Splinter", "Leonardo", "sensei");
+    ninjas.addEdge("Splinter", "Donatello", "father");
+
+    Graph amoeba = new Graph();
+    amoeba.addNode("blob");
+    amoeba.addEdge("blob", "blob", "self");
+
+    Graph plankton = new Graph();
+    plankton.addNode("blob");
+    plankton.addEdge("blob", "blob", "self");
+
     ////////////////////////////////////////
     // Add nodes/edges that already exist //
     ////////////////////////////////////////
@@ -114,7 +114,7 @@ public class GraphTest {
     /////////////////////////////////////////
 
     // Remove non-existent node
-    hippo.removeNode("snout")
+    hippo.removeNode("snout");
     assertEquals(giraffe.listNodes(), hippo.listNodes());
 
     // Remove non-existent edge
@@ -142,7 +142,7 @@ public class GraphTest {
 
     Graph college = new Graph();
     college.addNode("classroom");
-    college.addNode("lunchroom")
+    college.addNode("lunchroom");
     college.addEdge("classroom", "lunchroom", "hallway");
 
     Graph k12 = new Graph();
@@ -189,7 +189,7 @@ public class GraphTest {
   public void testRemoveEdge() {
     Graph college = new Graph();
     college.addNode("classroom");
-    college.addNode("lunchroom")
+    college.addNode("lunchroom");
     college.addEdge("classroom", "lunchroom", "hallway");
 
     Graph k12 = new Graph();
@@ -220,9 +220,9 @@ public class GraphTest {
     assertEquals(college.listChildren("classroom"), k12.listChildren("classroom"));
     
     // Remove edge neighbored with another edge
-    // 0, 1, 2 heuristic (2)i
+    // 0, 1, 2 heuristic (2)
     calendar.removeEdge("week", "Tuesday", "second");
-    assertEquals(calendar.listChilren("week"), weekly.listChildren("weekly"));
+    assertEquals(calendar.listChildren("week"), weekly.listChildren("week"));
     
     // Remove edge from node pointing to itself
     // Special case
