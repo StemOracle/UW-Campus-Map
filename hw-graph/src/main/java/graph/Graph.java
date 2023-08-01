@@ -9,24 +9,25 @@ import java.util.*;
  * if they're arranged identically (same parent and child).
  */
 public class Graph {
-  /* Comment? */
-  // AF: this.nodes -> set of labeled nodes of the graph
+  // AF: this.nodes -> collection of labeled nodes with keys as labels
+  // and entries as nodes
   // this.edges -> set of labeled edges that point from edge.parent
   // to edge.child
   //
   // RI: this != null, this.nodes != null, this.edges != null,
-  // none of the elements in this.nodes and this.edges are null,
+  // no entries in this.nodes and this.edges are null,
   // all edges most point from and to nodes contained in this.nodes
+  // For each entry of this.nodes, string key must be equal to corresponding node label
 
-  private Set<GraphNode> nodes;
+  private HashMap<String, GraphNode> nodes;
   private Set<GraphEdge> edges;
-  private static final boolean DEBUG = false;
+  private static final boolean DEBUG = true;
 
   /**
    * Creates a graph object with no nodes
    */
   public Graph() {
-    this.nodes = new HashSet<GraphNode>();
+    this.nodes = new HashMap<String, GraphNode>();
     this.edges = new HashSet<GraphEdge>();
     checkRep();
   }
@@ -46,38 +47,24 @@ public class Graph {
       throw new IllegalArgumentException();
     }
 
-    // Inv: All nodeLabels up to current are turned into nodes, added to this.nodes, and non-null
+    // Inv: All nodeLabels up to current are turned into nodes, put into this.nodes, and non-null
     for(String nodeLabel : nodes) {
       if(nodeLabel == null) {
         throw new IllegalArgumentException();
       }
-      this.nodes.add(new GraphNode(nodeLabel));
+
+      this.nodes.put(nodeLabel, new GraphNode(nodeLabel));
     }
 
     // Inv: All edgeArrs up to current are turned into edges, added to this.edges, and non-null
     for(String[] edgeArr : edges) {
       if(edgeArr == null || edgeArr[0] == null || edgeArr[1] == null || edgeArr[2] == null) {
         throw new IllegalArgumentException();
-      }
-      int found = 0;
-      GraphNode parent = null;
-      GraphNode child = null;
-      // No major invarient here just looking for parent and child nodes
-      for(GraphNode node : this.nodes) {
-        if(node.label.equals(edgeArr[0])) {
-	  parent = node;
-	  found++;
-	}
-	if(node.label.equals(edgeArr[1])) {
-	  child = node;
-	  found++;
-	}
-      }
-
-      if(found == 2) {
-        this.edges.add(new GraphEdge(parent, child, edgeArr[2]));
+      } else if(!(this.nodes.keySet()).contains(edgeArr[0])
+	        || !(this.nodes.keySet().contains(edgeArr[1]))) {
+	throw new IllegalArgumentException();
       } else {
-        throw new IllegalArgumentException();
+	this.edges.add(new GraphEdge(this.nodes.get(edgeArr[0]), this.nodes.get(edgeArr[1]), edgeArr[2]));
       }
     }
     this.checkRep();
@@ -94,7 +81,7 @@ public class Graph {
   public void addNode(String label) {
     this.checkRep();
     GraphNode newNode = new GraphNode(label);
-    this.nodes.add(newNode);
+    this.nodes.put(label, newNode);
     this.checkRep();
   }
 
@@ -108,12 +95,11 @@ public class Graph {
    */
   public void removeNode(String label) {
     this.checkRep();
-    GraphNode toRemove = new GraphNode(label);
-    this.nodes.remove(toRemove);
+    this.nodes.remove(label);
 
     // Inv: All edges up to current don't point to or away from labeled node
     for(GraphEdge edge : this.edges) {
-      if((edge.parent).equals(toRemove) || (edge.child).equals(toRemove)) {
+      if((edge.parent.label).equals(label) || (edge.child.label).equals(label)) {
         this.edges.remove(edge);
       }
     }
@@ -133,23 +119,11 @@ public class Graph {
    */
   public void addEdge(String parentNode, String childNode, String edgeLabel) {
     this.checkRep();
-    GraphNode parent = null;
-    GraphNode child = null;
 
-    // No major invarient here just looking for parent and child nodes
-    for(GraphNode node : this.nodes) {
-      if((node.label).equals(parentNode)) {
-        parent = node;
-      }
-      if((node.label).equals(childNode)) {
-        child = node;
-      }
+    if((this.nodes.keySet()).contains(parentNode) && (this.nodes.keySet()).contains(childNode)) {
+      this.edges.add(new GraphEdge(this.nodes.get(parentNode), this.nodes.get(childNode), edgeLabel));
     }
 
-    if(child != null && parent != null) {
-      GraphEdge newEdge = new GraphEdge(parent, child, edgeLabel);
-      this.edges.add(newEdge);
-    }
     this.checkRep();
   }
 
@@ -165,10 +139,11 @@ public class Graph {
    */
   public void removeEdge(String parentNode, String childNode, String edgeLabel) {
     this.checkRep();
-    GraphNode parentCopy = new GraphNode(parentNode);
-    GraphNode childCopy = new GraphNode(childNode);
-    GraphEdge toRemove = new GraphEdge(parentCopy, childCopy, edgeLabel);
-    this.edges.remove(toRemove);
+    GraphNode parent = this.nodes.get(parentNode);
+    GraphNode child = this.nodes.get(childNode);
+    GraphEdge edgeCopy = new GraphEdge(parent, child, edgeLabel);
+    this.edges.remove(edgeCopy);
+    this.checkRep();
   }
 
 
@@ -199,18 +174,13 @@ public class Graph {
 
 
   /**
-   * Lists all nodes' labels
-   * @return List of all node's labels
+   * Lists all nodes' labels in alphabetical order
+   * @return List of all node's labels in alphabetical order
    */
   public List<String> listNodes() {
     this.checkRep();
     List<String> theNodes = new ArrayList<String>();
-
-    // Inv: All nodes up to current are contained in theNodes
-    for(GraphNode node : this.nodes) {
-      theNodes.add(node.label);
-    }
-
+    theNodes.addAll(this.nodes.keySet());
     theNodes.sort(Comparator.naturalOrder());
     this.checkRep();
     return theNodes;
@@ -243,8 +213,8 @@ public class Graph {
     this.checkRep();
     int hash = 0;
 
-    for(GraphNode node : this.nodes) {
-      hash += node.hashCode();
+    for(String nodeLabel : this.nodes.keySet()) {
+      hash += (this.nodes.get(nodeLabel)).hashCode();
     }
 
     for(GraphEdge edge : this.edges) {
@@ -258,22 +228,24 @@ public class Graph {
 
   /**
    * Checks if the RI has been violated, successfuly completes if not
-   * @throws assertion error if RI has been violated
+   * @throws AssertionError if RI has been violated
    */
   private void checkRep() {
     assert this != null;
     assert this.nodes != null;
     assert this.edges != null;
     if(DEBUG) {
-      // Inv: All nodes up to current are non-null
-      for(GraphNode node: this.nodes) {
-        assert (node != null);
+      // Inv: All nodes up to current are non-null and entry labels match graph labels
+      for(String nodeLabel : this.nodes.keySet()) {
+        assert (nodeLabel != null);
+	assert (this.nodes.get(nodeLabel) != null);
+	assert (nodeLabel.equals((this.nodes.get(nodeLabel)).label));
       }
-      // Inv: All edges up to current are non-null
+      // Inv: All edges up to current are non-null and point to nodes contained in this.nodes
       for(GraphEdge edge : this.edges) {
 	assert (edge != null);
-        assert this.nodes.contains(edge.parent);
-	assert this.nodes.contains(edge.child);
+        assert (this.nodes.keySet()).contains(edge.parent.label);
+	assert (this.nodes.keySet()).contains(edge.child.label);
       }
     }
   }
