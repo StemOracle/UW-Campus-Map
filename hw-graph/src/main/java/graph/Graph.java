@@ -21,7 +21,7 @@ public class Graph {
 
   private HashMap<String, GraphNode> nodes;
   private Set<GraphEdge> edges;
-  private static final boolean DEBUG = true;
+  private static final boolean DEBUG = false;
 
   /**
    * Creates a graph object with no nodes
@@ -29,7 +29,7 @@ public class Graph {
   public Graph() {
     this.nodes = new HashMap<String, GraphNode>();
     this.edges = new HashSet<GraphEdge>();
-    checkRep();
+    this.checkRep();
   }
 
 
@@ -119,11 +119,9 @@ public class Graph {
    */
   public void addEdge(String parentNode, String childNode, String edgeLabel) {
     this.checkRep();
-
     if((this.nodes.keySet()).contains(parentNode) && (this.nodes.keySet()).contains(childNode)) {
       this.edges.add(new GraphEdge(this.nodes.get(parentNode), this.nodes.get(childNode), edgeLabel));
     }
-
     this.checkRep();
   }
 
