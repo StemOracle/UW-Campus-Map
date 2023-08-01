@@ -2,7 +2,7 @@
 # 0, 1, 2 heuristic (2)
 
 # Create graph
-Create Graph giraffe6
+CreateGraph giraffe6
 
 # Add nodes
 AddNode giraffe6 node1

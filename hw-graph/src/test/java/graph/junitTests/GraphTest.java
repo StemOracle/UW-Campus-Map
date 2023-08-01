@@ -8,7 +8,13 @@ import graph.Graph;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
+import org.junit.Rule;
+import org.junit.rules.Timeout;
+
+import java.util.*;
+
 public class GraphTest {
+  @Rule public Timeout globalTimeout = Timeout.seconds(10); // 10 seconds max per method tested
   /**
    * Tests that illegal inputs don't change the graph.
    */
@@ -66,47 +72,47 @@ public class GraphTest {
     // Tests if no new nodes exist when adding a node that exists
     // 0, 1, 2 heuristic (1)
     hippo.addNode("leg");
-    assertEquals(giraffe.listNodes(), hippo.listNodes());
+    assertEquals(giraffe, hippo);
 
     // Tests if no new nodes exist when adding a node that exists
     // 0, 1, 2 heuristic (2)
     flea.addNode("fang");
-    assertEquals(spider.listNodes(), flea.listNodes());
+    assertEquals(spider, flea);
 
     // Ditto, but tests on children nodes
     // 0, 1, 2 heurisitc (1)
     turtle.addNode("scales");
-    assertEquals(frog.listChildren("tongue"), turtle.listChildren("tongue"));
+    assertEquals(frog, turtle);
 
     // Ditto, but tests on children nodes
     // 0, 1, 2 heuristic (2)
     ninjas.addNode("Donatello");
-    assertEquals(turtles.listChildren("Splinter"), ninjas.listChildren("Splinter"));
+    assertEquals(turtles, ninjas);
     
     // Ditto, but a node as its own child
     // Special case
     plankton.addNode("blob");
-    assertEquals(amoeba.listChildren("blob"), plankton.listChildren("blob"));
+    assertEquals(amoeba, plankton);
 
     // Adding edge that already exists
     // 0, 1, 2 heuristic (1)
     turtle.addEdge("tongue", "scales", "gorf");
-    assertEquals(frog.listChildren("tongue"), turtle.listChildren("tongue"));
+    assertEquals(frog, turtle);
 
     // Adding edge that already exists among another
     // 0, 1, 2 heuristic (2)
     ninjas.addEdge("Splinter", "Donatello", "father");
-    assertEquals(turtles.listChildren("Splinter"), ninjas.listChildren("Splinter"));
+    assertEquals(turtles, ninjas);
 
     // Adding edge that points from node to itself
     // Special case
     plankton.addEdge("blob", "blob", "self");
-    assertEquals(amoeba.listChildren("blob"), plankton.listChildren("blob"));
+    assertEquals(amoeba, plankton);
 
     // Add edge between nodes that don't exist
     // Special case
     ninjas.addEdge("Splinter", "nada", "edgy");
-    assertEquals(turtles.listChildren("Splinter"), ninjas.listChildren("Splinter"));
+    assertEquals(turtles, ninjas);
 
 
     /////////////////////////////////////////
@@ -115,11 +121,11 @@ public class GraphTest {
 
     // Remove non-existent node
     hippo.removeNode("snout");
-    assertEquals(giraffe.listNodes(), hippo.listNodes());
+    assertEquals(giraffe, hippo);
 
     // Remove non-existent edge
     turtle.removeEdge("tongue", "scales", "lick");
-    assertEquals(frog.listChildren("tongue"), turtle.listChildren("tongue"));
+    assertEquals(frog, turtle);
   }
 
   
@@ -163,22 +169,22 @@ public class GraphTest {
     // Remove only node
     // 0, 1, 2 heuristic (1)
     university.removeNode("library");
-    assertEquals(university.listNodes(), school.listNodes());
+    assertEquals(university, school);
 
     // Remove node along other node
     // 0, 1, 2 heuristic (2)
-    fish.removeNode("bubble");
-    assertEquals(fish.listNodes(), soap.listNodes());
+    fish.removeNode("gills");
+    assertEquals(fish, soap);
     
     // Remove an only child
     // 0, 1, 2 heuristic (1)
     college.removeNode("lunchroom");
-    assertEquals(college.listChildren("classroom"), k12.listChildren("classroom"));
+    assertEquals(college, k12);
     
     // Remove a child with a sibling
     // 0, 1, 2 heuristic (2)
     calendar.removeNode("Tuesday");
-    assertEquals(calendar.listChildren("week"), weekly.listChildren("week"));
+    assertEquals(calendar, weekly);
   }
 
 
@@ -194,6 +200,7 @@ public class GraphTest {
 
     Graph k12 = new Graph();
     k12.addNode("classroom");
+    k12.addNode("lunchroom");
 
     Graph calendar = new Graph();
     calendar.addNode("week");
@@ -205,6 +212,7 @@ public class GraphTest {
     Graph weekly = new Graph();
     weekly.addNode("week");
     weekly.addNode("Monday");
+    weekly.addNode("Tuesday");
     weekly.addEdge("week", "Monday", "first");
 
     Graph alabama = new Graph();
@@ -217,16 +225,144 @@ public class GraphTest {
     // Remove lonely edge
     // 0, 1, 2 heuristic (1)
     college.removeEdge("classroom", "lunchroom", "hallway");
-    assertEquals(college.listChildren("classroom"), k12.listChildren("classroom"));
+    assertEquals(college, k12);
     
     // Remove edge neighbored with another edge
     // 0, 1, 2 heuristic (2)
     calendar.removeEdge("week", "Tuesday", "second");
-    assertEquals(calendar.listChildren("week"), weekly.listChildren("week"));
+    assertEquals(calendar, weekly);
     
     // Remove edge from node pointing to itself
     // Special case
     alabama.removeEdge("child", "child", "parent");
-    assertEquals(alabama.listChildren("child"), washington.listChildren("child"));
+    assertEquals(alabama, washington);
+  }
+
+  /**
+   * Tests the equals() method
+   */
+  @Test
+  public void equalsTestAndHashCodeTest() {
+    ////////////
+    // Equals //
+    ////////////
+
+    // Vacuous test
+    Graph scarecrow = new Graph();
+    Graph gnome = new Graph();
+    assertTrue(scarecrow.equals(gnome));
+
+    // Simple test no edges
+    Graph hitman = new Graph();
+    Graph assassin = new Graph();
+    assassin.addNode("trained");
+    assertFalse(assassin.equals(hitman));
+
+    // Simple test no edges
+    Graph computer = new Graph();
+    computer.addNode("electronic");
+    Graph calculator = new Graph();
+    calculator.addNode("electronic");
+    assertTrue(computer.equals(calculator));
+
+    // Complex test no edges
+    Graph gov = new Graph();
+    gov.addNode("corrupt");
+    gov.addNode("powerful");
+    gov.addNode("corporate");
+    Graph politician = new Graph();
+    politician.addNode("corrupt");
+    politician.addNode("powerful");
+    politician.addNode("only sometimes corporate");
+    assertFalse(politician.equals(gov));
+
+    // Simple test one edge
+    Graph myself = new Graph();
+    myself.addNode("charles");
+    myself.addNode("spoiled");
+    myself.addEdge("charles", "spoiled", "nature");
+    Graph sister = new Graph();
+    sister.addNode("redacted");
+    sister.addNode("spoiled");
+    sister.addEdge("redacted", "spoiled", "nature");
+    assertFalse(myself.equals(sister));
+
+    // Complex test multiple edges
+    Graph bankRobbery = new Graph();
+    bankRobbery.addNode("vault");
+    bankRobbery.addNode("loot");
+    bankRobbery.addNode("getaway");
+    bankRobbery.addEdge("vault", "loot", "contains");
+    bankRobbery.addEdge("loot", "getaway", "run");
+    Graph jewelHeist = new Graph();
+    jewelHeist.addNode("vault");
+    jewelHeist.addNode("loot");
+    jewelHeist.addNode("getaway");
+    jewelHeist.addEdge("vault", "loot", "contains");
+    jewelHeist.addEdge("loot", "getaway", "run");
+    assertTrue(bankRobbery.equals(jewelHeist));
+
+    //////////////
+    // hashCode //
+    //////////////
+
+    // Equal object? Equal hash
+    assertTrue(scarecrow.hashCode() == gnome.hashCode());
+    assertTrue(computer.hashCode() == calculator.hashCode());
+    assertTrue(bankRobbery.hashCode() == jewelHeist.hashCode());
+
+    // Should return consistent values
+    int scarecrowHash = scarecrow.hashCode();
+    assertEquals(scarecrow.hashCode(), scarecrowHash);
+    int computerHash = computer.hashCode();
+    assertEquals(computer.hashCode(), computerHash);
+    int jewelHash = jewelHeist.hashCode();
+    assertEquals(jewelHeist.hashCode(), jewelHash);
+  }
+
+  /**
+   * Tests the constructor
+   */
+  public void testConstructor() {
+    // Simple empty test
+    Graph empty1 = new Graph();
+    Graph empty2 = new Graph(new HashSet<String>(), new HashSet<String[]>());
+    assertEquals(empty2, empty1);
+
+    // Intermediate test
+    Graph national = new Graph();
+    national.addNode("roman");
+    national.addNode("canadian");
+    national.addNode("american");
+    HashSet<String> setty = new HashSet<String>();
+    setty.add("roman"); setty.add("canadian"); setty.add("american");
+    Graph person = new Graph(setty, new HashSet<String[]>());
+    assertEquals(person, national);
+
+    // Complex test
+    Graph triangle = new Graph();
+    triangle.addNode("acute");
+    triangle.addNode("right");
+    triangle.addNode("obtuse");
+    triangle.addEdge("acute", "right", "lower than");
+    triangle.addEdge("right", "obtuse", "lower than");
+    triangle.addEdge("obtuse", "acute", "greater than");
+    HashSet<String> angles = new HashSet<String>();
+    angles.add("acute"); angles.add("right"); angles.add("obtuse");
+    HashSet<String[]> edges = new HashSet<String[]>();
+    edges.add(new String[]{"acute", "right", "lower than"});
+    edges.add(new String[]{"right", "obtuse", "lower than"});
+    edges.add(new String[]{"obtuse", "acute", "greater than"});
+    Graph anglez = new Graph(angles, edges);
+
+    // Special test
+    Graph childParent = new Graph();
+    childParent.addNode("routine");
+    childParent.addEdge("routine", "routine", "sleep");
+    HashSet<String> routine = new HashSet<String>();
+    routine.add("routine");
+    HashSet<String[]> repeat = new HashSet<String[]>();
+    repeat.add(new String[]{"routine", "routine", "sleep"});
+    Graph cycle = new Graph(routine, repeat);
   }
 }

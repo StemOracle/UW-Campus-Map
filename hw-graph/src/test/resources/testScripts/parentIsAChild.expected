@@ -8,7 +8,7 @@ added node cow to bison
 added node pig to bison
 
 # Add edges
-added edge cowTopig from cow to pig in bison
+added edge cowToPig from cow to pig in bison
 added edge pigToCow from pig to cow in bison
 
 # Print out children of each

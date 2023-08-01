@@ -4,8 +4,8 @@
 CreateGraph bison
 
 # Add nodes
-AddNode cow
-AddNode pig
+AddNode bison cow
+AddNode bison pig
 
 # Add edges
 AddEdge bison cow pig cowToPig
