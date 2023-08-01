@@ -2,14 +2,14 @@ package graph;
 import java.util.*;
 
 
-/*
+/** 
  * Represents a mutable labeled graph, where nodes are labeled with strings
  * and edges point from nodes to other nodes, also labeled with strings.
  * No two nodes can have the same label, nor can two edges have the same label
  * if they're arranged identically (same parent and child).
  */
 public class Graph {
-
+  /* Comment? */
   // AF: this.nodes -> set of labeled nodes of the graph
   // this.edges -> set of labeled edges that point from edge.parent
   // to edge.child
@@ -20,7 +20,7 @@ public class Graph {
 
   private Set<GraphNode> nodes;
   private Set<GraphEdge> edges;
-  private static final boolean DEBUG = true;
+  private static final boolean DEBUG = false;
 
   /**
    * Creates a graph object with no nodes
@@ -35,8 +35,8 @@ public class Graph {
   /**
    * Creates a graph object with nodes and edges from provided sets
    * @param nodes set of node labels
-   * @param set of edges formatted as [<parentLabel>, <childLabel>, <edgeLabel>]
-   * @spec.throws IllegalArgumentException if edges entries aren't properly formatted,
+   * @param edges set of edges formatted as [parentLabel, childLabel, edgeLabel]
+   * @throws IllegalArgumentException if edges entries aren't properly formatted,
    * if parent/child nodes don't exist, if nodes or edges are null, or if any of
    * their elements are null
    */
@@ -173,10 +173,12 @@ public class Graph {
 
 
   /**
-   * Lists labeled node's children's labels
+   * Lists labeled node's children's labels formatted as childLabel(edgeLabel)
+   * in alphabetical format
    * @param label label of parent node
    * @spec.requires labeled node must exist, no behavior otherwise
-   * @return List of labeled node's children's labels
+   * @return List of labeled node's children's labels formatted as childLabel(edgeLabel)
+   * in alphabetical format
    */
   public List<String> listChildren(String label) {
     this.checkRep();
@@ -253,9 +255,10 @@ public class Graph {
     return hash;
   }
 
+
   /**
    * Checks if the RI has been violated, successfuly completes if not
-   * @spec.throws assertion error if RI has been violated
+   * @throws assertion error if RI has been violated
    */
   private void checkRep() {
     assert this != null;
@@ -278,7 +281,7 @@ public class Graph {
 
 
 
-  /*
+  /**
    * Represents an immutable node of a labeled graph
    */
   private class GraphNode {
@@ -292,7 +295,7 @@ public class Graph {
     /**
      * Creates a labeled node
      * @param label chosen label of node
-     * @spec.throws IllegalArgumentException if label == null
+     * @throws IllegalArgumentException if label == null
      */
     public GraphNode(String label) {
       if(label == null) {
@@ -333,7 +336,7 @@ public class Graph {
 
     /**
      * Checks if the RI has been violated, successfuly completes if not
-     * @spec.throws assertion error if RI has been violated
+     * @throws assertion error if RI has been violated
      */
     private void checkRep() {
       assert this != null;
@@ -344,7 +347,7 @@ public class Graph {
 
 
 
-  /*
+  /**
    * Represents an immutable edge of a labeled graph
    */
   private class GraphEdge {
@@ -362,7 +365,7 @@ public class Graph {
      * @param parent parent node; edge points away from
      * @param child child node; edge points toward
      * @param label label of edge
-     * @spec.throws IllegalArgumentException if parent, child, or label are null
+     * @throws IllegalArgumentException if parent, child, or label are null
      */
     public GraphEdge(GraphNode parent, GraphNode child, String label) {
       if(parent == null || child == null || label == null) {
@@ -406,7 +409,7 @@ public class Graph {
 
   /**
    * Checks if the RI has been violated, successfuly completes if not
-   * @spec.throws assertion error if RI has been violated
+   * @throws assertion error if RI has been violated
    */
     private void checkRep() {
       assert this.parent != null;
