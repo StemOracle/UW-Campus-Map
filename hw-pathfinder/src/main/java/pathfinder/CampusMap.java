@@ -12,6 +12,7 @@
 package pathfinder;
 
 import pathfinder.datastructures.Path;
+import pathfinder.datastructures.Point;
 
 import java.util.Map;
 
@@ -36,7 +37,7 @@ public class CampusMap implements ModelAPI {
     }
 
     @Override
-    public Path findShortestPath(String startShortName, String endShortName) {
+    public Path<Point> findShortestPath(String startShortName, String endShortName) {
         // TODO: Implement this method exactly as it is specified in ModelAPI
         throw new RuntimeException("Not Implemented Yet");
     }

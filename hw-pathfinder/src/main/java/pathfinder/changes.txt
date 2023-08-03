@@ -1,2 +1,38 @@
 Briefly list any changes you made to your graph class during hw-pathfinder, and why you made those changes.
 
+
+
+ListChildren:
+It used to return a list of Strings, where each entry was formatted as childNodeLabel(edgeLabel).
+Unfortunately, when making the change to generic types, I couldn't find a way to
+return information containing both the child label and the edge label in a list.
+Therefore, I chose to instead return a map that maps each outgoing edge label to its child label.
+
+
+
+ListNodes and ListChildren:
+Both methods returned their lists in sorted alphabetical order
+Since I was no longer just using strings, I had to do away with the sorting.
+
+
+
+Constructor:
+For my non-empty constructor, I used a List<String[]> parameter to represent edges.
+This worked because node/edge labels were both represented by Strings.
+The jump to generic types resulted in two different types repersenting
+node/edge labels, so I could no longer use arrays.
+I changed the spec to require three lists alongside the collection of nodes,
+with each entry in each list representing an edge.
+
+
+
+Script Test Driver:
+I modified the test driver so that all instances of a Graph object are Graph<String, String>.
+Since I could no longer sort my graph's nodes and edges, I instead sorted them in the driver.
+ListChildren now returns a map, so I had to rewrite the test method to deal with a map.
+
+
+
+JUnit Tests:
+I had to modify them to work with the generic typing, so I created instances of Graph<String, String>.
+I also modified the constructor tests so it could work with its new parameters.
