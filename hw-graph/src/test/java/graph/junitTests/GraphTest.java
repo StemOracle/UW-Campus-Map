@@ -20,49 +20,49 @@ public class GraphTest {
    */
   @Test
   public void testBenignInputs() {
-    Graph giraffe = new Graph();
+    Graph<String, String> giraffe = new Graph<String, String>();
     giraffe.addNode("leg");
 
-    Graph hippo = new Graph();
+    Graph<String, String> hippo = new Graph<String, String>();
     hippo.addNode("leg");
 
-    Graph spider = new Graph();
+    Graph<String, String> spider = new Graph<String, String>();
     spider.addNode("eye");
     spider.addNode("fang");
 
-    Graph flea = new Graph();
+    Graph<String, String> flea = new Graph<String, String>();
     flea.addNode("eye");
     flea.addNode("fang");
 
-    Graph frog = new Graph();
+    Graph<String, String> frog = new Graph<String, String>();
     frog.addNode("tongue");
     frog.addNode("scales");
     frog.addEdge("tongue", "scales", "gorf");
 
-    Graph turtle = new Graph();
+    Graph<String, String> turtle = new Graph<String, String>();
     turtle.addNode("tongue");
     turtle.addNode("scales");
     turtle.addEdge("tongue", "scales", "gorf");
 
-    Graph turtles = new Graph();
+    Graph<String, String> turtles = new Graph<String, String>();
     turtles.addNode("Splinter");
     turtles.addNode("Leonardo");
     turtles.addNode("Donatello");
     turtles.addEdge("Splinter", "Leonardo", "sensei");
     turtles.addEdge("Splinter", "Donatello", "father");
 
-    Graph ninjas = new Graph();
+    Graph<String, String> ninjas = new Graph<String, String>();
     ninjas.addNode("Splinter");
     ninjas.addNode("Leonardo");
     ninjas.addNode("Donatello");
     ninjas.addEdge("Splinter", "Leonardo", "sensei");
     ninjas.addEdge("Splinter", "Donatello", "father");
 
-    Graph amoeba = new Graph();
+    Graph<String, String> amoeba = new Graph<String, String>();
     amoeba.addNode("blob");
     amoeba.addEdge("blob", "blob", "self");
 
-    Graph plankton = new Graph();
+    Graph<String, String> plankton = new Graph<String, String>();
     plankton.addNode("blob");
     plankton.addEdge("blob", "blob", "self");
 
@@ -134,34 +134,34 @@ public class GraphTest {
    */
   @Test
   public void testRemoveNode() {
-    Graph university = new Graph();
+    Graph<String, String> university = new Graph<String, String>();
     university.addNode("library");
 
-    Graph school = new Graph();
+    Graph<String, String> school = new Graph<String, String>();
 
-    Graph fish = new Graph();
+    Graph<String, String> fish = new Graph<String, String>();
     fish.addNode("bubble");
     fish.addNode("gills");
 
-    Graph soap = new Graph();
+    Graph<String, String> soap = new Graph<String, String>();
     soap.addNode("bubble");
 
-    Graph college = new Graph();
+    Graph<String, String> college = new Graph<String, String>();
     college.addNode("classroom");
     college.addNode("lunchroom");
     college.addEdge("classroom", "lunchroom", "hallway");
 
-    Graph k12 = new Graph();
+    Graph<String, String> k12 = new Graph<String, String>();
     k12.addNode("classroom");
 
-    Graph calendar = new Graph();
+    Graph<String, String> calendar = new Graph<String, String>();
     calendar.addNode("week");
     calendar.addNode("Monday");
     calendar.addNode("Tuesday");
     calendar.addEdge("week", "Monday", "first");
     calendar.addEdge("week", "Tuesday", "second");
 
-    Graph weekly = new Graph();
+    Graph<String, String> weekly = new Graph<String, String>();
     weekly.addNode("week");
     weekly.addNode("Monday");
     weekly.addEdge("week", "Monday", "first");
@@ -193,33 +193,33 @@ public class GraphTest {
    */
   @Test
   public void testRemoveEdge() {
-    Graph college = new Graph();
+    Graph<String, String> college = new Graph<String, String>();
     college.addNode("classroom");
     college.addNode("lunchroom");
     college.addEdge("classroom", "lunchroom", "hallway");
 
-    Graph k12 = new Graph();
+    Graph<String, String> k12 = new Graph<String, String>();
     k12.addNode("classroom");
     k12.addNode("lunchroom");
 
-    Graph calendar = new Graph();
+    Graph<String, String> calendar = new Graph<String, String>();
     calendar.addNode("week");
     calendar.addNode("Monday");
     calendar.addNode("Tuesday");
     calendar.addEdge("week", "Monday", "first");
     calendar.addEdge("week", "Tuesday", "second");
 
-    Graph weekly = new Graph();
+    Graph<String, String> weekly = new Graph<String, String>();
     weekly.addNode("week");
     weekly.addNode("Monday");
     weekly.addNode("Tuesday");
     weekly.addEdge("week", "Monday", "first");
 
-    Graph alabama = new Graph();
+    Graph<String, String> alabama = new Graph<String, String>();
     alabama.addNode("child");
     alabama.addEdge("child", "child", "parent");
 
-    Graph washington = new Graph();
+    Graph<String, String> washington = new Graph<String, String>();
     washington.addNode("child");
 
     // Remove lonely edge
@@ -248,53 +248,53 @@ public class GraphTest {
     ////////////
 
     // Vacuous test
-    Graph scarecrow = new Graph();
-    Graph gnome = new Graph();
+    Graph<String, String> scarecrow = new Graph<String, String>();
+    Graph<String, String> gnome = new Graph<String, String>();
     assertTrue(scarecrow.equals(gnome));
 
     // Simple test no edges
-    Graph hitman = new Graph();
-    Graph assassin = new Graph();
+    Graph<String, String> hitman = new Graph<String, String>();
+    Graph<String, String> assassin = new Graph<String, String>();
     assassin.addNode("trained");
     assertFalse(assassin.equals(hitman));
 
     // Simple test no edges
-    Graph computer = new Graph();
+    Graph<String, String> computer = new Graph<String, String>();
     computer.addNode("electronic");
-    Graph calculator = new Graph();
+    Graph<String, String> calculator = new Graph<String, String>();
     calculator.addNode("electronic");
     assertTrue(computer.equals(calculator));
 
     // Complex test no edges
-    Graph gov = new Graph();
+    Graph<String, String> gov = new Graph<String, String>();
     gov.addNode("corrupt");
     gov.addNode("powerful");
     gov.addNode("corporate");
-    Graph politician = new Graph();
+    Graph<String, String> politician = new Graph<String, String>();
     politician.addNode("corrupt");
     politician.addNode("powerful");
     politician.addNode("only sometimes corporate");
     assertFalse(politician.equals(gov));
 
     // Simple test one edge
-    Graph myself = new Graph();
+    Graph<String, String> myself = new Graph<String, String>();
     myself.addNode("charles");
     myself.addNode("spoiled");
     myself.addEdge("charles", "spoiled", "nature");
-    Graph sister = new Graph();
+    Graph<String, String> sister = new Graph<String, String>();
     sister.addNode("redacted");
     sister.addNode("spoiled");
     sister.addEdge("redacted", "spoiled", "nature");
     assertFalse(myself.equals(sister));
 
     // Complex test multiple edges
-    Graph bankRobbery = new Graph();
+    Graph<String, String> bankRobbery = new Graph<String, String>();
     bankRobbery.addNode("vault");
     bankRobbery.addNode("loot");
     bankRobbery.addNode("getaway");
     bankRobbery.addEdge("vault", "loot", "contains");
     bankRobbery.addEdge("loot", "getaway", "run");
-    Graph jewelHeist = new Graph();
+    Graph<String, String> jewelHeist = new Graph<String, String>();
     jewelHeist.addNode("vault");
     jewelHeist.addNode("loot");
     jewelHeist.addNode("getaway");
@@ -325,44 +325,61 @@ public class GraphTest {
    */
   public void testConstructor() {
     // Simple empty test
-    Graph empty1 = new Graph();
-    Graph empty2 = new Graph(new HashSet<String>(), new HashSet<String[]>());
+    Graph<String, String> empty1 = new Graph<String, String>();
+    Graph<String, String> empty2 = new Graph<String, String>(new HashSet<String>(),
+		                                             new ArrayList<String>(),
+		                                             new ArrayList<String>(),
+							     new ArrayList<String>());
     assertEquals(empty2, empty1);
 
+
     // Intermediate test
-    Graph national = new Graph();
+    Graph<String, String> national = new Graph<String, String>();
     national.addNode("roman");
     national.addNode("canadian");
     national.addNode("american");
     HashSet<String> setty = new HashSet<String>();
     setty.add("roman"); setty.add("canadian"); setty.add("american");
-    Graph person = new Graph(setty, new HashSet<String[]>());
+    Graph<String, String> person = new Graph<String, String>(setty,
+		                                             new ArrayList<String>(),
+		                                             new ArrayList<String>(),
+							     new ArrayList<String>());
     assertEquals(person, national);
 
+
     // Complex test
-    Graph triangle = new Graph();
-    triangle.addNode("acute");
-    triangle.addNode("right");
-    triangle.addNode("obtuse");
+    Graph<String, String> triangle = new Graph<String, String>();
+    triangle.addNode("acute"); triangle.addNode("right"); triangle.addNode("obtuse");
     triangle.addEdge("acute", "right", "lower than");
     triangle.addEdge("right", "obtuse", "lower than");
     triangle.addEdge("obtuse", "acute", "greater than");
+
     HashSet<String> angles = new HashSet<String>();
     angles.add("acute"); angles.add("right"); angles.add("obtuse");
-    HashSet<String[]> edges = new HashSet<String[]>();
-    edges.add(new String[]{"acute", "right", "lower than"});
-    edges.add(new String[]{"right", "obtuse", "lower than"});
-    edges.add(new String[]{"obtuse", "acute", "greater than"});
-    Graph anglez = new Graph(angles, edges);
+
+    List<String> parents = new ArrayList<String>();
+    List<String> children = new ArrayList<String>();
+    List<String> edges = new ArrayList<String>();
+    parents.add("acute"); parents.add("right"); parents.add("obtuse");
+    children.add("right"); children.add("obtuse"); children.add("acute");
+    edges.add("lower than"); edges.add("lower than"); edges.add("greater than");
+    
+    Graph<String, String> anglez = new Graph<String, String>(angles, parents, children, edges);
+    assertEquals(triangle, anglez);
+
 
     // Special test
-    Graph childParent = new Graph();
+    Graph<String, String> childParent = new Graph<String, String>();
     childParent.addNode("routine");
     childParent.addEdge("routine", "routine", "sleep");
+
     HashSet<String> routine = new HashSet<String>();
     routine.add("routine");
-    HashSet<String[]> repeat = new HashSet<String[]>();
-    repeat.add(new String[]{"routine", "routine", "sleep"});
-    Graph cycle = new Graph(routine, repeat);
+
+    List<String> moms = new ArrayList<String>();
+    List<String> kids = new ArrayList<String>();
+    List<String> rels = new ArrayList<String>();
+    moms.add("routine"); kids.add("routine"); rels.add("sleep");
+    Graph<String, String> cycle = new Graph<String, String>(routine, moms, kids, rels);
   }
 }

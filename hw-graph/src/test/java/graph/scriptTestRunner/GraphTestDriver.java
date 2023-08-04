@@ -28,7 +28,7 @@ public class GraphTestDriver {
     /**
      * String -> Graph: maps the names of graphs to the actual graph
      **/
-    private final Map<String, Graph> graphs = new HashMap<String, Graph>();
+    private final Map<String, Graph<String, String>> graphs = new HashMap<String, Graph<String, String>>();
     private final PrintWriter output;
     private final BufferedReader input;
 
@@ -113,7 +113,7 @@ public class GraphTestDriver {
     }
 
     private void createGraph(String graphName) {
-        graphs.put(graphName, new Graph());
+        graphs.put(graphName, new Graph<String, String>());
         output.println("created graph " + graphName);
     }
 
@@ -129,7 +129,7 @@ public class GraphTestDriver {
     }
 
     private void addNode(String graphName, String nodeName) {
-        Graph giraffe = graphs.get(graphName);
+        Graph<String, String> giraffe = graphs.get(graphName);
 	giraffe.addNode(nodeName);
         output.println("added node " + nodeName + " to " + graphName);
     }
@@ -149,7 +149,7 @@ public class GraphTestDriver {
 
     private void addEdge(String graphName, String parentName, String childName,
                          String edgeLabel) {
-        Graph giraffe = graphs.get(graphName);
+        Graph<String, String> giraffe = graphs.get(graphName);
 	giraffe.addEdge(parentName, childName, edgeLabel);
         output.println("added edge " + edgeLabel + " from " + parentName + " to " + childName + " in " + graphName);
     }
@@ -164,8 +164,9 @@ public class GraphTestDriver {
     }
 
     private void listNodes(String graphName) {
-        Graph giraffe = graphs.get(graphName);
+        Graph<String, String> giraffe = graphs.get(graphName);
 	List<String> nodes = giraffe.listNodes();
+	Collections.sort(nodes);
 	String toGo = graphName + " contains:";
 	if(!nodes.isEmpty()) {	
             int i = 0;
@@ -188,8 +189,16 @@ public class GraphTestDriver {
     }
 
     private void listChildren(String graphName, String parentName) {
-        Graph giraffe = graphs.get(graphName);
-        List<String> kids = giraffe.listChildren(parentName);
+        Graph<String, String> giraffe = graphs.get(graphName);
+        List<String> kids = new ArrayList<String>();
+	Map<String, String> kiddos = giraffe.listChildren(parentName);
+
+        for(String key : kiddos.keySet()) {
+	  kids.add(kiddos.get(key) + "(" + key + ")");
+	}
+
+	Collections.sort(kids);
+
         String toGo = "the children of " + parentName + " in " + graphName + " are:";
 	if(!kids.isEmpty()) {
             int i = 0;
