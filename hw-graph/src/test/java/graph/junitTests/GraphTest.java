@@ -189,6 +189,38 @@ public class GraphTest {
 
 
   /**
+   * Tests the overloaded addEdge(GraphEdge) method
+   * when a GraphEdge is passed as a parameter.
+   */
+  @Test
+  public void testOverloadedAddEdge() {
+    // Equality with addEdge(GraphEdge) and addEdge(GraphEdge)
+    Graph<String, String> cat = new Graph<String, String>();
+    cat.addNode("legs"); cat.addNode("tail");
+    
+    cat.addEdge(cat.new GraphEdge("tail", "legs", "longer than"));
+    Graph<String, String> dog = new Graph<String, String>();
+    dog.addNode("legs"); dog.addNode("tail");
+    dog.addEdge(dog.new GraphEdge("tail", "legs", "longer than"));
+    
+    assertEquals(dog, cat);
+
+
+    // Equality with addEdge(T1, T1, T2) and addEdge(GraphEdge)
+    Graph<String, Integer> parks = new Graph<String, Integer>();
+    parks.addNode("Yost"); parks.addNode("trails"); parks.addNode("Shoreview");
+    parks.addEdge(parks.new GraphEdge("Yost", "trails", 2));
+    parks.addEdge(parks.new GraphEdge("Shoreview", "trails", 2));
+
+    Graph<String, Integer> hiking = new Graph<String, Integer>();
+    hiking.addNode("Yost"); hiking.addNode("trails"); hiking.addNode("Shoreview");
+    hiking.addEdge("Yost", "trails", 2); hiking.addEdge("Shoreview", "trails", 2);
+
+    assertEquals(parks, hiking);
+  }
+
+
+  /**
    * Tests the removeEdge() method.
    */
   @Test
@@ -236,6 +268,13 @@ public class GraphTest {
     // Special case
     alabama.removeEdge("child", "child", "parent");
     assertEquals(alabama, washington);
+
+    // Try with Actual GraphEdge Object
+    Graph<String, String> uni = new Graph<String, String>();
+    uni.addNode("classroom"); uni.addNode("lunchroom");
+    uni.addEdge("classroom", "lunchroom", "hallway");
+    uni.removeEdge(uni.new GraphEdge("classroom", "lunchroom", "hallway"));
+    assertEquals(k12, uni);
   }
 
   /**
@@ -286,6 +325,7 @@ public class GraphTest {
     sister.addNode("spoiled");
     sister.addEdge("redacted", "spoiled", "nature");
     assertFalse(myself.equals(sister));
+    
 
     // Complex test multiple edges
     Graph<String, String> bankRobbery = new Graph<String, String>();
