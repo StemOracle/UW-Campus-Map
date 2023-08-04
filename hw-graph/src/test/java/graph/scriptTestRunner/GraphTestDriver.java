@@ -196,7 +196,7 @@ public class GraphTestDriver {
 	List<String> kids = new ArrayList<String>();
 
         for(Graph<String, String>.GraphEdge edge : edges) {
-	  kids.add(edge.child + "(" + edge.label + ")");
+	  kids.add(edge.getChild() + "(" + edge.getLabel() + ")");
 	}
 
 	Collections.sort(kids);

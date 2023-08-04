@@ -36,3 +36,18 @@ ListChildren now returns a map, so I had to rewrite the test method to deal with
 JUnit Tests:
 I had to modify them to work with the generic typing, so I created instances of Graph<String, String>.
 I also modified the constructor tests so it could work with its new parameters.
+
+
+
+=== OTHER ===
+I noticed a mistake I had initially made in my graph class. Nodes used observational equality
+instead of reference equality, which meant that two edges could be considered equal if
+the nodes the pointed to had the same label but were different objects.
+
+Although this would probably not raise a problem in practice, since two nodes can't have the
+same label, I wanted to make sure, so I changed the equals method for the edge inner class,
+removed the overridden method for the node inner class, and completely redid the equals
+method for the main graph class. I also added more to my checkrep function.
+
+Aside from that, I also replaced any put methods with putIfAbsent to prevent the possibility
+of replacing a node with a node of the same label, which would have caused problems.

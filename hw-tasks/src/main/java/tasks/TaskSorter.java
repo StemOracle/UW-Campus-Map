@@ -76,7 +76,11 @@ public class TaskSorter {
      * @return set of dependencies with {@code t} as the "before" task
      */
     public Set<Dependency> getOutgoingDependencies(Task t) {
-	return this.planner.listChildren(t).keySet();
+	Set<Dependency> deps = new HashSet<Dependency>();
+	for(Graph<Task, Dependency>.GraphEdge edge : this.planner.listChildren(t)) {
+            deps.add(edge.getLabel());
+	}
+	return deps;
     }
 
     /**

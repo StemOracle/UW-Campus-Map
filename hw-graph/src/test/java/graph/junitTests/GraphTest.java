@@ -355,13 +355,13 @@ public class GraphTest {
     triangle.addEdge("obtuse", "acute", "greater than");
 
     HashSet<String> triangleNodes = new HashSet<String>();
-    angles.add("acute"); angles.add("right"); angles.add("obtuse");
+    triangleNodes.add("acute"); triangleNodes.add("right"); triangleNodes.add("obtuse");
 
     HashSet<Graph<String, String>.GraphEdge> triangleEdges;
     triangleEdges = new HashSet<Graph<String, String>.GraphEdge>();
-    triangleEdges.add(Graph<String, String>.new GraphEdge("acute", "right", "lower than"));
-    triangleEdges.add(Graph<String, String>.new GraphEdge("right", "obtuse", "lower than"));
-    triangleEdges.add(Graph<String, String>.new GraphEdge("obtuse", "acute", "greater than"));
+    triangleEdges.add(triangle.new GraphEdge("acute", "right", "lower than"));
+    triangleEdges.add(triangle.new GraphEdge("right", "obtuse", "lower than"));
+    triangleEdges.add(triangle.new GraphEdge("obtuse", "acute", "greater than"));
     
     Graph<String, String> pointy = new Graph<String, String>(triangleNodes, triangleEdges);
     assertEquals(pointy, triangle);
@@ -377,52 +377,41 @@ public class GraphTest {
     
     HashSet<Graph<String, String>.GraphEdge> sleepy;
     sleepy = new HashSet<Graph<String, String>.GraphEdge>();
-    sleepy.add(Graph<String, String>.new GraphEdge("routine", "routine", "sleep"));
+    sleepy.add(childParent.new GraphEdge("routine", "routine", "sleep"));
 
     Graph<String, String> cycle = new Graph<String, String>(daily, sleepy);
     assertEquals(cycle, childParent);
   }
 
 
-  Graph<String, String> pic = new Graph<String, String>();
-  pic.addNode("alaska");
-  pic.addNode("washington");
-  pic.addNode("florida");
 
-  Graph<String, String>.GraphEdge edge1;
-  edge1 = Graph<String, String>.new GraphEdge("alaska", "washington", "colder than");
 
-  Graph<String, String>.GraphEdge edge2;
-  edge2 = Graph<String, String>.new GraphEdge("florida", "florida", "Donald Trump");
-
-  Graph<String, String>.GraphEdge edge3;
-  edge3 = Graph<String, String>.new GraphEdge("alaska", "washington", "less inflation than");
-
-  Graph<String, String>.GraphEdge edge4;
-  edge4 = Graph<String, String>.new GraphEdge("florida", "florida", "Donald Trump");
-
-  Graph<String, String>.GraphEdge edge5;
-  edge5 = Graph<String, String>.new GraphEdge("alaska", "washington", "colder than");
-
-  Graph<String, String>.GraphEdge edge6;
-  edge6 = Graph<String, String>.new GraphEdge("florida", "florida", "Ron DeSantis");
-
-  Graph<String, String>.GraphEdge edge7;
-  edge7 = Graph<String, String>.new GraphEdge("washington", "florida", "colder than");
-
-  Graph<String, String>.GraphEdge edge8;
-  edge8 = Graph<String, String>.new GraphEdge("washington", "alaska", "less inflation than");
-
+  /**
+   * Tests correctness of GraphEdge.getParent(), GraphEdge.getChild(),
+   * and GraphEdge.getLabel()
+   */
   @Test
   public void testEdgeGetters() {
+    Graph<String, String> pic = new Graph<String, String>();
+    pic.addNode("alaska");
+    pic.addNode("washington");
+    pic.addNode("florida");
+
+    Graph<String, String>.GraphEdge edge1;
+    edge1 = pic.new GraphEdge("alaska", "washington", "colder than");
+
+    Graph<String, String>.GraphEdge edge2;
+    edge2 = pic.new GraphEdge("florida", "florida", "Donald Trump");
+    
+    
     /////////////////
     // getParent() //
     /////////////////
 
     // Test normal edge
-    assertEquals(edge1.parent, "alaska");
+    assertEquals(edge1.getParent(), "alaska");
     // Test special edge
-    assertEquals(edge2.parent, "florida");
+    assertEquals(edge2.getParent(), "florida");
 	
 
     ////////////////
@@ -430,9 +419,9 @@ public class GraphTest {
     ////////////////
 
     // Test normal edge
-    assertEquals(edge1.child, "washington");
+    assertEquals(edge1.getChild(), "washington");
     // Test special edge
-    assertEquals(edge2.child, "florida");
+    assertEquals(edge2.getChild(), "florida");
 
     
     ////////////////
@@ -440,14 +429,47 @@ public class GraphTest {
     ////////////////
     
     // Test normal edge
-    assertEquals(edge1.label, "colder than");
+    assertEquals(edge1.getLabel(), "colder than");
     // Test special edge
-    assertEquals(edge2.label, "Donald Trump");
+    assertEquals(edge2.getLabel(), "Donald Trump");
   }
 
 
+  /**
+   * Tests correctness of GraphEdge.equals(Object) and GraphEdge.hashCode()
+   */
   @Test
   public void testEdgeEqualsAndHash() {
+  Graph<String, String> pic = new Graph<String, String>();
+  pic.addNode("alaska");
+  pic.addNode("washington");
+  pic.addNode("florida");
+
+  Graph<String, String>.GraphEdge edge1;
+  edge1 = pic.new GraphEdge("alaska", "washington", "colder than");
+
+  Graph<String, String>.GraphEdge edge2;
+  edge2 = pic.new GraphEdge("florida", "florida", "Donald Trump");
+
+  Graph<String, String>.GraphEdge edge3;
+  edge3 = pic.new GraphEdge("alaska", "washington", "less inflation than");
+
+  Graph<String, String>.GraphEdge edge4;
+  edge4 = pic.new GraphEdge("florida", "florida", "Donald Trump");
+
+  Graph<String, String>.GraphEdge edge5;
+  edge5 = pic.new GraphEdge("alaska", "washington", "colder than");
+
+  Graph<String, String>.GraphEdge edge6;
+  edge6 = pic.new GraphEdge("florida", "florida", "Ron DeSantis");
+
+  Graph<String, String>.GraphEdge edge7;
+  edge7 = pic.new GraphEdge("washington", "florida", "colder than");
+
+  Graph<String, String>.GraphEdge edge8;
+  edge8 = pic.new GraphEdge("washington", "alaska", "less inflation than");
+  
+  
   ////////////////////
   // equals(Object) //
   ////////////////////
@@ -483,13 +505,13 @@ public class GraphTest {
   int hash3 = edge3.hashCode(), hash4 = edge4.hashCode();
   int hash5 = edge5.hashCode(), hash6 = edge6.hashCode();
   int hash7 = edge7.hashCode(), hash8 = edge8.hashCode();
-  assertEquals(edge1.hashCode, hash1);
-  assertEquals(edge2.hashCode, hash2);
-  assertEquals(edge3.hashCode, hash3);
-  assertEquals(edge4.hashCode, hash4);
-  assertEquals(edge5.hashCode, hash5);
-  assertEquals(edge6.hashCode, hash6);
-  assertEquals(edge7.hashCode, hash7);
-  assertEquals(edge8.hashCode, hash8);
+  assertEquals(edge1.hashCode(), hash1);
+  assertEquals(edge2.hashCode(), hash2);
+  assertEquals(edge3.hashCode(), hash3);
+  assertEquals(edge4.hashCode(), hash4);
+  assertEquals(edge5.hashCode(), hash5);
+  assertEquals(edge6.hashCode(), hash6);
+  assertEquals(edge7.hashCode(), hash7);
+  assertEquals(edge8.hashCode(), hash8);
   }
 }
