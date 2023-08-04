@@ -23,12 +23,12 @@ import java.util.List;
 public class Path<T> implements Iterable<Path<T>.Segment> {
 
     // AF(this) =
-    //      first point in the path => start
+    //      first T value in the path => start
     //      each "step" along the path between T values => elements of list path, where
     //          path.get(0) is the first step from the start T value to an intermediate T value, and
     //          path.get(path.size() - 1) is the final step from an intermediate T value to the end
     //      total cost along the path => cost
-    //      the destination point in this path, opposite the start T value => getEnd()
+    //      the destination T value in this path, opposite the start T value => getEnd()
 
     // Rep Invariant:
     //      cost >= 0 &&
@@ -43,20 +43,20 @@ public class Path<T> implements Iterable<Path<T>.Segment> {
     private double cost;
 
     /**
-     * The point at the beginning of this path.
+     * The T value at the beginning of this path.
      */
     private T start;
 
     /**
-     * The ordered sequence of segments representing a path between points.
+     * The ordered sequence of segments representing a path between T values.
      */
     private List<Segment> path;
 
     /**
-     * Creates a new, empty path containing a start point. Essentially this represents a path
+     * Creates a new, empty path containing a start T value. Essentially this represents a path
      * from the start T value to itself with a total cost of "0".
      *
-     * @param start The starting point of the path.
+     * @param start The starting T value of the path.
      */
     public Path(T start) {
         this.start = start;
@@ -98,14 +98,14 @@ public class Path<T> implements Iterable<Path<T>.Segment> {
     }
 
     /**
-     * @return The point at the beginning of this path.
+     * @return The T value at the beginning of this path.
      */
     public T getStart() {
         return start;
     }
 
     /**
-     * @return The point at the end of this path, which may be the start T value if this path
+     * @return The T value at the end of this path, which may be the start T value if this path
      * contains no segments (i.e. this path is from the start T value to itself).
      */
     public T getEnd() {
@@ -118,7 +118,7 @@ public class Path<T> implements Iterable<Path<T>.Segment> {
     /**
      * @return An iterator of the segments in this path, in order, beginning from the starting
      * T value and ending at the end T value. In the case that this path represents a path between
-     * the start point and itself, this iterator contains no elements. This iterator does not
+     * the start T value and itself, this iterator contains no elements. This iterator does not
      * support the optional Iterator#remove() operation and will throw an
      * UnsupportedOperationException if Iterator#remove() is called.
      */
@@ -163,7 +163,7 @@ public class Path<T> implements Iterable<Path<T>.Segment> {
     /**
      * Checks this path for equality with another object. Two paths are equal if and only if
      * they contain exactly the same sequence of segments in the same order. In the case that
-     * both paths are empty, they are only equal if their starting point is equal.
+     * both paths are empty, they are only equal if their starting T value is equal.
      *
      * @param obj The object to compare with {@code this}.
      * @return {@literal true} if and only if {@code obj} is equal to {@code this}.
@@ -250,7 +250,7 @@ public class Path<T> implements Iterable<Path<T>.Segment> {
          */
         private Segment(T start, T end, double cost) {
             if(start == null || end == null) {
-                throw new NullPointerException("Segments cannot have null points.");
+                throw new NullPointerException("Segments cannot have null T values.");
             }
             if(!Double.isFinite(cost)) {
                 throw new IllegalArgumentException("Segment cost may not be NaN or infinite.");
@@ -264,7 +264,7 @@ public class Path<T> implements Iterable<Path<T>.Segment> {
         }
 
         /**
-         * @return The beginning point of this segment.
+         * @return The beginning T value of this segment.
          */
         public T getStart() {
             // Generic type T is not immutable. Must wrap it.
@@ -272,7 +272,7 @@ public class Path<T> implements Iterable<Path<T>.Segment> {
         }
 
         /**
-         * @return The ending point of this segment.
+         * @return The ending T value of this segment.
          */
         public T getEnd() {
 	    // Generic type T is not immutable. Must wrap it.

@@ -2,52 +2,47 @@ Briefly list any changes you made to your graph class during hw-pathfinder, and 
 
 
 
-ListChildren:
-It used to return a list of Strings, where each entry was formatted as childNodeLabel(edgeLabel).
-Unfortunately, when making the change to generic types, I couldn't find a way to
-return information containing both the child label and the edge label in a list.
-Therefore, I chose to instead return a map that maps each outgoing edge label to its child label.
-
-
-
 ListNodes and ListChildren:
 Both methods returned their lists in sorted alphabetical order
 Since I was no longer just using strings, I had to do away with the sorting.
 
 
 
+Representation:
+With Mr. Pardeshi's approval of making major changes to my implementation, I removed my node
+inner class completely and made the edge class a public inner class. This was to make
+the code cleaner, but to also allow me to return a list of edges in ListChildren.
+As I removed the node class, my collection of nodes is now just a set of node labels instead
+of a map of node labels -> nodes.
+
+
+
+AddEdge and RemoveEdge:
+Since the client can now work with actual edge objects, I overloaded AddEdge and RemoveEdge
+to also work with a GraphEdge object as a parameter.
+
+
+
 Constructor:
-For my non-empty constructor, I used a List<String[]> parameter to represent edges.
-This worked because node/edge labels were both represented by Strings.
-The jump to generic types resulted in two different types repersenting
-node/edge labels, so I could no longer use arrays.
-I changed the spec to require three lists alongside the collection of nodes,
-with each entry in each list representing an edge.
+My non-empty constructor now takes a collection of actual edges. I could no longer
+have a list of 3-element arrays because two of the elements were node labels (T1)
+while one of them was an edge label (T2).
 
 
 
 Script Test Driver:
 I modified the test driver so that all instances of a Graph object are Graph<String, String>.
 Since I could no longer sort my graph's nodes and edges, I instead sorted them in the driver.
-ListChildren now returns a map, so I had to rewrite the test method to deal with a map.
+ListChildren now returns a list of GraphEdges, so I had to heavily rewrite the test.
 
 
 
 JUnit Tests:
 I had to modify them to work with the generic typing, so I created instances of Graph<String, String>.
 I also modified the constructor tests so it could work with its new parameters.
+I added JUnit tests for GraphEdge methods as well as for the overloaded AddEdge and RemoveEdge methods.
 
 
 
-=== OTHER ===
-I noticed a mistake I had initially made in my graph class. Nodes used observational equality
-instead of reference equality, which meant that two edges could be considered equal if
-the nodes the pointed to had the same label but were different objects.
-
-Although this would probably not raise a problem in practice, since two nodes can't have the
-same label, I wanted to make sure, so I changed the equals method for the edge inner class,
-removed the overridden method for the node inner class, and completely redid the equals
-method for the main graph class. I also added more to my checkrep function.
-
-Aside from that, I also replaced any put methods with putIfAbsent to prevent the possibility
-of replacing a node with a node of the same label, which would have caused problems.
+Other:
+I also slightly tweaked the wording of some of the method specifications and parameters.

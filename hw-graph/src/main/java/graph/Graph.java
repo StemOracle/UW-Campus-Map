@@ -9,10 +9,9 @@ import java.util.*;
  * if they're arranged identically (same parent and child).
  */
 public class Graph <T1, T2> {
-  // AF: this.nodes -> map of labeled nodes with keys as labels
-  // and entries as nodes
-  // this.edges -> set of labeled edges that point from edge.parent
-  // to edge.child
+  // AF: this.nodes -> collection of labeled nodes
+  // this.edges -> collection of labeled edges
+  // pointing from a parent node to a child node
   //
   // RI: this != null, this.nodes != null, this.edges != null,
   // no entries in this.nodes and this.edges are null,
@@ -21,7 +20,7 @@ public class Graph <T1, T2> {
 
   private Set<T1> nodes;
   private Set<GraphEdge> edges;
-  private static final boolean DEBUG = true;
+  private static final boolean DEBUG = false;
 
   /**
    * Creates a graph object with no nodes
@@ -37,14 +36,10 @@ public class Graph <T1, T2> {
    * Creates a graph object with nodes and edges from the provided collections
    * For each element of parents, children, and edgelabels, edge is added that
    * points from parent entry to child entry and labeled as edgeLabel
-   * @param nodes collection of node labels of type T1
-   * @param parents List of node labels with type T1, will serve as parent nodes
-   * @param children List of node labels with type T1, will serve as child nodes
-   * @param edgeLabels List of edge labels with type T2, will serve as edges that
-   * point from parents to children
-   * @throws IllegalArgumentException if any nulls found, if parents, children,
-   * and edgeLabels are different sizes, and if labels in parents or children
-   * are not found in nodes collection
+   * @param nodes collection of nodes labeled with type T1
+   * @param edges Collection of edges labeled with type T2
+   * @throws IllegalArgumentException if an edge parent/child not found in nodes
+   * @throws NullPointerException if any nulls found
    */
   public Graph(Collection<T1> nodes, Collection<GraphEdge> edges) {
     this();
@@ -321,11 +316,11 @@ public class Graph <T1, T2> {
      * @param parent parent node; edge points away from
      * @param child child node; edge points toward
      * @param label label of edge
-     * @throws IllegalArgumentException if parent, child, or label are null
+     * @throws NullPointerException if parent, child, or label are null
      */
     public GraphEdge(T1 parent, T1 child, T2 label) {
       if(parent == null || child == null || label == null) {
-        throw new IllegalArgumentException();
+        throw new NullPointerException();
       }
       this.parent = parent;
       this.child = child;
