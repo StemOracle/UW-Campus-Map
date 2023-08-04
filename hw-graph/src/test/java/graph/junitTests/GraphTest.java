@@ -302,16 +302,17 @@ public class GraphTest {
     jewelHeist.addEdge("loot", "getaway", "run");
     assertTrue(bankRobbery.equals(jewelHeist));
 
+
     //////////////
     // hashCode //
     //////////////
 
-    // Equal object? Equal hash
+    // Equal graph? Equal hash!
     assertTrue(scarecrow.hashCode() == gnome.hashCode());
     assertTrue(computer.hashCode() == calculator.hashCode());
     assertTrue(bankRobbery.hashCode() == jewelHeist.hashCode());
 
-    // Should return consistent values
+    // Hash values better be consistent!
     int scarecrowHash = scarecrow.hashCode();
     assertEquals(scarecrow.hashCode(), scarecrowHash);
     int computerHash = computer.hashCode();
@@ -323,13 +324,12 @@ public class GraphTest {
   /**
    * Tests the constructor
    */
+  @Test
   public void testConstructor() {
     // Simple empty test
     Graph<String, String> empty1 = new Graph<String, String>();
-    Graph<String, String> empty2 = new Graph<String, String>(new HashSet<String>(),
-		                                             new ArrayList<String>(),
-		                                             new ArrayList<String>(),
-							     new ArrayList<String>());
+    Graph<String, String> empty2 = new Graph<String, String>
+            (new HashSet<String>(), new HashSet<Graph<String, String>.GraphEdge>());
     assertEquals(empty2, empty1);
 
 
@@ -338,34 +338,33 @@ public class GraphTest {
     national.addNode("roman");
     national.addNode("canadian");
     national.addNode("american");
+
     HashSet<String> setty = new HashSet<String>();
     setty.add("roman"); setty.add("canadian"); setty.add("american");
-    Graph<String, String> person = new Graph<String, String>(setty,
-		                                             new ArrayList<String>(),
-		                                             new ArrayList<String>(),
-							     new ArrayList<String>());
+    
+    Graph<String, String> person = new Graph<String, String>
+            (setty, new HashSet<Graph<String, String>.GraphEdge>());
     assertEquals(person, national);
 
 
-    // Complex test
+    // Complex test with edges
     Graph<String, String> triangle = new Graph<String, String>();
     triangle.addNode("acute"); triangle.addNode("right"); triangle.addNode("obtuse");
     triangle.addEdge("acute", "right", "lower than");
     triangle.addEdge("right", "obtuse", "lower than");
     triangle.addEdge("obtuse", "acute", "greater than");
 
-    HashSet<String> angles = new HashSet<String>();
+    HashSet<String> triangleNodes = new HashSet<String>();
     angles.add("acute"); angles.add("right"); angles.add("obtuse");
 
-    List<String> parents = new ArrayList<String>();
-    List<String> children = new ArrayList<String>();
-    List<String> edges = new ArrayList<String>();
-    parents.add("acute"); parents.add("right"); parents.add("obtuse");
-    children.add("right"); children.add("obtuse"); children.add("acute");
-    edges.add("lower than"); edges.add("lower than"); edges.add("greater than");
+    HashSet<Graph<String, String>.GraphEdge> triangleEdges;
+    triangleEdges = new HashSet<Graph<String, String>.GraphEdge>();
+    triangleEdges.add(Graph<String, String>.new GraphEdge("acute", "right", "lower than"));
+    triangleEdges.add(Graph<String, String>.new GraphEdge("right", "obtuse", "lower than"));
+    triangleEdges.add(Graph<String, String>.new GraphEdge("obtuse", "acute", "greater than"));
     
-    Graph<String, String> anglez = new Graph<String, String>(angles, parents, children, edges);
-    assertEquals(triangle, anglez);
+    Graph<String, String> pointy = new Graph<String, String>(triangleNodes, triangleEdges);
+    assertEquals(pointy, triangle);
 
 
     // Special test
@@ -373,13 +372,124 @@ public class GraphTest {
     childParent.addNode("routine");
     childParent.addEdge("routine", "routine", "sleep");
 
-    HashSet<String> routine = new HashSet<String>();
-    routine.add("routine");
+    HashSet<String> daily = new HashSet<String>();
+    daily.add("routine");
+    
+    HashSet<Graph<String, String>.GraphEdge> sleepy;
+    sleepy = new HashSet<Graph<String, String>.GraphEdge>();
+    sleepy.add(Graph<String, String>.new GraphEdge("routine", "routine", "sleep"));
 
-    List<String> moms = new ArrayList<String>();
-    List<String> kids = new ArrayList<String>();
-    List<String> rels = new ArrayList<String>();
-    moms.add("routine"); kids.add("routine"); rels.add("sleep");
-    Graph<String, String> cycle = new Graph<String, String>(routine, moms, kids, rels);
+    Graph<String, String> cycle = new Graph<String, String>(daily, sleepy);
+    assertEquals(cycle, childParent);
+  }
+
+
+  Graph<String, String> pic = new Graph<String, String>();
+  pic.addNode("alaska");
+  pic.addNode("washington");
+  pic.addNode("florida");
+
+  Graph<String, String>.GraphEdge edge1;
+  edge1 = Graph<String, String>.new GraphEdge("alaska", "washington", "colder than");
+
+  Graph<String, String>.GraphEdge edge2;
+  edge2 = Graph<String, String>.new GraphEdge("florida", "florida", "Donald Trump");
+
+  Graph<String, String>.GraphEdge edge3;
+  edge3 = Graph<String, String>.new GraphEdge("alaska", "washington", "less inflation than");
+
+  Graph<String, String>.GraphEdge edge4;
+  edge4 = Graph<String, String>.new GraphEdge("florida", "florida", "Donald Trump");
+
+  Graph<String, String>.GraphEdge edge5;
+  edge5 = Graph<String, String>.new GraphEdge("alaska", "washington", "colder than");
+
+  Graph<String, String>.GraphEdge edge6;
+  edge6 = Graph<String, String>.new GraphEdge("florida", "florida", "Ron DeSantis");
+
+  Graph<String, String>.GraphEdge edge7;
+  edge7 = Graph<String, String>.new GraphEdge("washington", "florida", "colder than");
+
+  Graph<String, String>.GraphEdge edge8;
+  edge8 = Graph<String, String>.new GraphEdge("washington", "alaska", "less inflation than");
+
+  @Test
+  public void testEdgeGetters() {
+    /////////////////
+    // getParent() //
+    /////////////////
+
+    // Test normal edge
+    assertEquals(edge1.parent, "alaska");
+    // Test special edge
+    assertEquals(edge2.parent, "florida");
+	
+
+    ////////////////
+    // getChild() //
+    ////////////////
+
+    // Test normal edge
+    assertEquals(edge1.child, "washington");
+    // Test special edge
+    assertEquals(edge2.child, "florida");
+
+    
+    ////////////////
+    // getLabel() //
+    ////////////////
+    
+    // Test normal edge
+    assertEquals(edge1.label, "colder than");
+    // Test special edge
+    assertEquals(edge2.label, "Donald Trump");
+  }
+
+
+  @Test
+  public void testEdgeEqualsAndHash() {
+  ////////////////////
+  // equals(Object) //
+  ////////////////////
+
+  // Test normal edges false
+  assertFalse(edge1.equals(edge3));
+  // Test normal edges true
+  assertTrue(edge1.equals(edge5));
+  // Test special edges false
+  assertFalse(edge4.equals(edge6));
+  // Test special edges true
+  assertTrue(edge2.equals(edge4));
+  // Reference same normal edge
+  assertTrue(edge3.equals(edge3));
+  // Reference same special edge
+  assertTrue(edge4.equals(edge4));
+  // Same label but different parents/children
+  assertFalse(edge5.equals(edge7));
+  // Flip flop the parents
+  assertFalse(edge3.equals(edge8));
+
+
+  ////////////////
+  // hashCode() //
+  ////////////////
+
+  // Equal edge? Equal hash!
+  assertEquals(edge1.hashCode(), edge5.hashCode());
+  assertEquals(edge2.hashCode(), edge4.hashCode());
+
+  // Hash values better be consistent!
+  int hash1 = edge1.hashCode(), hash2 = edge2.hashCode();
+  int hash3 = edge3.hashCode(), hash4 = edge4.hashCode();
+  int hash5 = edge5.hashCode(), hash6 = edge6.hashCode();
+  int hash7 = edge7.hashCode(), hash8 = edge8.hashCode();
+  assertEquals(edge1.hashCode, hash1);
+  assertEquals(edge2.hashCode, hash2);
+  assertEquals(edge3.hashCode, hash3);
+  assertEquals(edge4.hashCode, hash4);
+  assertEquals(edge5.hashCode, hash5);
+  assertEquals(edge6.hashCode, hash6);
+  assertEquals(edge7.hashCode, hash7);
+  assertEquals(edge8.hashCode, hash8);
   }
 }

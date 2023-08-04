@@ -19,15 +19,15 @@ public class Graph <T1, T2> {
   // all edges most point from and to nodes contained in this.nodes
   // For each entry of this.nodes, string key must be equal to corresponding node label
 
-  private HashMap<T1, GraphNode> nodes;
+  private Set<T1> nodes;
   private Set<GraphEdge> edges;
-  private static final boolean DEBUG = false;
+  private static final boolean DEBUG = true;
 
   /**
    * Creates a graph object with no nodes
    */
   public Graph() {
-    this.nodes = new HashMap<T1, GraphNode>();
+    this.nodes = new HashSet<T1>();
     this.edges = new HashSet<GraphEdge>();
     this.checkRep();
   }
@@ -46,43 +46,32 @@ public class Graph <T1, T2> {
    * and edgeLabels are different sizes, and if labels in parents or children
    * are not found in nodes collection
    */
-  public Graph(Collection<T1> nodes, List<T1> parents,
-	       List<T1> children, List<T2> edgeLabels) {
+  public Graph(Collection<T1> nodes, Collection<GraphEdge> edges) {
     this();
-    if(nodes == null || parents == null || children == null || edgeLabels == null) {
-      throw new IllegalArgumentException("Error: Null collection found");
-    } else if(parents.size() != children.size() || children.size() != edgeLabels.size()) {
-      throw new IllegalArgumentException
-	        ("Error: parents, children, and edgeLabels are not all the same size");
+    if(nodes == null || edges == null) {
+      throw new NullPointerException();
     }
 
-    // Inv: All nodeLabels up to current are turned into nodes, put into this.nodes, and non-null
-    for(T1 nodeLabel : nodes) {
-      if(nodeLabel == null) {
-        throw new IllegalArgumentException("Error: Null node label found");
+    // Inv: All nodes up to current are non-null and added to this.nodes
+    for(T1 node : nodes) {
+      if(node == null) {
+        throw new NullPointerException();
       }
-      this.nodes.putIfAbsent(nodeLabel, new GraphNode(nodeLabel));
+      this.nodes.add(node);
     }
-
-    int i = 0;
-    // Inv: Up to the ith element, all elements of parents, children, and edgeLabels are non-null
-    // parents and children exist in this.nodes
-    // Elements up to i converted to an edge and added to this.edges
-    while(i < parents.size()) {
-      T1 parent = parents.get(i);
-      T1 child = children.get(i);
-      T2 edgeLabel = edgeLabels.get(i);
-      if(parent == null || child == null || edgeLabel == null) {
-        throw new IllegalArgumentException
-		  ("Error: Null parent, child, or edge label found");
-      } else if(!(this.nodes.keySet().contains(parent)
-		  && this.nodes.keySet().contains(child))) {
+    
+    // Inv: All edges up to current are non-null, have non-null parents,
+    // have non-null children, have non-null labels, and are added to this.edges
+    for(GraphEdge edge : edges) {
+      T1 parent = edge.parent, child = edge.child;
+      T2 label = edge.label;
+      if(edge == null || parent == null || child == null || label == null) {
+        throw new NullPointerException();
+      } else if(!this.nodes.contains(parent) || !this.nodes.contains(child)) {
 	throw new IllegalArgumentException
-		  ("Error: Parent or child not found in given node collection");
+		  ("Parent or child of edge not found in nodes");
       } else {
-        this.edges.add(new GraphEdge(this.nodes.get(parent),
-		                     this.nodes.get(child), edgeLabel));
-	i++;
+        this.edges.add(edge);
       }
     }
 
@@ -92,16 +81,16 @@ public class Graph <T1, T2> {
 
   /**
    * Adds labeled node to this
-   * @param label label of new node
+   * @param node label of new node
    * @spec.requires labeled node is non-null and can't already exist,
    * no behavior otherwise
    * @spec.modifies this
    * @spec.effects adds node to this
    */
-  public void addNode(T1 label) {
+  public void addNode(T1 node) {
     this.checkRep();
-    if(label != null) {
-      this.nodes.putIfAbsent(label, new GraphNode(label));
+    if(node != null) {
+      this.nodes.add(node);
     }
     this.checkRep();
   }
@@ -109,68 +98,78 @@ public class Graph <T1, T2> {
  
   /**
    * Removes labeled node from this
-   * @param label of node to remove
+   * @param node label of node to remove
    * @spec.requires labeled node must exist, no behavior otherwise
    * @spec.modifies this
    * @spec.effects removes node from this, all incoming/outgoing edges removed too
    */
-  public void removeNode(T1 label) {
+  public void removeNode(T1 node) {
     this.checkRep();
-    if(label != null && this.nodes.keySet().contains(label)) {
-      GraphNode toRemove = this.nodes.get(label);
+    if(node != null) {
       // Inv: All edges up to current don't point to or away from labeled node
       for(GraphEdge edge : this.edges) {
-	// Reference equality is stronger here and still correct
-        if(edge.parent == toRemove || edge.child == toRemove) {
+        if(edge.parent.equals(node) || edge.child.equals(node)) {
           this.edges.remove(edge);
         }
       }
-      this.nodes.remove(label);
+      this.nodes.remove(node);
     }
     this.checkRep();
   }
 
 
   /**
-   * Adds edge labeled edgeLabel, points from parentNode to childNode
-   * @param parentNode new edge points from parentNode
-   * @param childNode new edge points to childNode
-   * @param edgeLabel label of new edge
-   * @spec.requires labeled nodes must exist,
+   * Adds edge labeled edge, points from parent to child
+   * @param parent new edge points from parent
+   * @param child new edge points to child
+   * @param label label of new edge
+   * @spec.requires parent and child nodes must exist,
    * identical edge can't already exist, no behavior otherwise
    * @spec.modifies this
-   * @spec.effects adds edge to this, pointing from parentNode to childNode
+   * @spec.effects adds edge to this, pointing from parent to child
    */
-  public void addEdge(T1 parentNode, T1 childNode, T2 edgeLabel) {
+  public void addEdge(T1 parent, T1 child, T2 label) {
     this.checkRep();
-    if((this.nodes.keySet()).contains(parentNode)
-       && (this.nodes.keySet()).contains(childNode)
-       && parentNode != null && childNode != null && edgeLabel != null) {
+    if(this.nodes.contains(parent) && this.nodes.contains(child)
+       && parent != null && child != null && label != null) {
 
-      this.edges.add(new GraphEdge(this.nodes.get(parentNode),
-		                   this.nodes.get(childNode), edgeLabel));
+      this.edges.add(new GraphEdge(parent, child, label));
     }
     this.checkRep();
   }
 
 
   /**
-   * Removes labeled edge that points from parentNode to childNode from this
-   * @param parentNode edge to remove points from parentNode
-   * @param childNode edge to remove points to childNode
-   * @param edgeLabel label of edge to remove
-   * @spec.requires labeled nodes must exist, labeled edge must exist,
-   * and all must be non-null, no behavior otherwise
+   * Adds edge labeled edge to this
+   * @param edge edge to add
+   * @spec.requires parent and child nodes must exist,
+   * identical edge can't already exist, no behavior otherwise
+   * @spec.modifies this
+   * @spec.effects adds labeled edge to this, pointing from parent to child
+   */
+  public void addEdge(Graph<T1, T2>.GraphEdge edge) {
+    this.checkRep();
+    if(edge != null) {
+      addEdge(edge.parent, edge.child, edge.label);
+    }
+  }
+
+
+  /**
+   * Removes labeled edge that points from parent to child from this
+   * @param parent edge to remove points from parentNode
+   * @param child edge to remove points to childNode
+   * @param label label of edge to remove
+   * @spec.requires parent and child nodes must exist, labeled edge must exist,
+   * all must be non-null, no behavior otherwise
    * @spec.modifies this
    * @spec.effects removes labeled edge from this,
-   * formerly pointed from parentNode to childNode and labeled edgeLabel
+   * that points from parent to child and labeled label
    */
-  public void removeEdge(T1 parentNode, T1 childNode, T2 edgeLabel) {
-    if(parentNode != null && childNode != null && edgeLabel != null) {
-      this.checkRep();
-      GraphNode parent = this.nodes.get(parentNode);
-      GraphNode child = this.nodes.get(childNode);
-      GraphEdge edgeCopy = new GraphEdge(parent, child, edgeLabel);
+  public void removeEdge(T1 parent, T1 child, T2 label) {
+    this.checkRep();
+    if(parent != null && child != null && label != null) {
+      GraphEdge edgeCopy = new GraphEdge(parent, child, label);
       this.edges.remove(edgeCopy);
       this.checkRep();
     }
@@ -178,31 +177,47 @@ public class Graph <T1, T2> {
 
 
   /**
-   * Maps labels of outgoing edges to labels of corresponding child nodes
-   * @param label label of parent node
+   * Removes labeled edge from this
+   * @param edge edge to remove
+   * @spec.requires parent and child nodes must exist, labeled edge must exist,
+   * all must be non-null, no behavior otherwise
+   * @spec.modifies this
+   * @spec.effects removes labeled edge from this,
+   * that points from parent to child and labeled label
+   */
+  public void removeEdge(Graph<T1, T2>.GraphEdge edge) {
+    this.checkRep();
+    if(edge != null) {
+      removeEdge(edge.parent, edge.child, edge.label);
+    }
+  }
+
+
+  /**
+   * Lists all outgoing edges
+   * @param node label of parent node
    * @spec.requires labeled node be non-null and be exist in graph,
    * empty map returned otherwise
-   * @return Map of labeled node's outgoing edges as keys and corresponding
-   * child node labels as values
+   * @return List of all outgoing edges
    */
-  public Map<T2, T1> listChildren(T1 label) {
+  public List<GraphEdge> listChildren(T1 node) {
     this.checkRep();
-    Map<T2, T1> kids = new HashMap<T2, T1>();
-   if(label == null || !this.nodes.keySet().contains(label)) {
-     this.checkRep();
-     return kids;
-   }
+    List<GraphEdge> outgoing = new ArrayList<GraphEdge>();
+    if(node == null || !this.nodes.contains(node)) {
+      this.checkRep();
+      return outgoing;
+    }
 
     // Inv: If current edge points from labeled parent, add child(edge) to kids
     // All edges before current are contained in kids or don't point from labeled parent
     for(GraphEdge edge : this.edges) {
-      if((edge.parent.label).equals(label)) {
-	kids.putIfAbsent(edge.label, edge.child.label);
+      if(edge.parent.equals(node)) {
+	outgoing.add(edge);
       }
     }
 
     this.checkRep();
-    return kids;
+    return outgoing;
   }
 
 
@@ -213,7 +228,7 @@ public class Graph <T1, T2> {
   public List<T1> listNodes() {
     this.checkRep();
     List<T1> theNodes = new ArrayList<T1>();
-    theNodes.addAll(this.nodes.keySet());
+    theNodes.addAll(this.nodes);
     this.checkRep();
     return theNodes;
   }
@@ -228,43 +243,15 @@ public class Graph <T1, T2> {
   public boolean equals(Object o) {
     this.checkRep();
     // Checks for nulls!
-    if(!(o instanceof Graph<?, ?>)) {
+    if(this == o) {
+      return true;
+    } else if(!(o instanceof Graph<?, ?>)) {
+      // This branch also checks for nulls
       return false;
     }
     Graph<?, ?> casted = (Graph<?, ?>)o;
-
-    // Not nearly as simple to do, since we did away with solely checking for
-    // observational equality
-    
-    if(this.nodes.size() != casted.nodes.size()
-       || this.edges.size() != casted.edges.size()) {
-      return false;
-    } else if(!(this.nodes.keySet()).equals(casted.nodes.keySet())) {
-      return false;
-    }
-
-    List<GraphEdge> thisEdges = new ArrayList<GraphEdge>();
-    thisEdges.addAll(this.edges);
-    List<Graph<?, ?>.GraphEdge> oEdges = new ArrayList<Graph<?, ?>.GraphEdge>();
-    oEdges.addAll(casted.edges);
-
-    // Inv: All edges of this and casted up to current are observationally equal
-    int i = 0;
-    while(i < thisEdges.size()) {
-      GraphEdge ours = thisEdges.get(i);
-      Graph<?, ?>.GraphEdge theirs = oEdges.get(i);
-      if(!(ours.parent.label).equals(theirs.parent.label)
-	 || !(ours.child.label).equals(theirs.child.label)
-	 || !(ours.label.equals(theirs.label))) {
-
-	this.checkRep();
-        return false;
-      }
-      i++;
-    }
-    
     this.checkRep();
-    return true;
+    return (this.nodes).equals(casted.nodes) && (this.edges).equals(casted.edges);
   }
 
 
@@ -277,9 +264,8 @@ public class Graph <T1, T2> {
     this.checkRep();
     int hash = 0;
 
-    for(T1 nodeLabel : this.nodes.keySet()) {
-      // Same value as corresponding node's hash
-      hash += nodeLabel.hashCode();
+    for(T1 node : this.nodes) {
+      hash += node.hashCode();
     }
 
     for(GraphEdge edge : this.edges) {
@@ -301,75 +287,16 @@ public class Graph <T1, T2> {
     assert this.edges != null;
     if(DEBUG) {
       // Inv: All nodes up to current are non-null
-      // and entry labels match graph labels
-      for(T1 nodeLabel : this.nodes.keySet()) {
-        assert (nodeLabel != null);
-	assert (this.nodes.get(nodeLabel) != null);
-	assert (nodeLabel.equals((this.nodes.get(nodeLabel)).label));
+      for(T1 node : this.nodes) {
+        assert (node != null);
       }
       // Inv: All edges up to current are non-null
       // and point to nodes contained in this.nodes
       for(GraphEdge edge : this.edges) {
 	assert (edge != null);
-	GraphNode parent = edge.parent;
-	GraphNode child = edge.child;
-        assert (this.nodes.keySet()).contains(parent.label);
-	assert (this.nodes.keySet()).contains(child.label);
-	// Observational equality is not enough. Edge must REFERENCE
-	// nodes that exist in the graph
-	assert (this.nodes.get(parent.label) == parent);
-	assert (this.nodes.get(child.label) == child);
+        assert this.nodes.contains(edge.parent);
+	assert this.nodes.contains(edge.child);
       }
-    }
-  }
-
-
-
-
-  /**
-   * Represents an immutable node of a labeled graph.
-   * Labeled with generic type T1
-   */
-  private class GraphNode {
-    
-    // AF: this.label -> label of this node
-    // RI: this != null and this.label != null
-	  
-    private T1 label;
-
-
-    /**
-     * Creates a labeled node
-     * @param label chosen label of node
-     * @throws IllegalArgumentException if label == null
-     */
-    public GraphNode(T1 label) {
-      if(label == null) {
-        throw new IllegalArgumentException();
-      }
-      this.label = label;
-      this.checkRep();
-    }
-
-
-    /**
-     * Gives hash value of this
-     * @return hash value of this
-     */
-    @Override
-    public int hashCode() {
-      this.checkRep();
-      return this.label.hashCode();
-    }
-
-
-    /**
-     * Checks if the RI has been violated, successfuly completes if not
-     * @throws assertion error if RI has been violated
-     */
-    private void checkRep() {
-      assert this != null;
-      assert this.label != null;
     }
   }
 
@@ -380,15 +307,14 @@ public class Graph <T1, T2> {
    * Represents an immutable edge of a labeled graph.
    * Labeled with generic type T2
    */
-  private class GraphEdge {
+  public class GraphEdge {
 
     // AF: Edge points from this.parent to this.child and is Labeled this.label
     // RI: this != null, parent != null, child != null, label != null
 
-    private GraphNode parent;
-    private GraphNode child;
-    private T2 label;
-
+    private final T1 parent;
+    private final T1 child;
+    private final T2 label;
 
     /**
      * Creates a labeled edge
@@ -397,7 +323,7 @@ public class Graph <T1, T2> {
      * @param label label of edge
      * @throws IllegalArgumentException if parent, child, or label are null
      */
-    public GraphEdge(GraphNode parent, GraphNode child, T2 label) {
+    public GraphEdge(T1 parent, T1 child, T2 label) {
       if(parent == null || child == null || label == null) {
         throw new IllegalArgumentException();
       }
@@ -409,6 +335,36 @@ public class Graph <T1, T2> {
 
 
     /**
+     * Returns label of parent node
+     * @return label of parent node
+     */
+    public T1 getParent() {
+      this.checkRep();
+      return this.parent;
+    }
+
+
+    /**
+     * Returns Label of child node
+     * @return label of child node
+     */
+    public T1 getChild() {
+      this.checkRep();
+      return this.child;
+    }
+
+
+    /**
+     * Returns label of this edge
+     * @return label of this edge
+     */
+    public T2 getLabel() {
+      this.checkRep();
+      return this.label;
+    }
+
+
+    /**
      * Returns true iff o is a GraphEdge and has the same parent, child, and label
      * @param o object to check equality with
      * @return true iff o is a GraphEdge and has the same parent, child, and label
@@ -416,15 +372,17 @@ public class Graph <T1, T2> {
     @Override
     public boolean equals(Object o) {
       this.checkRep();
-      // Checks for nulls!
-      if(!(o instanceof Graph<?, ?>.GraphEdge)) {
+      if(this == o) {
+        return true;
+      } else if(!(o instanceof Graph<?, ?>.GraphEdge)) {
+	// This branch also checks for nulls
         return false;
       }
       Graph<?, ?>.GraphEdge casted = (Graph<?, ?>.GraphEdge)o;
       this.checkRep();
-      // They must REFERENCE same parents and children
-      return (this.parent) == casted.parent && this.child == casted.child
-	                                    && this.label.equals(casted.label);
+      return (this.parent).equals(casted.parent)
+	     && (this.child).equals(casted.child)
+	     && (this.label).equals(casted.label);
     }
 
 
@@ -435,13 +393,13 @@ public class Graph <T1, T2> {
     @Override
     public int hashCode() {
       this.checkRep();
-      return (this.parent.hashCode()) + (this.label.hashCode())
-	      + (this.label.hashCode());
+      return (this.parent.hashCode()) + (this.child.hashCode())
+	                              + (this.label.hashCode());
     }
 
   /**
    * Checks if the RI has been violated, successfuly completes if not
-   * @throws assertion error if RI has been violated
+   * @throws AssertionError if RI has been violated
    */
     private void checkRep() {
       assert this.parent != null;

@@ -190,11 +190,13 @@ public class GraphTestDriver {
 
     private void listChildren(String graphName, String parentName) {
         Graph<String, String> giraffe = graphs.get(graphName);
-        List<String> kids = new ArrayList<String>();
-	Map<String, String> kiddos = giraffe.listChildren(parentName);
+        List<Graph<String, String>.GraphEdge> edges;
+	edges = giraffe.listChildren(parentName);
+	
+	List<String> kids = new ArrayList<String>();
 
-        for(String key : kiddos.keySet()) {
-	  kids.add(kiddos.get(key) + "(" + key + ")");
+        for(Graph<String, String>.GraphEdge edge : edges) {
+	  kids.add(edge.child + "(" + edge.label + ")");
 	}
 
 	Collections.sort(kids);
