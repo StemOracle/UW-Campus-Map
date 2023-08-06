@@ -57,22 +57,17 @@ public class CampusMap implements ModelAPI {
         this.campus = new Graph<Point, Double>();
 	this.buildCords = new HashMap<String, CampusBuilding>();
 
-        // List of all campus buildings
-        List<CampusBuilding> buildings = CampusPathsParser.parseCampusBuildings("campus_buildings.csv");
-
 	// Inv: All CampusBuildings up to current are extracted for coordinates,
 	// which are added as nodes of this.compass.
-        for(CampusBuilding building : buildings) {
+        for(CampusBuilding building : CampusPathsParser.parseCampusBuildings("campus_buildings.csv")) {
            this.campus.addNode(new Point(building.getX(), building.getY()));
 	   this.buildCords.put(building.getShortName(), building);
         }
 
-        // List of all campus paths
-	List<CampusPath> paths = CampusPathsParser.parseCampusPaths("campus_paths.csv");
-
-	// Inv: All campus paths up to current coverted to edges and added to our graph/map.
+	// Inv: All campus paths up to current coverted to edges.
+	// Then added to our graph/map.
 	// If parent or child isn't in graph/map, add it in.
-	for(CampusPath path : paths) {
+	for(CampusPath path : CampusPathsParser.parseCampusPaths("campus_paths.csv")) {
 	    Point start = new Point(path.getX1(), path.getY1());
 	    Point end = new Point(path.getX2(), path.getY2());
 	    this.campus.addNode(start);
@@ -91,7 +86,8 @@ public class CampusMap implements ModelAPI {
     @Override
     public String longNameForShort(String shortName) {
 	if(!shortNameExists(shortName)) {
-	    throw new IllegalArgumentException("Short building name " + shortName + " not found.");
+	    throw new IllegalArgumentException
+		      ("Short building name " + shortName + " not found.");
 	}
         return (this.buildCords.get(shortName)).getLongName();
     }
@@ -112,10 +108,12 @@ public class CampusMap implements ModelAPI {
     @Override 
     public Path<Point> findShortestPath(String startShortName, String endShortName) {
 	if(startShortName == null || endShortName == null) {
-	    throw new IllegalArgumentException(startShortName + " or " + endShortName + " was null.");
+	    throw new IllegalArgumentException
+		      (startShortName + " or " + endShortName + " was null.");
 	} else if(!(this.buildCords.keySet()).contains(startShortName)
 		  || !(this.buildCords.keySet()).contains(endShortName)) {
-	    throw new IllegalArgumentException(startShortName + " or " + endShortName + " not found.");
+	    throw new IllegalArgumentException
+		      (startShortName + " or " + endShortName + " not found.");
 	} else {
 	    CampusBuilding start = this.buildCords.get(startShortName);
 	    CampusBuilding end = this.buildCords.get(endShortName);
