@@ -13,7 +13,6 @@ package pathfinder;
 
 import pathfinder.datastructures.*;
 import pathfinder.parser.*;
-// import pathfinder.Algorithm;
 import graph.Graph;
 
 import java.util.*;
