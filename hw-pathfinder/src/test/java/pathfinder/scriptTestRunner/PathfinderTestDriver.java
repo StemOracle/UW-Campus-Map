@@ -228,8 +228,7 @@ public class PathfinderTestDriver {
 	        output.println("unknown: " + destNode);
 	    }
 	} else {
-            Algorithm<String> pathFinder = new Algorithm<String>(giraffe);
-	    Path<String> journey = pathFinder.findShortestDistance(startNode, destNode);
+	    Path<String> journey = Algorithm.findShortestDistance(giraffe, startNode, destNode);
 	    output.println("path from " + startNode + " to " + destNode + ":");
 	    if(journey == null) {
 	        output.println("no path found");

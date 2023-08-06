@@ -28,7 +28,7 @@ public class CampusMap implements ModelAPI {
     // AF: buildCords -> coordinate position of each building.
     // campus -> graph with building positions as nodes and distances as edges.
    
-    // RI: No nulls anywhere, except the return of findShortestDistance.
+    // RI: No nulls anywhere, except potentially the return of findShortestPath.
     // Keys of buildCords must equal short name of corresponding CampusBuilding.
    
     /**
@@ -50,7 +50,9 @@ public class CampusMap implements ModelAPI {
 
 
     /**
-     *
+     * Creates new instance of a CampusMap!
+     * @throws IllegalArgumentException if any provided path's parent or child
+     * doesn't exist in the campus map.
      *
      */
     public CampusMap() {
@@ -60,6 +62,9 @@ public class CampusMap implements ModelAPI {
         // Set of all campus buildings
         List<CampusBuilding> buildings = (CampusPathsParser.parseCampusBuildings("campus_buildings.csv"));
 	Map<String, String> shortToLong = new HashMap<String, String>();
+
+	// Inv: All CampusBuildings up to current are extracted for coordinates,
+	// which are added as nodes of this.compass.
         for(CampusBuilding building : buildings) {
            this.campus.addNode(new Point(building.getX(), building.getY()));
 	   this.buildCords.put(building.getShortName(), building);
@@ -69,9 +74,12 @@ public class CampusMap implements ModelAPI {
         Set<CampusPath> paths = new HashSet<CampusPath>();
 	paths.addAll(CampusPathsParser.parseCampusPaths("campus_paths.csv"));
 
+	// Inv: All CampusPaths are matched with their Point nodes,
+	// then added as edges to this.compass.
 	for(CampusPath path : paths) {
 	    Point start = null;
 	    Point end = null;
+	    // No invarient here just looking for start and end buildings of current CampusPath.
 	    for(CampusBuilding building : buildings) {
 		if((path.getX1() == building.getX()) && (path.getY1() == building.getY())) {
 		    start = new Point(path.getX1(), path.getY1());
@@ -108,6 +116,9 @@ public class CampusMap implements ModelAPI {
     @Override
     public Map<String, String> buildingNames() {
         Map<String, String> toLong = new HashMap<String, String>();
+
+	// Inv: All shortName keys up to current are put into new map,
+	// with corresponding longNames as values.
 	for(String shortName : this.buildCords.keySet()) {
 	    toLong.put(shortName, (this.buildCords.get(shortName)).getLongName());
 	}
@@ -124,9 +135,9 @@ public class CampusMap implements ModelAPI {
 	} else {
 	    CampusBuilding start = this.buildCords.get(startShortName);
 	    CampusBuilding end = this.buildCords.get(endShortName);
-	    Algorithm<Point> pathFinder = new Algorithm<Point>(this.campus);
-	    return pathFinder.findShortestDistance(new Point(start.getX(), start.getY()),
-			                           new Point(end.getX(), end.getY()));
+	    return Algorithm.findShortestDistance(this.campus,
+			                                 new Point(start.getX(), start.getY()),
+			                                 new Point(end.getX(), end.getY()));
 	}
     }
 
