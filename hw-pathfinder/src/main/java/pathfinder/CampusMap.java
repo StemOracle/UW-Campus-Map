@@ -13,14 +13,27 @@ package pathfinder;
 
 import pathfinder.datastructures.*;
 import pathfinder.parser.*;
-import pathfinder.Algorithm;
+// import pathfinder.Algorithm;
 import graph.Graph;
 
 import java.util.*;
 
+
+/**
+ * An immutable CampusMap that allows pathfinding between campus buildings!
+ *
+ */
 public class CampusMap implements ModelAPI {
     
-    
+    // AF: buildCords -> coordinate position of each building.
+    // campus -> graph with building positions as nodes and distances as edges.
+   
+    // RI: No nulls anywhere, except the return of findShortestDistance.
+    // Keys of buildCords must equal short name of corresponding CampusBuilding.
+   
+    /**
+     * Maps a campus building's short name to its corresponding CampusBuilding.
+     */	
     private Map<String, CampusBuilding> buildCords;
 
 
@@ -30,6 +43,16 @@ public class CampusMap implements ModelAPI {
     private Graph<Point, Double> campus;
 
 
+    /**
+     * For debug purposes only!
+     */
+    private static final boolean DEBUG = false;
+
+
+    /**
+     *
+     *
+     */
     public CampusMap() {
         // Prepare Graph object
         this.campus = new Graph<Point, Double>();
@@ -77,7 +100,7 @@ public class CampusMap implements ModelAPI {
     @Override
     public String longNameForShort(String shortName) {
 	if(!shortNameExists(shortName)) {
-	    throw new IllegalArgumentException("Short building name " + shortName + "not found.");
+	    throw new IllegalArgumentException("Short building name " + shortName + " not found.");
 	}
         return (this.buildCords.get(shortName)).getLongName();
     }
@@ -91,7 +114,7 @@ public class CampusMap implements ModelAPI {
 	return toLong;
     }
 
-    @Override
+    @Override 
     public Path<Point> findShortestPath(String startShortName, String endShortName) {
 	if(startShortName == null || endShortName == null) {
 	    throw new IllegalArgumentException(startShortName + " or " + endShortName + " was null.");
@@ -107,4 +130,26 @@ public class CampusMap implements ModelAPI {
 	}
     }
 
+    
+    /**
+     * Checks if RI has been violated.
+     * Executes smoothly if not.
+     * @throws AssertionError if RI violated.
+     */
+    private void checkRep() {
+        assert this.buildCords != null;
+	assert this.campus != null;
+	if(DEBUG) {
+	    // No need to check for nulls in graph object; its RI checks for that!
+	    // Inv: All keys and values up to current are non-null and key value
+	    // matches corresponding CampusBuilding shortName.
+	    for(String name : this.buildCords.keySet()) {
+	        assert name != null;
+		CampusBuilding building = this.buildCords.get(name);
+		assert building != null;
+		assert building.getShortName() != null;
+		assert building.getLongName() != null;
+	    }
+	}
+    }
 }

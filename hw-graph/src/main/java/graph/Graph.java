@@ -55,13 +55,13 @@ public class Graph <T1, T2> {
   public Graph(Collection<T1> nodes, Collection<GraphEdge> edges) {
     this();
     if(nodes == null || edges == null) {
-      throw new NullPointerException();
+      throw new NullPointerException("null node or edge found.");
     }
 
     // Inv: All nodes up to current are non-null and added to this.nodes
     for(T1 node : nodes) {
       if(node == null) {
-        throw new NullPointerException();
+        throw new NullPointerException("null node found.");
       }
       this.nodes.add(node);
     }
@@ -71,11 +71,12 @@ public class Graph <T1, T2> {
     for(GraphEdge edge : edges) {
       T1 parent = edge.parent, child = edge.child;
       T2 label = edge.label;
-      if(edge == null || parent == null || child == null || label == null) {
-        throw new NullPointerException();
+      if(parent == null || child == null || label == null) {
+        throw new NullPointerException
+		  ("null parent node, child node, or edge label found.");
       } else if(!this.nodes.contains(parent) || !this.nodes.contains(child)) {
 	throw new IllegalArgumentException
-		  ("Parent or child of edge not found in nodes");
+		  ("node " + parent + " or " + child + " not found in graph.");
       } else {
         this.edges.add(edge);
       }
@@ -331,7 +332,8 @@ public class Graph <T1, T2> {
      */
     public GraphEdge(T1 parent, T1 child, T2 label) {
       if(parent == null || child == null || label == null) {
-        throw new NullPointerException();
+        throw new NullPointerException
+		  ("null parent node, child node, or edge label found.");
       }
       this.parent = parent;
       this.child = child;
