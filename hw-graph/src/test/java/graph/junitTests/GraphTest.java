@@ -480,78 +480,79 @@ public class GraphTest {
    */
   @Test
   public void testEdgeEqualsAndHash() {
-  Graph<String, String> pic = new Graph<String, String>();
-  pic.addNode("alaska");
-  pic.addNode("washington");
-  pic.addNode("florida");
+    Graph<String, String> pic = new Graph<String, String>();
+    pic.addNode("alaska");
+    pic.addNode("washington");
+    pic.addNode("florida");
 
-  Graph<String, String>.GraphEdge edge1;
-  edge1 = pic.new GraphEdge("alaska", "washington", "colder than");
+    Graph<String, String>.GraphEdge edge1;
+    edge1 = pic.new GraphEdge("alaska", "washington", "colder than");
 
-  Graph<String, String>.GraphEdge edge2;
-  edge2 = pic.new GraphEdge("florida", "florida", "Donald Trump");
+    Graph<String, String>.GraphEdge edge2;
+    edge2 = pic.new GraphEdge("florida", "florida", "Donald Trump");
 
-  Graph<String, String>.GraphEdge edge3;
-  edge3 = pic.new GraphEdge("alaska", "washington", "less inflation than");
+    Graph<String, String>.GraphEdge edge3;
+    edge3 = pic.new GraphEdge("alaska", "washington", "less inflation than");
 
-  Graph<String, String>.GraphEdge edge4;
-  edge4 = pic.new GraphEdge("florida", "florida", "Donald Trump");
+    Graph<String, String>.GraphEdge edge4;
+    edge4 = pic.new GraphEdge("florida", "florida", "Donald Trump");
 
-  Graph<String, String>.GraphEdge edge5;
-  edge5 = pic.new GraphEdge("alaska", "washington", "colder than");
+    Graph<String, String>.GraphEdge edge5;
+    edge5 = pic.new GraphEdge("alaska", "washington", "colder than");
 
-  Graph<String, String>.GraphEdge edge6;
-  edge6 = pic.new GraphEdge("florida", "florida", "Ron DeSantis");
+    Graph<String, String>.GraphEdge edge6;
+    edge6 = pic.new GraphEdge("florida", "florida", "Ron DeSantis");
 
-  Graph<String, String>.GraphEdge edge7;
-  edge7 = pic.new GraphEdge("washington", "florida", "colder than");
+    Graph<String, String>.GraphEdge edge7;
+    edge7 = pic.new GraphEdge("washington", "florida", "colder than");
 
-  Graph<String, String>.GraphEdge edge8;
-  edge8 = pic.new GraphEdge("washington", "alaska", "less inflation than");
+    Graph<String, String>.GraphEdge edge8;
+    edge8 = pic.new GraphEdge("washington", "alaska", "less inflation than");
   
   
-  ////////////////////
-  // equals(Object) //
-  ////////////////////
+    ////////////////////
+    // equals(Object) //
+    ////////////////////
 
-  // Test normal edges false
-  assertFalse(edge1.equals(edge3));
-  // Test normal edges true
-  assertTrue(edge1.equals(edge5));
-  // Test special edges false
-  assertFalse(edge4.equals(edge6));
-  // Test special edges true
-  assertTrue(edge2.equals(edge4));
-  // Reference same normal edge
-  assertTrue(edge3.equals(edge3));
-  // Reference same special edge
-  assertTrue(edge4.equals(edge4));
-  // Same label but different parents/children
-  assertFalse(edge5.equals(edge7));
-  // Flip flop the parents
-  assertFalse(edge3.equals(edge8));
+    // Test normal edges false
+    assertFalse(edge1.equals(edge3));
+    // Test normal edges true
+    assertTrue(edge1.equals(edge5));
+    // Test special edges false
+    assertFalse(edge4.equals(edge6));
+    // Test special edges true
+    assertTrue(edge2.equals(edge4));
+    // Reference same normal edge
+    assertTrue(edge3.equals(edge3));
+    // Reference same special edge
+    assertTrue(edge4.equals(edge4));
+    // Same label but different parents/children
+    assertFalse(edge5.equals(edge7));
+    // Flip flop the parents
+    assertFalse(edge3.equals(edge8));
 
 
-  ////////////////
-  // hashCode() //
-  ////////////////
+    ////////////////
+    // hashCode() //
+    ////////////////
 
-  // Equal edge? Equal hash!
-  assertEquals(edge1.hashCode(), edge5.hashCode());
-  assertEquals(edge2.hashCode(), edge4.hashCode());
+    // Equal edge? Equal hash!
+    assertEquals(edge1.hashCode(), edge5.hashCode());
+    assertEquals(edge2.hashCode(), edge4.hashCode());
 
-  // Hash values better be consistent!
-  int hash1 = edge1.hashCode(), hash2 = edge2.hashCode();
-  int hash3 = edge3.hashCode(), hash4 = edge4.hashCode();
-  int hash5 = edge5.hashCode(), hash6 = edge6.hashCode();
-  int hash7 = edge7.hashCode(), hash8 = edge8.hashCode();
-  assertEquals(edge1.hashCode(), hash1);
-  assertEquals(edge2.hashCode(), hash2);
-  assertEquals(edge3.hashCode(), hash3);
-  assertEquals(edge4.hashCode(), hash4);
-  assertEquals(edge5.hashCode(), hash5);
-  assertEquals(edge6.hashCode(), hash6);
-  assertEquals(edge7.hashCode(), hash7);
-  assertEquals(edge8.hashCode(), hash8);
+    // Hash values better be consistent!
+    int hash1 = edge1.hashCode(), hash2 = edge2.hashCode();
+    int hash3 = edge3.hashCode(), hash4 = edge4.hashCode();
+    int hash5 = edge5.hashCode(), hash6 = edge6.hashCode();
+    int hash7 = edge7.hashCode(), hash8 = edge8.hashCode();
+    assertEquals(edge1.hashCode(), hash1);
+    assertEquals(edge2.hashCode(), hash2);
+    assertEquals(edge3.hashCode(), hash3);
+    assertEquals(edge4.hashCode(), hash4);
+    assertEquals(edge5.hashCode(), hash5);
+    assertEquals(edge6.hashCode(), hash6);
+    assertEquals(edge7.hashCode(), hash7);
+    assertEquals(edge8.hashCode(), hash8);
   }
 }
+
