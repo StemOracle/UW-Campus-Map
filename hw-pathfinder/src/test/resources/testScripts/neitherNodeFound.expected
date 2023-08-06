@@ -1,0 +1,11 @@
+# Test when neither node is found
+
+created graph giraffe
+
+added node A to giraffe
+added node B to giraffe
+
+# Neither node is in giraffe
+unknown: W
+unknown: Z
+

@@ -1,0 +1,14 @@
+# Let's not go anywhere!
+
+created graph giraffe
+
+added node A to giraffe
+added node B to giraffe
+added node C to giraffe
+
+added edge 10.000 from A to B in giraffe
+added edge 2.000 from B to C in giraffe
+added edge 13.000 from A to C in giraffe
+
+path from A to A:
+total cost: 0.000

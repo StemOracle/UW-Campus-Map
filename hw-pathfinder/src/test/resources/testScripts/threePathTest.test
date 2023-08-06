@@ -1,0 +1,18 @@
+# Misleading title! Many possible paths!
+
+CreateGraph giraffe
+
+AddNode giraffe A
+AddNode giraffe B
+AddNode giraffe C
+AddNode giraffe D
+AddNode giraffe E
+
+AddEdge giraffe A B 1.0
+AddEdge giraffe A C 3.0
+AddEdge giraffe B C 3.0
+AddEdge giraffe C D 1.0
+AddEdge giraffe D E 4.0
+AddEdge giraffe C E 6.0
+
+FindPath giraffe A E

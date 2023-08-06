@@ -1,0 +1,8 @@
+# Test if a path can't be found
+
+CreateGraph giraffe
+
+AddNode giraffe A
+AddNode giraffe B
+
+FindPath giraffe A B

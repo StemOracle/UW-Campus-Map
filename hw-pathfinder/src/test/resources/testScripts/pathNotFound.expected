@@ -1,0 +1,9 @@
+# Test if a path can't be found
+
+created graph giraffe
+
+added node A to giraffe
+added node B to giraffe
+
+path from A to B:
+no path found

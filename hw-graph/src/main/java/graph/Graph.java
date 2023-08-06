@@ -12,14 +12,25 @@ public class Graph <T1, T2> {
   // AF: this.nodes -> collection of labeled nodes
   // this.edges -> collection of labeled edges
   // pointing from a parent node to a child node
-  //
+
   // RI: this != null, this.nodes != null, this.edges != null,
   // no entries in this.nodes and this.edges are null,
   // all edges most point from and to nodes contained in this.nodes
   // For each entry of this.nodes, string key must be equal to corresponding node label
 
-  private Set<T1> nodes;
-  private Set<GraphEdge> edges;
+  /**
+   * Set of labeled nodes
+   */
+  private HashSet<T1> nodes;
+
+  /**
+   * Set of GraphEdge objects that point to and from nodes
+   */
+  private HashSet<GraphEdge> edges;
+
+  /**
+   * For checkRep() purposes only
+   */
   private static final boolean DEBUG = false;
 
   /**

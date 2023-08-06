@@ -1,0 +1,13 @@
+# Test when two paths exist between nodes
+
+CreateGraph giraffe
+
+AddNode giraffe A
+AddNode giraffe B
+AddNode giraffe C
+
+AddEdge giraffe A B 10.0
+AddEdge giraffe B C 2.0
+AddEdge giraffe A C 13.0
+
+FindPath giraffe A C

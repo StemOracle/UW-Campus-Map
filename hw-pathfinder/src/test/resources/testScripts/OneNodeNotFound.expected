@@ -1,0 +1,13 @@
+# Test when one of the nodes isn't in the graph
+
+created graph giraffe
+
+added node A to giraffe
+added node B to giraffe
+
+added edge 5.000 from A to B in giraffe
+
+# Unknown parent
+unknown: C
+# Unknown child
+unknown: X

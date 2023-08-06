@@ -128,7 +128,7 @@ public class GraphTest {
     assertEquals(frog, turtle);
   }
 
-  
+
   /**
    * Tests the removeNode() method.
    */

@@ -1,0 +1,13 @@
+# Test when one of the nodes isn't in the graph
+
+CreateGraph giraffe
+
+AddNode giraffe A
+AddNode giraffe B
+
+AddEdge giraffe A B 5.0
+
+# Unknown parent
+FindPath giraffe C A
+# Unknown child
+FindPath giraffe B X

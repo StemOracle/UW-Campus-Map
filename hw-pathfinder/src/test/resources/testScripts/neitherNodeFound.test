@@ -1,0 +1,10 @@
+# Test when neither node is found
+
+CreateGraph giraffe
+
+AddNode giraffe A
+AddNode giraffe B
+
+# Neither node is in giraffe
+FindPath giraffe W Z
+
