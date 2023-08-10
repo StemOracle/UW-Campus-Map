@@ -44,26 +44,33 @@ class EdgeList extends Component<EdgeListProps, EdgeListState> {
     while(i < lines.length) {
       const parsed: string = lines[i];
       const tokens: string[] = parsed.split(" ");
+
       if(tokens.length !== 5) {
-        console.log("Line: " + parsed + " was improperly formatted. Too many tokens.");
+        alert("Line: " + parsed + " was improperly formatted. Incorrect number of tokens.");
+        i++;
         continue;
       }
+
       // To avoid errors but will probably change to something else.
-      const x1: any = +lines[0]; const y1: any = +lines[1];
-      const x2: any = +lines[2]; const y2: any = +lines[3];
+      const x1: number = parseFloat(lines[0]);
+      const y1: number = parseFloat(lines[1]);
+      const x2: number = parseFloat(lines[2]);
+      const y2: number = parseFloat(lines[3]);
       // To be more forgiving with casing.
       const col: any = lines[4].toLowerCase();
-      if(typeof x1 !== 'number' || typeof y1 !== 'number' || typeof x2 !== 'number'
-                              || typeof y2 !== 'number' || typeof col !== 'string') {
-        console.log("Line: " + parsed + " was improperly formatted. Incorrect token type.");
-        continue;
+
+      if(isNaN(x1) || isNaN(y1) || isNaN(x2) || isNaN(y2) || typeof col !== 'string') {
+        alert("Line: " + parsed + " was improperly formatted. Incorrect token type.");
       } else if((x1 < 0) || (x1 > 4000) || (y1 < 0) || (y1 > 4000) || (x2 < 0) || (x2 > 4000)
                                         || (y2 < 0) || (y2 > 4000)) {
-        console.log("Line: " + parsed + " has a start or end coordinate out of bounds.");
-        continue;
+        alert("Line: " + parsed + " has a start or end coordinate out of bounds.");
+      } else {
+        edges.push(new Edge(x1, y1, x2, y2, col));
       }
-      edges.push(new Edge(x1, y1, x2, y2, col));
+
+      i++;
     }
+
     return edges;
   }
 
@@ -81,7 +88,7 @@ class EdgeList extends Component<EdgeListProps, EdgeListState> {
             value={this.state.text}
           /> <br/>
         <button onClick={() => {this.props.onChange(this.parse(this.state.text));}}>Draw</button>
-        <button onClick={() => {console.log('Clear onClick was called');}}>Clear</button>
+        <button onClick={() => {this.props.onChange([]);}}>Clear</button>
       </div>
       );
   }
