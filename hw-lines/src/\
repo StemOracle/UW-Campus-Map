@@ -10,14 +10,13 @@
  */
 
 import React, { Component } from "react";
-import EdgeList from "./EdgeList";
-import Edge from "./Edge";
+import EdgeList, Edge from "./EdgeList";
 import Map from "./Map";
 
 // Allows us to write CSS styles inside App.css, any styles will apply to all components inside <App />
 import "./App.css";
 
-interface AppState {
+interface AppState = {
   edges: Edge[];
 }
 
@@ -39,7 +38,7 @@ class App extends Component<{}, AppState> { // <- {} means no props.
           <Map />
         </div>
         <EdgeList
-          onChange={(edges: Edge[]) => {this.setState({edges});}}
+          onChange={(lines: string[]) => {this.setState({lines});}}
         />
       </div>
     );
