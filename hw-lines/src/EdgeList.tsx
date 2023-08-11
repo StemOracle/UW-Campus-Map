@@ -10,7 +10,6 @@
  */
 
 import React, {Component} from 'react';
-import MapLine from './MapLine';
 import Edge from './Edge';
 
 interface EdgeListProps {
@@ -95,7 +94,6 @@ class EdgeList extends Component<EdgeListProps, EdgeListState> {
     return ( 
       <div id="edge-list">
         Edges <br/>
-          <MapLine color="red" x1={0} y1={0} x2={0} y2={0} />
           <textarea
             rows={5}
             cols={30}

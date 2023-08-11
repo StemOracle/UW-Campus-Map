@@ -40,17 +40,17 @@ class App extends Component<{}, AppState> { // <- {} means no props.
 
   render() {
     return (
-      <div>
-        <h1 id="app-title">Line Mapper!</h1>
+      <div id="app">
+        <Map
+          edges={this.state.edges}
+        />
         <div>
-          <Map
-            edges={this.state.edges}
+          <h1 id="app-title">Line Mapper!</h1>
+          <EdgeList
+            onChange={(edges: Edge[]) => {this.setState({edges: edges});}}
           />
         </div>
-        <EdgeList
-          onChange={(edges: Edge[]) => {this.setState({edges: edges});}}
-        />
-      </div>
+    </div>
     );
   }
 }
