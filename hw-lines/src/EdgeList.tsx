@@ -14,11 +14,18 @@ import MapLine from './MapLine';
 import Edge from './Edge';
 
 interface EdgeListProps {
-  onChange(lines: Edge[]): void;  // called when a new edge list is ready
+  /**
+   * Called when a new Edgep[] is ready and 'Draw' is clicked.
+   * Replaces state in App component.
+   */ 
+  onChange(lines: Edge[]): void;
 }
 
 interface EdgeListState {
-  text: string; // Text stored in the text box
+  /**
+   * Text currently stored in the text field.
+   */
+  text: string;
 }
 
 /**
@@ -28,19 +35,28 @@ interface EdgeListState {
 class EdgeList extends Component<EdgeListProps, EdgeListState> {
 
   constructor(props: any) {
+    // Well defined onChange function expected as props.
     super(props);
     this.state = {
       text: ""
     };
   }
 
-  parse(text: string): Edge[] {
+
+  /**
+   * Parses text to give an array of Edges. 
+   * @param text Currently in the text box.
+   * @spec.requires Each line of text must be well-formatted as x1 y1 x2 y2 COLOR.
+   * Badly formatted lines aren't parsed into an Edge.
+   * @return Array of Edge, where each line of text is parsed into an Edge.
+   */
+  private parse(text: string): Edge[] {
     const lines: string[] = text.split("\n");
     let edges: Edge[] = [];
 
     let i = 0;
     // Inv: Up to current, all lines are parsed into an Edge object and added.
-    // Alternatievly, if badly formatted, they are rejected.
+    // Badly formatted lines are rejected.
     while(i < lines.length) {
       const parsed: string = lines[i];
       const tokens: string[] = parsed.split(" ");
@@ -74,6 +90,7 @@ class EdgeList extends Component<EdgeListProps, EdgeListState> {
     return edges;
   }
 
+
   render() {
     return ( 
       <div id="edge-list">
@@ -82,7 +99,6 @@ class EdgeList extends Component<EdgeListProps, EdgeListState> {
           <textarea
             rows={5}
             cols={30}
-            // Can try ChangeEventHandler<HTMLTextAreaElement>
             // Changes the text area in the text box.
             onChange={(event: any) => {this.setState({text: event.target.value});}}
             value={this.state.text}
@@ -90,7 +106,7 @@ class EdgeList extends Component<EdgeListProps, EdgeListState> {
         <button onClick={() => {this.props.onChange(this.parse(this.state.text));}}>Draw</button>
         <button onClick={() => {this.props.onChange([]);}}>Clear</button>
       </div>
-      );
+    );
   }
 }
 

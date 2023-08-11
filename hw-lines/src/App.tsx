@@ -18,12 +18,20 @@ import Map from "./Map";
 import "./App.css";
 
 interface AppState {
+  /**
+   * Array of Edges that will be parsed into MapLines.
+   */
   edges: Edge[];
 }
 
+/**
+ * An application that visualizes the UW Campus and allows you to draw lines.
+ * Draw lines by typing in starting coordinates, ending coordinates, and colors.
+ */
 class App extends Component<{}, AppState> { // <- {} means no props.
 
   constructor(props: any) {
+    // No props here!
     super(props);
     this.state = {
       edges: []

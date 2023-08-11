@@ -21,11 +21,17 @@ import Edge from './Edge';
 const position: LatLngExpression = [UW_LATITUDE_CENTER, UW_LONGITUDE_CENTER];
 
 interface MapProps {
+  /**
+   * Array of Edges that will be parsed into MapLines.
+   */
   edges: Edge[];
 }
 
 interface MapState {}
 
+/**
+ * Visualizes the UW Campus and any lines that are drawn on it.
+ */
 class Map extends Component<MapProps, MapState> {
   render() { 
     return ( 
