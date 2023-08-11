@@ -44,12 +44,12 @@ class Map extends Component<MapProps, MapState> {
           {this.props.edges.map(
             (edge: Edge, i: number) => (
               <MapLine
-                key={i}
                 color={edge.color}
                 x1={edge.x1}
                 y1={edge.y1}
                 x2={edge.x2}
                 y2={edge.y2}
+                key={i}
               />
             )
           )}   
