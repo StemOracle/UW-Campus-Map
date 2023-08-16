@@ -12,18 +12,46 @@
 package campuspaths;
 
 import campuspaths.utils.CORSFilter;
+import pathfinder.CampusMap;
+import com.google.gson.Gson;
+import spark.Request;
+import spark.Response;
+import spark.Route;
+import spark.Spark;
 
 public class SparkServer {
 
-    public static void main(String[] args) {
-        CORSFilter corsFilter = new CORSFilter();
-        corsFilter.apply();
-        // The above two lines help set up some settings that allow the
-        // React application to make requests to the Spark server, even though it
-        // comes from a different server.
-        // You should leave these two lines at the very beginning of main().
+  public static void main(String[] args) {
+    CORSFilter corsFilter = new CORSFilter();
+    corsFilter.apply();
+    // The above two lines help set up some settings that allow the
+    // React application to make requests to the Spark server, even though it
+    // comes from a different server.
+    // You should leave these two lines at the very beginning of main().
 
-        // TODO: Create all the Spark Java routes you need here.
-    }
+    CampusMap campus = new CampusMap();
+    Gson gson = new Gson();
 
+    // Get names of buildings.
+    // No query params.
+    Spark.get("/list-buildings", new Route() {
+      @Override
+      public Object handle(Request req, Response resp) throws Exception {
+	return gson.toJson(campus.buildingNames());
+      }
+    });
+
+
+    // Get the path between two campus buildings.
+    // Expected query params: "/find-path?start=string&end=string",
+    // where start and end are short names of campus buildings.
+    Spark.get("/find-path", new Route() {
+      @Override
+      public Object handle(Request req, Response resp) throws Exception {
+	String start = req.queryParams("start");
+	String end = req.queryParams("end");
+	return gson.toJson(campus.findShortestPath(start, end));
+      }
+    });
+  }
 }
