@@ -34,7 +34,7 @@ public class SparkServer {
 
     // Get names of buildings.
     // No query params.
-    Spark.get("/list-buildings", new Route() {
+    Spark.get("/listBuildings", new Route() {
       @Override
       public Object handle(Request req, Response resp) throws Exception {
 	return gson.toJson(campus.buildingNames());
@@ -43,9 +43,9 @@ public class SparkServer {
 
 
     // Get the path between two campus buildings.
-    // Expected query params: "/find-path?start=string&end=string",
+    // Expected query params: "/findPath?start=string&end=string",
     // where start and end are short names of campus buildings.
-    Spark.get("/find-path", new Route() {
+    Spark.get("/findPath", new Route() {
       @Override
       public Object handle(Request req, Response resp) throws Exception {
 	String start = req.queryParams("start");
