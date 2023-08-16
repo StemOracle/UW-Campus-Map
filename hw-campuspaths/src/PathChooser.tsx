@@ -28,9 +28,50 @@ interface PathChooserState {
   buildMap: object;
 
   /**
-   * Shortest path between buildings named start and end.
+   * Represents shortest path between buildings labeled start and end.
    */
-  path: object;
+  edges: Edge[];
+}
+
+interface Path {
+  /**
+   * Total weight of Path.
+   */
+  cost: number;
+  /**
+   * Starting coordinates of Path.
+   */
+  start: Point;
+  /**
+   * All straight-line Segments of Path.
+   */
+  path: Segment[];
+}
+
+interface Segment {
+  /**
+   * Starting coordinates of Segment.
+   */
+  start: Point;
+  /**
+   * Ending coordinates of Segment.
+   */
+  end: Point;
+  /**
+   * Weight of Segment.
+   */
+  cost: number;
+}
+
+interface Point {
+  /**
+   * X-coordinate in cartesian plane.
+   */
+  x: number;
+  /**
+   * Y-coordinate in cartesian plane.
+   */
+  y: number;
 }
 
 /**
@@ -50,17 +91,14 @@ class PathChooser extends Component<PathChooserProps, PathChooserState> {
       end: "",
       color: "",
       buildMap: new Object(),
-      path: new Object()
+      edges: []
     };
   }
 
   async getBuildings() {
     let buildsPromise = fetch(this.HOSTNAME + this.PORT + "/listBuildings");
     let buildsString = await buildsPromise;
-
-    let parsedBuildsPromise = buildsString.json();
-    let parsedBuilds = await parsedBuildsPromise;
-
+    let parsedBuilds = await buildsString.json();
     this.setState({buildMap: parsedBuilds});
   }
 
@@ -68,27 +106,19 @@ class PathChooser extends Component<PathChooserProps, PathChooserState> {
     let pathPromise = fetch(this.HOSTNAME + this.PORT + "/findPath?start="
                                           + start + "&end=" + end);
     let pathString = await pathPromise;
-
-    let parsedPathPromise = pathString.json();
-    let parsedPath = await parsedPathPromise;
-
-    this.setState({path: parsedPath});
-  }
-
-  pathToEdges(path: object): Edge[] {
-    this.pathBetweenBuildings(this.state.start, this.state.end);
+    let parsedPath = await pathString.json();
+    let directions: Path = (Path)parsedPath;
     let edges: Edge[] = [];
-    
-    let directions: object = this.state.path;
-    
+
     // Inv?
     let i: number = 0;
     while(i < directions.path.length) {
-      const seg: object = directions.path[i];
+      const seg: Segment = directions.path[i];
       edges.push(new Edge(seg.start.x, seg.start.y, seg.end.x,
-                                       seg.end.y, seg.color));
+                          seg.end.y, this.state.color));
+      i++;
     }
-    return edges;
+    this.setState({edges: edges});
   }
 
   render() {
@@ -125,8 +155,18 @@ class PathChooser extends Component<PathChooserProps, PathChooserState> {
             /> <br/>
         </div>
         <div id="path-and-reset"> 
-          <button onClick={() => {this.props.onChange([]);}}>Show Path</button>
-          <button onClick={() => {this.props.onChange([]);}}>Reset</button>
+          <button onClick={() => {this.props.onChange(this.state.edges);}}>
+          Show Path</button>
+          <button onClick={() => {
+            this.props.onChange([]);
+            this.setState{
+              start: "",
+              end: "",
+              color: "",
+              buildsMap: new Object(),
+              edges: []
+            }
+          }}>Reset</button>
         </div>
       </div>
     );
@@ -134,5 +174,3 @@ class PathChooser extends Component<PathChooserProps, PathChooserState> {
 }
 
 export default PathChooser;
-
-
