@@ -14,23 +14,21 @@ interface PathChooserState {
    * Text currently stored in the text field labeled 'Start'.
    */
   start: string;
+
   /**
    * Text currently stored in the text field labeled 'End'.
    */
   end: string;
+
   /**
    * Text currently stored in the text field labeled 'Color'.
    */
   color: string;
+
   /**
    * Map of campus building's short names to their long names.
    */
   buildMap: object;
-
-  /**
-   * Represents shortest path between buildings labeled start and end.
-   */
-  edges: Edge[];
 }
 
 interface Path {
@@ -38,10 +36,12 @@ interface Path {
    * Total weight of Path.
    */
   cost: number;
+
   /**
    * Starting coordinates of Path.
    */
   start: Point;
+
   /**
    * All straight-line Segments of Path.
    */
@@ -53,10 +53,12 @@ interface Segment {
    * Starting coordinates of Segment.
    */
   start: Point;
+
   /**
    * Ending coordinates of Segment.
    */
   end: Point;
+
   /**
    * Weight of Segment.
    */
@@ -68,6 +70,7 @@ interface Point {
    * X-coordinate in cartesian plane.
    */
   x: number;
+
   /**
    * Y-coordinate in cartesian plane.
    */
@@ -90,8 +93,7 @@ class PathChooser extends Component<PathChooserProps, PathChooserState> {
       start: "",
       end: "",
       color: "",
-      buildMap: new Object(),
-      edges: []
+      buildMap: {},
     };
   }
 
@@ -107,9 +109,8 @@ class PathChooser extends Component<PathChooserProps, PathChooserState> {
                                           + start + "&end=" + end);
     let pathString = await pathPromise;
     let parsedPath = await pathString.json();
-    let directions: Path = (Path)parsedPath;
+    let directions: Path = parsedPath as Path;
     let edges: Edge[] = [];
-
     // Inv?
     let i: number = 0;
     while(i < directions.path.length) {
@@ -118,7 +119,21 @@ class PathChooser extends Component<PathChooserProps, PathChooserState> {
                           seg.end.y, this.state.color));
       i++;
     }
-    this.setState({edges: edges});
+    this.props.onChange(edges);
+  }
+
+  listBuildings(): string {
+    const fields: string[] = Object.keys(this.state.buildMap);
+    const vals: string[] = Object.values(this.state.buildMap);
+    let valids: string = "";  
+
+    // Inv?
+    let i: number = 0;
+    while(i < fields.length) {
+      valids += vals[i] + ": " + fields[i] + " | ";
+      i++;
+    }
+    return valids;
   }
 
   render() {
@@ -143,6 +158,7 @@ class PathChooser extends Component<PathChooserProps, PathChooserState> {
               cols={15}
               // Changes the text area in the text box.
               onChange={(event: any) => {this.setState({end: event.target.value});}}
+              value={this.state.end}
             /> <br/>
         </div>
         <div id="color-choice">
@@ -152,21 +168,34 @@ class PathChooser extends Component<PathChooserProps, PathChooserState> {
               cols={15}
               // Changes the text area in the text box.
               onChange={(event: any) => {this.setState({color: event.target.value});}}
+              value={this.state.color}
             /> <br/>
         </div>
         <div id="path-and-reset"> 
-          <button onClick={() => {this.props.onChange(this.state.edges);}}>
+          <button onClick={() => {
+            const fields: string[] = Object.keys(this.state.buildMap);
+            if(this.state.start === "" || this.state.end === ""
+                                       || this.state.color === "") {
+              alert("No text field may be empty.");
+            } else if(!fields.includes(this.state.start)
+                   || !fields.includes(this.state.end)) {
+              alert("Building " + this.state.start + " or "
+                                + this.state.end + " not found.");
+            } else {
+              this.pathBetweenBuildings(this.state.start, this.state.end);
+            }
+          }}>
           Show Path</button>
           <button onClick={() => {
             this.props.onChange([]);
-            this.setState{
-              start: "",
-              end: "",
-              color: "",
-              buildsMap: new Object(),
-              edges: []
-            }
-          }}>Reset</button>
+            this.setState({start: "", end: "", color: ""});}}>
+          Reset</button>
+        </div>
+        <div id="list-of-buildings">
+          List of Valid Buildings: <br/>
+          <p>
+          {this.listBuildings()}
+          </p>
         </div>
       </div>
     );
