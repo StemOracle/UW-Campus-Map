@@ -49,7 +49,7 @@ class App extends Component<{}, AppState> {
           <PathChooser
             onChange={(edges: Edge[]) => {this.setState({edges: edges});}}
           />
-        </div>
+      </div>
     </div>
     );
   }

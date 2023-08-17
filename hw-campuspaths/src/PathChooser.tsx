@@ -93,7 +93,7 @@ class PathChooser extends Component<PathChooserProps, PathChooserState> {
       start: "",
       end: "",
       color: "",
-      buildMap: {},
+      buildMap: {}
     };
   }
 
@@ -122,15 +122,15 @@ class PathChooser extends Component<PathChooserProps, PathChooserState> {
     this.props.onChange(edges);
   }
 
-  listBuildings(): string {
+  listBuildings(): JSX.Element[] {
     const fields: string[] = Object.keys(this.state.buildMap);
     const vals: string[] = Object.values(this.state.buildMap);
-    let valids: string = "";  
+    let valids: JSX.Element[] = [];  
 
     // Inv?
     let i: number = 0;
     while(i < fields.length) {
-      valids += vals[i] + ": " + fields[i] + " | ";
+      valids.push(<p>{vals[i] + ": " + fields[i]}</p>);
       i++;
     }
     return valids;
@@ -193,9 +193,7 @@ class PathChooser extends Component<PathChooserProps, PathChooserState> {
         </div>
         <div id="list-of-buildings">
           List of Valid Buildings: <br/>
-          <p>
           {this.listBuildings()}
-          </p>
         </div>
       </div>
     );
