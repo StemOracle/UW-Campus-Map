@@ -31,3 +31,46 @@ file was empty.
     width: 800px;
     height: 600px;
 }
+
+#path-chooser {
+    text-align: center;
+    margin: 5px;
+}
+
+#path-chooser button {
+    margin: 2px 5px;
+    background-color: violet;
+    border-color: #915;
+}
+
+#path-chooser select {
+    margin: 2px 5px;
+    background-color: #86FF76;
+    border-color: green;
+}
+
+#path-chooser textarea {
+    margin: 2px 5px;
+    background-color: aquamarine;
+    border-color: blue;
+}
+
+#app p {
+    text-align: center;
+}
+
+/*
+#path-chooser div {
+    display: grid;
+    grid-template-columns: 200px 200px;
+}
+*/
+
+#app-title {
+    text-align: center;
+    font-size: 30px;
+    font-weight: bold;
+    margin: 10px;
+}
+
+

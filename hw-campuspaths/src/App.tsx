@@ -46,11 +46,16 @@ class App extends Component<{}, AppState> {
         />
         <div>
           <h1 id="app-title">Choose Your Path!</h1>
+          <p>
+            Choose a starting building and a destination building on the UW campus. <br/>
+            With the color of your choice,
+            I will display the shortest path between the two buildings.
+          </p>
           <PathChooser
             onChange={(edges: Edge[]) => {this.setState({edges: edges});}}
           />
+        </div>
       </div>
-    </div>
     );
   }
 }

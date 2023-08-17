@@ -83,10 +83,10 @@ interface Point {
  */
 class PathChooser extends Component<PathChooserProps, PathChooserState> {
 
-  private readonly HOSTNAME: string = "http://localhost:";
+  private readonly HOSTNAME: string = "http://attu1.cs.washington.edu:";
   private readonly PORT: string | number = 4567;
 
-  constructor(props: any) {
+  constructor(props: PathChooserProps) {
     // Well defined onChange function expected as props.
     super(props);
     this.state = {
@@ -97,6 +97,10 @@ class PathChooser extends Component<PathChooserProps, PathChooserState> {
     };
   }
 
+  componentDidMount() {
+    this.getBuildings();
+  }
+
   async getBuildings() {
     let buildsPromise = fetch(this.HOSTNAME + this.PORT + "/listBuildings");
     let buildsString = await buildsPromise;
@@ -105,12 +109,26 @@ class PathChooser extends Component<PathChooserProps, PathChooserState> {
   }
 
   async pathBetweenBuildings(start: string, end: string) {
+    if(this.state.start === "" || this.state.end === "") {
+      alert("Please select a starting building and destination building.");
+      return;
+    } else if(this.state.color === "") {
+      alert("Please specify a color.");
+      return;
+    }
+
     let pathPromise = fetch(this.HOSTNAME + this.PORT + "/findPath?start="
                                           + start + "&end=" + end);
     let pathString = await pathPromise;
     let parsedPath = await pathString.json();
+    
+    if(parsedPath === null) {
+      alert("No path found between buildings " + start + " and " + end);
+      return;
+    }
     let directions: Path = parsedPath as Path;
     let edges: Edge[] = [];
+
     // Inv?
     let i: number = 0;
     while(i < directions.path.length) {
@@ -137,45 +155,39 @@ class PathChooser extends Component<PathChooserProps, PathChooserState> {
   }
 
   render() {
-    this.getBuildings();
-
-    return ( 
+    return (
       <div id="path-chooser">
-        <div id="make-path">
-          Start
-            <select value={this.state.start} onChange={(event: any) => {this.setState({start: event.target.value});}}>
+        <div id="select-start">
+          <label htmlFor="start-select">Start:</label><br/>
+            <select id={"start-select"} value={this.state.start} onChange={(event: any) => {this.setState({start: event.target.value});}}>
               <option value={""}>Starting Building</option>
               {this.buildingSelection()}
             </select>
-          Destination
-            <select value={this.state.end} onChange={(event: any) => {this.setState({end: event.target.value});}}>
+        </div>
+        <div id="select-destination">
+          <label htmlFor="dest-select">Destination:</label><br/>
+            <select id={"dest-select"} value={this.state.end} onChange={(event: any) => {this.setState({end: event.target.value});}}>
               <option value={""}>Destination Building</option>
               {this.buildingSelection()}
             </select>
-          Color
-            <textarea
-              rows={1}
-              cols={10}
-              // Changes the text area in the text box.
+        </div>
+        <div id="enter-color">
+          <label htmlFor="color-text">Color:</label><br/>
+            <textarea id={"color-text"} rows={1} cols={10}
               onChange={(event: any) => {this.setState({color: event.target.value});}}
               value={this.state.color}
             />
         </div>
         <div id="options"> 
           <button onClick={() => {
-            if(this.state.start === "" || this.state.end === "") {
-              alert("Please select a starting building and destination building.");
-            } else if(this.state.color === "") {
-              alert("Please specify a color.");
-            } else {
-              this.pathBetweenBuildings(this.state.start, this.state.end);
-            }
-          }}>
-          Find Path</button>
+            this.pathBetweenBuildings(this.state.start, this.state.end);}}>
+            Find Path
+          </button>
           <button onClick={() => {
             this.props.onChange([]);
             this.setState({start: "", end: "", color: ""});}}>
-          Reset</button>
+            Reset
+          </button>
         </div>
       </div>
     );
