@@ -122,7 +122,7 @@ class PathChooser extends Component<PathChooserProps, PathChooserState> {
     this.props.onChange(edges);
   }
 
-  listBuildings(): JSX.Element[] {
+  buildingSelection(): JSX.Element[] {
     const fields: string[] = Object.keys(this.state.buildMap);
     const vals: string[] = Object.values(this.state.buildMap);
     let valids: JSX.Element[] = [];  
@@ -130,7 +130,7 @@ class PathChooser extends Component<PathChooserProps, PathChooserState> {
     // Inv?
     let i: number = 0;
     while(i < fields.length) {
-      valids.push(<p>{vals[i] + ": " + fields[i]}</p>);
+      valids.push(<option value={fields[i]}>{vals[i]}</option>);
       i++;
     }
     return valids;
@@ -141,59 +141,41 @@ class PathChooser extends Component<PathChooserProps, PathChooserState> {
 
     return ( 
       <div id="path-chooser">
-        <div>
-          Start <br/>
+        <div id="make-path">
+          Start
+            <select value={this.state.start} onChange={(event: any) => {this.setState({start: event.target.value});}}>
+              <option value={""}>Starting Building</option>
+              {this.buildingSelection()}
+            </select>
+          Destination
+            <select value={this.state.end} onChange={(event: any) => {this.setState({end: event.target.value});}}>
+              <option value={""}>Destination Building</option>
+              {this.buildingSelection()}
+            </select>
+          Color
             <textarea
               rows={1}
-              cols={15}
-              // Changes the text area in the text box.
-              onChange={(event: any) => {this.setState({start: event.target.value});}}
-              value={this.state.start}
-            /> <br/>
-        </div>
-        <div id="end-choice">
-          Destination <br/>
-            <textarea
-              rows={1}
-              cols={15}
-              // Changes the text area in the text box.
-              onChange={(event: any) => {this.setState({end: event.target.value});}}
-              value={this.state.end}
-            /> <br/>
-        </div>
-        <div id="color-choice">
-          Color <br/>
-            <textarea
-              rows={1}
-              cols={15}
+              cols={10}
               // Changes the text area in the text box.
               onChange={(event: any) => {this.setState({color: event.target.value});}}
               value={this.state.color}
-            /> <br/>
+            />
         </div>
-        <div id="path-and-reset"> 
+        <div id="options"> 
           <button onClick={() => {
-            const fields: string[] = Object.keys(this.state.buildMap);
-            if(this.state.start === "" || this.state.end === ""
-                                       || this.state.color === "") {
-              alert("No text field may be empty.");
-            } else if(!fields.includes(this.state.start)
-                   || !fields.includes(this.state.end)) {
-              alert("Building " + this.state.start + " or "
-                                + this.state.end + " not found.");
+            if(this.state.start === "" || this.state.end === "") {
+              alert("Please select a starting building and destination building.");
+            } else if(this.state.color === "") {
+              alert("Please specify a color.");
             } else {
               this.pathBetweenBuildings(this.state.start, this.state.end);
             }
           }}>
-          Show Path</button>
+          Find Path</button>
           <button onClick={() => {
             this.props.onChange([]);
             this.setState({start: "", end: "", color: ""});}}>
           Reset</button>
-        </div>
-        <div id="list-of-buildings">
-          List of Valid Buildings: <br/>
-          {this.listBuildings()}
         </div>
       </div>
     );
