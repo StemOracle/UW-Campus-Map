@@ -1,6 +1,9 @@
 import React, {Component} from 'react';
 import Edge from './Edge';
 
+/**
+ * Properties of this component.
+ */
 interface PathChooserProps {
   /**
    * Called when a new Edgep[] is ready and 'Draw' is clicked.
@@ -9,6 +12,9 @@ interface PathChooserProps {
   onChange(lines: Edge[]): void;
 }
 
+/**
+ * State of this component.
+ */
 interface PathChooserState {
   /**
    * Text currently stored in the text field labeled 'Start'.
@@ -31,6 +37,9 @@ interface PathChooserState {
   buildMap: object;
 }
 
+/**
+ * Represents a path, which is composed of many segments.
+ */
 interface Path {
   /**
    * Total weight of Path.
@@ -48,6 +57,10 @@ interface Path {
   path: Segment[];
 }
 
+/**
+ * Represents a vector with a starting Point and an Ending point.
+ * Also given a weight that doesn't necessarily mean pythagorean length.
+ */
 interface Segment {
   /**
    * Starting coordinates of Segment.
@@ -65,6 +78,9 @@ interface Segment {
   cost: number;
 }
 
+/**
+ * Represents a point (x, y) in the cartesian plane.
+ */
 interface Point {
   /**
    * X-coordinate in cartesian plane.
@@ -83,7 +99,7 @@ interface Point {
  */
 class PathChooser extends Component<PathChooserProps, PathChooserState> {
 
-  private readonly HOSTNAME: string = "http://attu1.cs.washington.edu:";
+  private readonly HOSTNAME: string = "http://localhost:";
   private readonly PORT: string | number = 4567;
 
   constructor(props: PathChooserProps) {
@@ -97,10 +113,16 @@ class PathChooser extends Component<PathChooserProps, PathChooserState> {
     };
   }
 
+  /**
+   * Sets up this component. 
+   */
   componentDidMount() {
     this.getBuildings();
   }
 
+  /**
+   * Fetches object that maps all UW campus building short names to long names.
+   */
   async getBuildings() {
     let buildsPromise = fetch(this.HOSTNAME + this.PORT + "/listBuildings");
     let buildsString = await buildsPromise;
@@ -108,6 +130,13 @@ class PathChooser extends Component<PathChooserProps, PathChooserState> {
     this.setState({buildMap: parsedBuilds});
   }
 
+  /**
+   * Finds shortest path between building labeled start and building labeled end.
+   * @param start name of starting building on the UW campus.
+   * @param end name of destination building on the UW campus.
+   * @spec.requires valid buildings must be chosen, a color must be specified,
+   * and a path must exist between the buildings. No behavior otherwise.
+   */
   async pathBetweenBuildings(start: string, end: string) {
     if(this.state.start === "" || this.state.end === "") {
       alert("Please select a starting building and destination building.");
@@ -129,7 +158,7 @@ class PathChooser extends Component<PathChooserProps, PathChooserState> {
     let directions: Path = parsedPath as Path;
     let edges: Edge[] = [];
 
-    // Inv?
+    // All Segments of directions are converted to an edge and pushed to edges.
     let i: number = 0;
     while(i < directions.path.length) {
       const seg: Segment = directions.path[i];
@@ -140,12 +169,17 @@ class PathChooser extends Component<PathChooserProps, PathChooserState> {
     this.props.onChange(edges);
   }
 
+  /**
+   * Gives select component options for each building of UW campus.
+   * @return array of select component options for each building of UW campus.
+   */
   buildingSelection(): JSX.Element[] {
     const fields: string[] = Object.keys(this.state.buildMap);
     const vals: string[] = Object.values(this.state.buildMap);
     let valids: JSX.Element[] = [];  
 
-    // Inv?
+    // Inv: All entries of fields and vals up to current are converted to
+    // select component options and pushed to valids.
     let i: number = 0;
     while(i < fields.length) {
       valids.push(<option value={fields[i]}>{vals[i]}</option>);
@@ -159,14 +193,20 @@ class PathChooser extends Component<PathChooserProps, PathChooserState> {
       <div id="path-chooser">
         <div id="select-start">
           <label htmlFor="start-select">Start:</label><br/>
-            <select id={"start-select"} value={this.state.start} onChange={(event: any) => {this.setState({start: event.target.value});}}>
+            <select
+              id={"start-select"}
+              value={this.state.start}
+              onChange={(event: any) => {this.setState({start: event.target.value});}}>
               <option value={""}>Starting Building</option>
               {this.buildingSelection()}
             </select>
         </div>
         <div id="select-destination">
           <label htmlFor="dest-select">Destination:</label><br/>
-            <select id={"dest-select"} value={this.state.end} onChange={(event: any) => {this.setState({end: event.target.value});}}>
+            <select 
+              id={"dest-select"}
+              value={this.state.end}
+              onChange={(event: any) => {this.setState({end: event.target.value});}}>
               <option value={""}>Destination Building</option>
               {this.buildingSelection()}
             </select>

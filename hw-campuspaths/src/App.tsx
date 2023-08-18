@@ -17,9 +17,12 @@ import PathChooser from "./PathChooser";
 // Allows us to write CSS styles inside App.css, any styles will apply to all components inside <App />
 import "./App.css";
 
+/**
+ * State of this component.
+ */
 interface AppState {
   /**
-   * Array of Edges that will be parsed into MapLines.
+   * Array of Edges that will be parsed into MapLine components.
    */
   edges: Edge[];
 }

@@ -17,7 +17,7 @@ and only exists for aesthetic purposes. The app would work just fine if this
 file was empty.
 */
 
-/* Centers component with ID "map-wrapper" and sets width and bottom spacing */
+/* Centers component with ID "map-wrapper" and sets width and bottom spacing. */
 #map {
     margin-left: auto;
     margin-right: auto;
@@ -26,51 +26,56 @@ file was empty.
     width: 800px;
 }
 
-/* Sets size of map, which has class name "leaflet-container" */
+/* Sets size of map, which has class name "leaflet-container". */
 .leaflet-container {
     width: 800px;
     height: 600px;
 }
 
+/* Aligns PathChooser component to center. */
 #path-chooser {
     text-align: center;
-    margin: 5px;
+    margin: 5px; 
 }
 
+/* Sets color of buttons in PathChooser component to be violet.
+ * Sets their borders to be a dark shade of purple.
+ * Margins to prevent buttons from being too squished together. */ 
 #path-chooser button {
     margin: 2px 5px;
     background-color: violet;
     border-color: #915;
 }
 
+/* Sets color of select components in PathChooser component to be lime.
+ * Sets their borders to be a dark shade of green.
+ * Margins to prevent select components from being too squished together. */
 #path-chooser select {
     margin: 2px 5px;
     background-color: #86FF76;
     border-color: green;
 }
 
+/* Sets color of textarea in PathChooser component to be aquamarine.
+ * Sets its border to be blue.
+ * Margins to prevent it from being too squished with other components. */
 #path-chooser textarea {
     margin: 2px 5px;
     background-color: aquamarine;
     border-color: blue;
 }
 
+/* Aligns text of paragraph in App component to center. */
 #app p {
     text-align: center;
 }
 
-/*
-#path-chooser div {
-    display: grid;
-    grid-template-columns: 200px 200px;
-}
-*/
-
+/* Aligns text of "Choose Your Path!" to center.
+ * Set to high font size and to bold to make it very readable.
+ * Margin to prevent it from being too squished with components. */
 #app-title {
     text-align: center;
     font-size: 30px;
     font-weight: bold;
     margin: 10px;
 }
-
-

@@ -20,7 +20,13 @@ import Edge from './Edge';
 // This defines the location of the map. These are the coordinates of the UW Seattle campus
 const position: LatLngExpression = [UW_LATITUDE_CENTER, UW_LONGITUDE_CENTER];
 
+/**
+ * Properties of this component.
+ */
 interface MapProps {
+  /**
+   * Array of Edges that will be converted to MapLine components.
+   */
   edges: Edge[];
 }
 
