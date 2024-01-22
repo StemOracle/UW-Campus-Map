@@ -18,18 +18,18 @@ import PathChooser from "./PathChooser";
 import "./App.css";
 
 /**
- * State of this component.
+ * State of this component
  */
 interface AppState {
   /**
-   * Array of Edges that will be parsed into MapLine components.
+   * Array of Edges to be parsed into MapLine components
    */
   edges: Edge[];
 }
 
 /**
- * An application that visualizes the UW Campus and allows you to draw lines.
- * Draw lines by typing in starting coordinates, ending coordinates, and colors.
+ * An application that visualizes the UW Campus and allows you to draw lines
+ * Draw lines by typing in starting coordinates, ending coordinates, and colors
  */
 class App extends Component<{}, AppState> {
 

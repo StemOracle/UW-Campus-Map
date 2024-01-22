@@ -2,108 +2,108 @@ import React, {Component} from 'react';
 import Edge from './Edge';
 
 /**
- * Properties of this component.
+ * Properties of this component
  */
 interface PathChooserProps {
   /**
-   * Called when a new Edgep[] is ready and 'Draw' is clicked.
-   * Replaces state in App component.
+   * Called when a new Edgep[] is ready and 'Draw' is clicked
+   * Replaces state in App component
    */ 
   onChange(lines: Edge[]): void;
 }
 
 /**
- * State of this component.
+ * State of this component
  */
 interface PathChooserState {
   /**
-   * Text currently stored in the text field labeled 'Start'.
+   * Text currently stored in the text field labeled 'Start'
    */
   start: string;
 
   /**
-   * Text currently stored in the text field labeled 'End'.
+   * Text currently stored in the text field labeled 'End'
    */
   end: string;
 
   /**
-   * Text currently stored in the text field labeled 'Color'.
+   * Text currently stored in the text field labeled 'Color'
    */
   color: string;
 
   /**
-   * Map of campus building's short names to their long names.
+   * Map of campus building's short names to their long names
    */
   buildMap: object;
 }
 
 /**
- * Represents a path, which is composed of many segments.
+ * Path composed of many segments
  */
 interface Path {
   /**
-   * Total weight of Path.
+   * Total weight of Path
    */
   cost: number;
 
   /**
-   * Starting coordinates of Path.
+   * Starting coordinates of Path
    */
   start: Point;
 
   /**
-   * All straight-line Segments of Path.
+   * All straight-line Segments of Path
    */
   path: Segment[];
 }
 
 /**
- * Represents a vector with a starting Point and an Ending point.
- * Also given a weight that doesn't necessarily mean pythagorean length.
+ * Vector with a starting Point and an ending Point
+ * Also given a weight that doesn't necessarily mean pythagorean length
  */
 interface Segment {
   /**
-   * Starting coordinates of Segment.
+   * Starting coordinates of Segment
    */
   start: Point;
 
   /**
-   * Ending coordinates of Segment.
+   * Ending coordinates of Segment
    */
   end: Point;
 
   /**
-   * Weight of Segment.
+   * Weight of Segment
    */
   cost: number;
 }
 
 /**
- * Represents a point (x, y) in the cartesian plane.
+ * Represents a point (x, y) in the cartesian plane
  */
 interface Point {
   /**
-   * X-coordinate in cartesian plane.
+   * X-coordinate in cartesian plane
    */
   x: number;
 
   /**
-   * Y-coordinate in cartesian plane.
+   * Y-coordinate in cartesian plane
    */
   y: number;
 }
 
 /**
- * A text field that allows the user to enter the list of edges.
- * Also contains the buttons that the user will use to interact with the app.
+ * A text field that allows the user to enter the list of edges
+ * Also contains the buttons that the user will use to interact with the app
  */
 class PathChooser extends Component<PathChooserProps, PathChooserState> {
 
   private readonly HOSTNAME: string = "http://localhost:";
-  private readonly PORT: string | number = 4567;
+  private readonly PORT: string = "4567";
 
   constructor(props: PathChooserProps) {
-    // Well defined onChange function expected as props.
+    // Well defined onChange function expected as props
     super(props);
     this.state = {
       start: "",
@@ -114,14 +114,14 @@ class PathChooser extends Component<PathChooserProps, PathChooserState> {
   }
 
   /**
-   * Sets up this component. 
+   * Sets up this component
    */
   componentDidMount() {
     this.getBuildings();
   }
 
   /**
-   * Fetches object that maps all UW campus building short names to long names.
+   * Fetches object that maps all UW campus building short names to long names
    */
   async getBuildings() {
     let buildsPromise = fetch(this.HOSTNAME + this.PORT + "/listBuildings");
@@ -131,11 +131,11 @@ class PathChooser extends Component<PathChooserProps, PathChooserState> {
   }
 
   /**
-   * Finds shortest path between building labeled start and building labeled end.
-   * @param start name of starting building on the UW campus.
-   * @param end name of destination building on the UW campus.
+   * Finds shortest path between building labeled start and building labeled end
+   * @param start name of starting building on the UW campus
+   * @param end name of destination building on the UW campus
    * @spec.requires valid buildings must be chosen, a color must be specified,
-   * and a path must exist between the buildings. No behavior otherwise.
+   * and a path must exist between the buildings. No behavior otherwise
    */
   async pathBetweenBuildings(start: string, end: string) {
     if(this.state.start === "" || this.state.end === "") {
@@ -158,7 +158,7 @@ class PathChooser extends Component<PathChooserProps, PathChooserState> {
     let directions: Path = parsedPath as Path;
     let edges: Edge[] = [];
 
-    // All Segments of directions are converted to an edge and pushed to edges.
+    // All Segments of directions are converted to an edge and pushed to edges
     let i: number = 0;
     while(i < directions.path.length) {
       const seg: Segment = directions.path[i];
@@ -170,8 +170,8 @@ class PathChooser extends Component<PathChooserProps, PathChooserState> {
   }
 
   /**
-   * Gives select component options for each building of UW campus.
-   * @return array of select component options for each building of UW campus.
+   * Gives select component options for each building of UW campus
+   * @return array of select component options for each building of UW campus
    */
   buildingSelection(): JSX.Element[] {
     const fields: string[] = Object.keys(this.state.buildMap);
