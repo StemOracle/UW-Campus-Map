@@ -98,7 +98,9 @@ interface Point {
  * Also contains the buttons that the user will use to interact with the app
  */
 class PathChooser extends Component<PathChooserProps, PathChooserState> {
-
+ /**
+  * URL of Spark backend
+  */
   private readonly HOSTNAME: string = "http://localhost:";
   private readonly PORT: string = "4567";
 
@@ -124,8 +126,7 @@ class PathChooser extends Component<PathChooserProps, PathChooserState> {
    * Fetches object that maps all UW campus building short names to long names
    */
   async getBuildings() {
-    let buildsPromise = fetch(this.HOSTNAME + this.PORT + "/listBuildings");
-    let buildsString = await buildsPromise;
+    let buildsString = await fetch(this.HOSTNAME + this.PORT + "/listBuildings");
     let parsedBuilds = await buildsString.json();
     this.setState({buildMap: parsedBuilds});
   }
@@ -146,9 +147,8 @@ class PathChooser extends Component<PathChooserProps, PathChooserState> {
       return;
     }
 
-    let pathPromise = fetch(this.HOSTNAME + this.PORT + "/findPath?start="
-                                          + start + "&end=" + end);
-    let pathString = await pathPromise;
+    let pathString = await fetch(this.HOSTNAME + this.PORT + "/findPath?start="
+                                               + start + "&end=" + end);
     let parsedPath = await pathString.json();
     
     if(parsedPath === null) {
