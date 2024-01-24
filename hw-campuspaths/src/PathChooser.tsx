@@ -1,15 +1,16 @@
 import React, {Component} from 'react';
 import Edge from './Edge';
+import { Point, Segment, Path } from './Interfaces'
 
 /**
  * Properties of this component
  */
 interface PathChooserProps {
   /**
-   * Called when a new Edgep[] is ready and 'Draw' is clicked
+   * Called when a new Edge[] is ready and 'Draw' is clicked
    * Replaces state in App component
    */ 
-  onChange(lines: Edge[]): void;
+  onChange(startPoint: Point | null, destPoint: Point | null, lines: Edge[]): void;
 }
 
 /**
@@ -35,62 +36,6 @@ interface PathChooserState {
    * Map of campus building's short names to their long names
    */
   buildMap: object;
-}
-
-/**
- * Path composed of many segments
- */
-interface Path {
-  /**
-   * Total weight of Path
-   */
-  cost: number;
-
-  /**
-   * Starting coordinates of Path
-   */
-  start: Point;
-
-  /**
-   * All straight-line Segments of Path
-   */
-  path: Segment[];
-}
-
-/**
- * Vector with a starting Point and an ending Point
- * Also given a weight that doesn't necessarily mean pythagorean length
- */
-interface Segment {
-  /**
-   * Starting coordinates of Segment
-   */
-  start: Point;
-
-  /**
-   * Ending coordinates of Segment
-   */
-  end: Point;
-
-  /**
-   * Weight of Segment
-   */
-  cost: number;
-}
-
-/**
- * Represents a point (x, y) in the cartesian plane
- */
-interface Point {
-  /**
-   * X-coordinate in cartesian plane
-   */
-  x: number;
-
-  /**
-   * Y-coordinate in cartesian plane
-   */
-  y: number;
 }
 
 /**
@@ -166,7 +111,7 @@ class PathChooser extends Component<PathChooserProps, PathChooserState> {
                           seg.end.y, this.state.color));
       i++;
     }
-    this.props.onChange(edges);
+    this.props.onChange(null, null, edges);
   }
 
   /**
@@ -224,7 +169,7 @@ class PathChooser extends Component<PathChooserProps, PathChooserState> {
             Find Path
           </button>
           <button onClick={() => {
-            this.props.onChange([]);
+            this.props.onChange(null, null, []);
             this.setState({start: "", end: "", color: ""});}}>
             Reset
           </button>

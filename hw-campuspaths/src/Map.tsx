@@ -11,11 +11,12 @@
 
 import { LatLngExpression } from "leaflet";
 import React, { Component } from "react";
-import { MapContainer, TileLayer } from "react-leaflet";
+import {MapContainer, TileLayer, Circle, Polyline} from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import MapLine from "./MapLine";
-import { UW_LATITUDE_CENTER, UW_LONGITUDE_CENTER } from "./Constants";
-import Edge from './Edge';
+import MapCircle from "./MapCircle";
+import { UW_LATITUDE_CENTER, UW_LONGITUDE_CENTER, xToLon, yToLat } from "./Constants";
+import Edge from "./Edge";
 
 // Defines the location of the map. These are the coordinates of the UW Seattle campus
 const position: LatLngExpression = [UW_LATITUDE_CENTER, UW_LONGITUDE_CENTER];
@@ -51,6 +52,12 @@ class Map extends Component<MapProps, {}> {
               />
             )
           )}
+          <MapCircle
+            x={1500}
+            y={1500}
+            radius={50}
+            color={"red"}
+          />
         </MapContainer>
       </div>
     );

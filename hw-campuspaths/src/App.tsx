@@ -13,6 +13,7 @@ import React, {Component} from 'react';
 import Edge from "./Edge";
 import Map from "./Map";
 import PathChooser from "./PathChooser";
+import { Point } from "./Interfaces";
 
 // Allows us to write CSS styles inside App.css, any styles will apply to all components inside <App />
 import "./App.css";
@@ -25,6 +26,16 @@ interface AppState {
    * Array of Edges to be parsed into MapLine components
    */
   edges: Edge[];
+
+  /**
+   * Point coordinate of starting building
+   */
+  startPoint: { x1: number, y1: number } | null;
+
+  /**
+   * Point coordinate of destination building
+   */
+  destPoint: { x2: number, y2: number } | null;
 }
 
 /**
@@ -37,7 +48,9 @@ class App extends Component<{}, AppState> {
     // No props here!
     super(props);
     this.state = {
-      edges: []
+      edges: [],
+      startPoint: null,
+      destPoint: null
     };
   }
 
@@ -55,7 +68,7 @@ class App extends Component<{}, AppState> {
             I will display the shortest path between the two buildings.
           </p>
           <PathChooser
-            onChange={(edges: Edge[]) => {this.setState({edges: edges});}}
+            onChange={(startPoint: Point, destPoint: Point, edges: Edge[]) => {this.setState({edges: edges});}}
           />
         </div>
       </div>

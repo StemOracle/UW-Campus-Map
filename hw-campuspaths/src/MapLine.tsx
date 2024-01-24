@@ -12,12 +12,8 @@
 import React, { Component } from "react";
 import { Polyline } from "react-leaflet";
 import {
-  UW_LATITUDE,
-  UW_LATITUDE_OFFSET,
-  UW_LATITUDE_SCALE,
-  UW_LONGITUDE,
-  UW_LONGITUDE_OFFSET,
-  UW_LONGITUDE_SCALE
+  xToLon,
+  yToLat
 } from "./Constants";
 
 interface MapLineProps {
@@ -29,20 +25,6 @@ interface MapLineProps {
 }
 
 /**
- * Converts x coordinate to longitude
- */
-function xToLon(x: number): number {
-  return UW_LONGITUDE + (x - UW_LONGITUDE_OFFSET) * UW_LONGITUDE_SCALE;
-}
-
-/**
- * Converts y coordinate to latitude
- */
-function yToLat(y: number): number {
-  return UW_LATITUDE + (y - UW_LATITUDE_OFFSET) * UW_LATITUDE_SCALE;
-}
-
-/**
  * A component that will render a line on the React Leaflet map of color from
  * point x1,y1 to x2,y2. This line will convert from the assignment's coordinate
  * system (where 0,0 is the top-left of the UW campus) to latitude and
@@ -51,6 +33,7 @@ function yToLat(y: number): number {
 class MapLine extends Component<MapLineProps, {}> {
   constructor(props: any) {
     super(props);
+    // What is this for?
     this.state = {
       edgeText: "",
     };

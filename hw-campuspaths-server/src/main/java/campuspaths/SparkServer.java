@@ -37,7 +37,7 @@ public class SparkServer {
     Spark.get("/listBuildings", new Route() {
       @Override
       public Object handle(Request req, Response resp) throws Exception {
-	return gson.toJson(campus.buildingNames());
+	    return gson.toJson(campus.buildingNames());
       }
     });
 
@@ -48,9 +48,9 @@ public class SparkServer {
     Spark.get("/findPath", new Route() {
       @Override
       public Object handle(Request req, Response resp) throws Exception {
-	String start = req.queryParams("start");
-	String end = req.queryParams("end");
-	return gson.toJson(campus.findShortestPath(start, end));
+	    String start = req.queryParams("start");
+	    String end = req.queryParams("end");
+	    return gson.toJson(campus.findShortestPath(start, end));
       }
     });
   }
