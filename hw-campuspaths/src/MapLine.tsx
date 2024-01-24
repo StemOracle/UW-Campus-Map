@@ -33,10 +33,6 @@ interface MapLineProps {
 class MapLine extends Component<MapLineProps, {}> {
   constructor(props: any) {
     super(props);
-    // What is this for?
-    this.state = {
-      edgeText: "",
-    };
   }
 
   render() {

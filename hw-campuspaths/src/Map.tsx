@@ -53,15 +53,15 @@ class Map extends Component<MapProps, {}> {
             )
           )}
           <MapCircle
-            x={1500}
-            y={1500}
-            radius={50}
+            x={2360}
+            y={1100}
+            radius={37.5}
             color={"red"}
           />
         </MapContainer>
       </div>
+        // Circle is at communications building!
     );
   }
 }
-
 export default Map;
