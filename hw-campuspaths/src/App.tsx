@@ -10,10 +10,9 @@
  */
 
 import React, {Component} from 'react';
-import Edge from "./Edge";
 import Map from "./Map";
 import PathChooser from "./PathChooser";
-import { Point } from "./Interfaces";
+import { Point, Edge } from "./Interfaces";
 
 // Allows us to write CSS styles inside App.css, any styles will apply to all components inside <App />
 import "./App.css";

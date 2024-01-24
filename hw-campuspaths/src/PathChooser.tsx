@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
-import Edge from './Edge';
-import { Point, Segment, Path } from './Interfaces'
+import { Point, Segment, Path, Edge } from './Interfaces'
 
 /**
  * Properties of this component
@@ -107,8 +106,8 @@ class PathChooser extends Component<PathChooserProps, PathChooserState> {
     let i: number = 0;
     while(i < directions.path.length) {
       const seg: Segment = directions.path[i];
-      edges.push(new Edge(seg.start.x, seg.start.y, seg.end.x,
-                          seg.end.y, this.state.color));
+      edges.push({x1: seg.start.x, y1: seg.start.y, x2: seg.end.x,
+                  y2: seg.end.y, color: this.state.color});
       i++;
     }
     this.props.onChange(null, null, edges);

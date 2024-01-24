@@ -16,7 +16,7 @@ import "leaflet/dist/leaflet.css";
 import MapLine from "./MapLine";
 import MapCircle from "./MapCircle";
 import { UW_LATITUDE_CENTER, UW_LONGITUDE_CENTER, xToLon, yToLat } from "./Constants";
-import Edge from "./Edge";
+import { Edge } from "./Interfaces";
 
 // Defines the location of the map. These are the coordinates of the UW Seattle campus
 const position: LatLngExpression = [UW_LATITUDE_CENTER, UW_LONGITUDE_CENTER];
