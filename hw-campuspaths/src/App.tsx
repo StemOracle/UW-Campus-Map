@@ -13,37 +13,21 @@ import React, {Component} from 'react';
 import Map from "./Map";
 import PathChooser from "./PathChooser";
 import { Point, Edge } from "./Interfaces";
-
-// Allows us to write CSS styles inside App.css, any styles will apply to all components inside <App />
 import "./App.css";
 
-/**
- * State of this component
- */
+/** State of this component */
 interface AppState {
-  /**
-   * Array of Edges to be parsed into MapLine components
-   */
+  /** Makes up path between buildings */
   edges: Edge[];
-
-  /**
-   * Point coordinate of starting building
-   */
+  /** Point coordinate of starting building */
   startPoint: Point | null;
-
-  /**
-   * Point coordinate of destination building
-   */
+  /** Point coordinate of destination building */
   destPoint: Point | null;
-
-
+  /** Color of marked starting, dest building, and path between them */
   drawColor: string;
 }
 
-/**
- * An application that visualizes the UW Campus and allows you to draw lines
- * Draw lines by typing in starting coordinates, ending coordinates, and colors
- */
+/** Visualizes UW Seattle Campus finds shortest path between two select buildings */
 class App extends Component<{}, AppState> {
 
   constructor(props: any) {
@@ -73,12 +57,14 @@ class App extends Component<{}, AppState> {
             This will display the shortest path between the two buildings.
           </p>
           <PathChooser
-            onChange={(edges: Edge[], drawColor: string) => {
-              this.setState({edges: edges, drawColor: drawColor});}}
-            resetApp={() => {
-              this.setState({startPoint: null, destPoint: null, edges: [], drawColor: ""});}}
-            markStart={(startPoint: Point) => {this.setState({startPoint: startPoint});}}
-            markDest={(destPoint: Point) =>  {this.setState({destPoint: destPoint});}}
+            onChange={(startPoint: Point | null | undefined,
+                       destPoint: Point | null | undefined,
+                       edges: Edge[] | undefined,
+                       drawColor: string | undefined) => {
+              if(startPoint !== undefined) {this.setState({startPoint: startPoint});}
+              if(destPoint !== undefined) {this.setState({destPoint: destPoint});}
+              if(edges !== undefined) {this.setState({edges: edges});}
+              if(drawColor !== undefined) {this.setState({drawColor: drawColor});}}}
           />
         </div>
       </div>

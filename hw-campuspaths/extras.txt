@@ -6,6 +6,7 @@ List any additional features or functionality you implemented
 in your CampusPaths application below. Only things listed here
 will be considered for extra credit.
 
+ADDITIONAL FEATURE #1:
 Upon selecting a building, its location will immediately be marked with a circle.
 By default, the circle color will be red. However, if a color is specified,
 the circles and the eventual path between them will both be that color.

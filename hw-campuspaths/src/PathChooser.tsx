@@ -1,24 +1,16 @@
 import React, {Component} from 'react';
 import { Point, Segment, Path, Edge } from './Interfaces'
 
-/**
- * Properties of this component
- */
+/** Properties of this component */
 interface PathChooserProps {
-  /** Called when a new Edge[] is ready and 'Draw' is clicked
-   * Replaces state in App component */
-  onChange(lines: Edge[], drawColor: string): void;
-
-  markStart(startPoint: Point | null) : void;
-
-  markDest(destPoint: Point | null) : void;
-
-  resetApp() : void;
+  /** Called when drawing a path, changing color, or marking buildings */
+  onChange(startPoint: Point | null | undefined,
+           destPoint: Point | null | undefined,
+           lines: Edge[] | undefined,
+           drawColor: string | undefined): void;
 }
 
-/**
- * State of this component
- */
+/** State of this component */
 interface PathChooserState {
   /** Text stored in text field labeled 'Start' */
   start: string;
@@ -33,19 +25,14 @@ interface PathChooserState {
 /** Text field that allows the user to enter the list of edges
  * Also buttons allowing user to interact with app */
 class PathChooser extends Component<PathChooserProps, PathChooserState> {
- /** URL of Spark backend */
+  /** URL of Spark backend */
   private readonly HOSTNAME: string = "http://localhost:";
   private readonly PORT: string = "4567";
 
   constructor(props: PathChooserProps) {
     // Well-defined onChange function expected as props
     super(props);
-    this.state = {
-      start: "",
-      end: "",
-      color: "",
-      buildMap: {}
-    };
+    this.state = {start: "", end: "", color: "", buildMap: {}};
   }
 
   /** Sets up this component */
@@ -66,33 +53,29 @@ class PathChooser extends Component<PathChooserProps, PathChooserState> {
    * @spec.requires valid buildings must be chosen, a color must be specified,
    * and a path must exist between the buildings. No behavior otherwise */
   async pathBetweenBuildings(start: string, end: string) {
+    // If not enough info given, benignly return
     if(this.state.start === "" || this.state.end === "") {
-      alert("Please select a starting building and destination building.");
-      return;
+      alert("Please select a starting building and destination building."); return;
     } else if(this.state.color === "") {
-      alert("Please specify a color.");
-      return;
+      alert("Please confirm a color."); return;
     }
 
     let pathString = await fetch(this.HOSTNAME + this.PORT + "/findPath?start="
                                                + start + "&end=" + end);
     let parsedPath = await pathString.json();
+    // If no path found, benignly return
     if(parsedPath === null) {
-      alert("No path found between buildings " + start + " and " + end);
-      return;
+      alert("No path found between buildings " + start + " and " + end); return;
     }
-    let directions: Path = parsedPath as Path;
+    let castedPath: Path = parsedPath as Path;
     let edges: Edge[] = [];
 
     // All Segments of directions are converted to an edge and pushed to edges
-    let i: number = 0;
-    while(i < directions.path.length) {
-      const seg: Segment = directions.path[i];
-      edges.push({x1: seg.start.x, y1: seg.start.y,
-                  x2: seg.end.x, y2: seg.end.y});
-      i++;
+    for(let i = 0; i < castedPath.path.length; i+= 1) {
+      const seg: Segment = castedPath.path[i];
+      edges.push({x1: seg.start.x, y1: seg.start.y, x2: seg.end.x, y2: seg.end.y});
     }
-    this.props.onChange(edges, this.state.color);
+    this.props.onChange(undefined, undefined, edges, this.state.color);
   }
 
   async markBuilding(buildName: string, destFlag: boolean) {
@@ -101,9 +84,9 @@ class PathChooser extends Component<PathChooserProps, PathChooserState> {
     let parsedPoint = await pointString.json();
     let castedPoint = parsedPoint as Point;
     if(destFlag) {
-      this.props.markDest(castedPoint);
+      this.props.onChange(undefined, castedPoint, undefined, undefined);
     } else {
-      this.props.markStart(castedPoint);
+      this.props.onChange(castedPoint, undefined, undefined, undefined);
     }
   }
 
@@ -152,19 +135,20 @@ class PathChooser extends Component<PathChooserProps, PathChooserState> {
             </select>
         </div>
           <div id="enter-color">
-              <label htmlFor="color-text">Color:</label><br/>
+            <label htmlFor="color-text">Color:</label><br/>
               <textarea id={"color-text"} rows={1} cols={10} value={this.state.color}
                 onChange={(event: any) => {
                   this.setState({color: event.target.value});}}/>
-              <button onClick={() => {alert("Well hello there.");}}>Enter</button>
+              <button onClick={() => {
+                this.props.onChange(undefined, undefined, undefined, this.state.color);}}>✔</button>
           </div>
           <div id="options">
-              <button onClick={() => {
-                  this.pathBetweenBuildings(this.state.start, this.state.end);}}>
+            <button onClick={() => {
+              this.pathBetweenBuildings(this.state.start, this.state.end);}}>
             Find Path
           </button>
           <button onClick={() => {
-            this.props.resetApp();
+            this.props.onChange(null, null, [], "");
             this.setState({start: "", end: "", color: ""});}}>
             Reset
           </button>

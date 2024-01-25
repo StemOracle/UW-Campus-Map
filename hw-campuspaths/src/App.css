@@ -35,7 +35,7 @@ file was empty.
 /* Aligns PathChooser component to center. */
 #path-chooser {
     text-align: center;
-    margin: 5px; 
+    margin: 5px;
 }
 
 /* Sets color of buttons in PathChooser component to be violet.
@@ -51,7 +51,7 @@ file was empty.
  * Sets their borders to be a dark shade of green.
  * Margins to prevent select components from being too squished together. */
 #path-chooser select {
-    margin: 2px 5px;
+    margin: 3px 5px;
     background-color: #86FF76;
     border-color: green;
 }

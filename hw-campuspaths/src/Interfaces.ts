@@ -1,41 +1,30 @@
-export interface Point { x: number, y: number }
+/** Cartesian point coordinate */
+export interface Point {
+    /** X-coordinate */
+    x: number;
+    /** Y-Coordinate */
+    y: number;
+}
 
 export interface Edge { x1: number, y1: number, x2: number, y2: number }
 
+/** Path composed of starting point and many straight-line segments */
 export interface Path {
-    /**
-     * Total weight of Path
-     */
+    /** Total weight of Path */
     cost: number;
-
-    /**
-     * Starting coordinates of Path
-     */
+    /** Starting coordinates of Path */
     start: Point;
-
-    /**
-     * All straight-line Segments of Path
-     */
+    /** All straight-line Segments of Path */
     path: Segment[];
 }
 
-/**
- * Vector with a starting Point and an ending Point
- * Also given a weight that doesn't necessarily mean pythagorean length
- */
+/** Vector with a starting Point and an ending Point
+ * Also given a weight that doesn't necessarily mean pythagorean length */
 export interface Segment {
-    /**
-     * Starting coordinates of Segment
-     */
+    /** Starting coordinates of Segment */
     start: Point;
-
-    /**
-     * Ending coordinates of Segment
-     */
+    /** Ending coordinates of Segment */
     end: Point;
-
-    /**
-     * Weight of Segment
-     */
+    /** Weight of Segment */
     cost: number;
 }
