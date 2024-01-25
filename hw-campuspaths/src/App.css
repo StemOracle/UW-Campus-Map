@@ -68,6 +68,7 @@ file was empty.
 /* Aligns text of paragraph in App component to center. */
 #app p {
     text-align: center;
+    font-family: arial;
 }
 
 /* Aligns text of "Choose Your Path!" to center.
@@ -75,6 +76,7 @@ file was empty.
  * Margin to prevent it from being too squished with components. */
 #app-title {
     text-align: center;
+    font-family: arial;
     font-size: 30px;
     font-weight: bold;
     margin: 10px;

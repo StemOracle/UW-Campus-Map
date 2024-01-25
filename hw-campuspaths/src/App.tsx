@@ -73,11 +73,10 @@ class App extends Component<{}, AppState> {
             This will display the shortest path between the two buildings.
           </p>
           <PathChooser
-            onChange={(startPoint: Point, destPoint: Point, edges: Edge[], drawColor: string) => {
-              this.setState({startPoint: startPoint,
-                                   destPoint: destPoint,
-                                   edges: edges,
-                                   drawColor: drawColor});}}
+            onChange={(edges: Edge[], drawColor: string) => {
+              this.setState({edges: edges, drawColor: drawColor});}}
+            resetApp={() => {
+              this.setState({startPoint: null, destPoint: null, edges: [], drawColor: ""});}}
             markStart={(startPoint: Point) => {this.setState({startPoint: startPoint});}}
             markDest={(destPoint: Point) => {this.setState({destPoint: destPoint});}}
           />

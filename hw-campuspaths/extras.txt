@@ -1,9 +1,11 @@
-CSE 331 Homework Answers:
+CSE 331 Homework Answers: What am I meant to put here?
 
-Your Name:
+Your Name: Charles Hamilton-Eppler
 
 List any additional features or functionality you implemented
 in your CampusPaths application below. Only things listed here
 will be considered for extra credit.
 
-
+Upon selecting a building, its location will immediately be marked with a circle.
+By default, the circle color will be red. However, if a color is specified,
+the circles and the eventual path between them will both be that color.
