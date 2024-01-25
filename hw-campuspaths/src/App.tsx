@@ -75,6 +75,7 @@ class App extends Component<{}, AppState> {
           <PathChooser
             onChange={(startPoint: Point, destPoint: Point, edges: Edge[], drawColor: string) => {
               this.setState({startPoint: startPoint,
+                                   destPoint: destPoint,
                                    edges: edges,
                                    drawColor: drawColor});}}
           />

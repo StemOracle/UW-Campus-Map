@@ -40,12 +40,15 @@ interface MapProps {
 class Map extends Component<MapProps, {}> {
 
   makeCircle(center: Point | null) {
+    let col: string = this.props.drawColor;
     if(center === null) {
       return null;
-    } else {
-      return <MapCircle x={center.x} y={center.y} radius={50} color={this.props.drawColor} />;
+    } else if (this.props.drawColor === "") {
+      col = "red";
     }
+    return <MapCircle x={center.x} y={center.y} radius={42.5} color={col} />;
   }
+
   render() {
     return (
       <div id="map">
@@ -68,7 +71,6 @@ class Map extends Component<MapProps, {}> {
           )}
           {this.makeCircle(this.props.startPoint)}
           {this.makeCircle(this.props.destPoint)}
-          <MapCircle x={1500} y={1500} radius={50} color={this.props.drawColor}/>
         </MapContainer>
       </div>
     );

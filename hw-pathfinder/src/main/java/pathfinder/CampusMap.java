@@ -126,10 +126,14 @@ public class CampusMap implements ModelAPI {
 	 * @param buildingName
 	 * @return Point coordinate of building if found, null if name not recognized
 	 */
-	public Point<> lookupBuilding(String buildingName) {
-		return null;
+	public Point lookupBuilding(String buildingName) {
+		CampusBuilding build = buildCords.get(buildingName);
+		if(build == null) {
+          return null;
+		} else {
+			return new Point(build.getX(), build.getY());
+		}
 	}
-
     
     /**
      * Checks if RI has been violated

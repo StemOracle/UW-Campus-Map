@@ -53,5 +53,13 @@ public class SparkServer {
 	    return gson.toJson(campus.findShortestPath(start, end));
       }
     });
+
+    Spark.get("/lookupBuilding", new Route() {
+      @Override
+      public Object handle(Request req, Response resp) throws Exception {
+        String shortName = req.queryParams("shortName");
+        return gson.toJson(campus.lookupBuilding(shortName));
+      }
+    });
   }
 }

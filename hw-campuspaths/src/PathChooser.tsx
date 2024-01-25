@@ -17,22 +17,22 @@ interface PathChooserProps {
  */
 interface PathChooserState {
   /**
-   * Text currently stored in the text field labeled 'Start'
+   * Text stored in text field labeled 'Start'
    */
   start: string;
 
   /**
-   * Text currently stored in the text field labeled 'End'
+   * Text stored in text field labeled 'End'
    */
   end: string;
 
   /**
-   * Text currently stored in the text field labeled 'Color'
+   * Text stored in text field labeled 'Color'
    */
   color: string;
 
   /**
-   * Map of campus building's short names to their long names
+   * Map of campus buildings' short names to their long names
    */
   buildMap: object;
 }
@@ -49,7 +49,7 @@ class PathChooser extends Component<PathChooserProps, PathChooserState> {
   private readonly PORT: string = "4567";
 
   constructor(props: PathChooserProps) {
-    // Well defined onChange function expected as props
+    // Well-defined onChange function expected as props
     super(props);
     this.state = {
       start: "",
@@ -99,6 +99,12 @@ class PathChooser extends Component<PathChooserProps, PathChooserState> {
       alert("No path found between buildings " + start + " and " + end);
       return;
     }
+
+    let startPoint = await fetch(this.HOSTNAME + this.PORT + "/lookupBuilding?shortName=" + start);
+    let parsedStart = await startPoint.json();
+    let destPoint = await fetch(this.HOSTNAME + this.PORT + "/lookupBuilding?shortName=" + end);
+    let parsedDest = await destPoint.json();
+
     let directions: Path = parsedPath as Path;
     let edges: Edge[] = [];
 
@@ -110,17 +116,16 @@ class PathChooser extends Component<PathChooserProps, PathChooserState> {
                   x2: seg.end.x, y2: seg.end.y});
       i++;
     }
-    this.props.onChange({x: directions.start.x, y: directions.start.y},
-                        null, edges, this.state.color);
+
+    this.props.onChange(parsedStart as Point, parsedDest as Point, edges, this.state.color);
   }
 
-  // Benign so far.
-  markBuilding(building: string) {
-    if(building = "") {
-      return;
-    } else {
-      return;
-    }
+  // Unused so far.
+  async markBuilding(buildName: string) {
+    let pointString = await fetch(this.HOSTNAME + this.PORT
+                                            + "/lookupBuilding?shortName=" + buildName);
+    let parsedPoint = await pointString.json();
+    let castedPoint = parsedPoint as Point;
   }
 
   /**
