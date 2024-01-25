@@ -78,7 +78,7 @@ class App extends Component<{}, AppState> {
             resetApp={() => {
               this.setState({startPoint: null, destPoint: null, edges: [], drawColor: ""});}}
             markStart={(startPoint: Point) => {this.setState({startPoint: startPoint});}}
-            markDest={(destPoint: Point) => {this.setState({destPoint: destPoint});}}
+            markDest={(destPoint: Point) =>  {this.setState({destPoint: destPoint});}}
           />
         </div>
       </div>
