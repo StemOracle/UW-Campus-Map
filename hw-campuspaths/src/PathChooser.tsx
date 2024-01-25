@@ -10,6 +10,10 @@ interface PathChooserProps {
    * Replaces state in App component
    */ 
   onChange(startPoint: Point | null, destPoint: Point | null, lines: Edge[], drawColor: string): void;
+
+  markStart(startPoint: Point | null) : void;
+
+  markDest(destPoint: Point | null) : void;
 }
 
 /**
@@ -94,7 +98,6 @@ class PathChooser extends Component<PathChooserProps, PathChooserState> {
     let pathString = await fetch(this.HOSTNAME + this.PORT + "/findPath?start="
                                                + start + "&end=" + end);
     let parsedPath = await pathString.json();
-    
     if(parsedPath === null) {
       alert("No path found between buildings " + start + " and " + end);
       return;
@@ -121,11 +124,16 @@ class PathChooser extends Component<PathChooserProps, PathChooserState> {
   }
 
   // Unused so far.
-  async markBuilding(buildName: string) {
+  async markBuilding(buildName: string, destFlag: boolean) {
     let pointString = await fetch(this.HOSTNAME + this.PORT
                                             + "/lookupBuilding?shortName=" + buildName);
     let parsedPoint = await pointString.json();
     let castedPoint = parsedPoint as Point;
+    if(destFlag) {
+      this.props.markDest(castedPoint);
+    } else {
+      this.props.markStart(castedPoint);
+    }
   }
 
   /**
@@ -155,9 +163,9 @@ class PathChooser extends Component<PathChooserProps, PathChooserState> {
             <select
               id={"start-select"}
               value={this.state.start}
-              onChange={(event: any) =>
-                {this.setState({start: event.target.value});
-                }}>
+              onChange={(event: any) => {
+                this.setState({start: event.target.value});
+                this.markBuilding(event.target.value, false);}}>
               <option value={""}>Starting Building</option>
               {this.buildingSelection()}
             </select>
@@ -167,7 +175,9 @@ class PathChooser extends Component<PathChooserProps, PathChooserState> {
             <select 
               id={"dest-select"}
               value={this.state.end}
-              onChange={(event: any) => {this.setState({end: event.target.value});}}>
+              onChange={(event: any) => {
+                this.setState({end: event.target.value});
+                this.markBuilding(event.target.value, true);}}>
               <option value={""}>Destination Building</option>
               {this.buildingSelection()}
             </select>
