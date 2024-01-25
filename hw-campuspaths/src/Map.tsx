@@ -11,12 +11,12 @@
 
 import { LatLngExpression } from "leaflet";
 import React, { Component } from "react";
-import {MapContainer, TileLayer, Circle, Polyline} from "react-leaflet";
+import {MapContainer, TileLayer } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import MapLine from "./MapLine";
 import MapCircle from "./MapCircle";
-import { UW_LATITUDE_CENTER, UW_LONGITUDE_CENTER, xToLon, yToLat } from "./Constants";
-import { Edge } from "./Interfaces";
+import { UW_LATITUDE_CENTER, UW_LONGITUDE_CENTER } from "./Constants";
+import { Edge, Point } from "./Interfaces";
 
 // Defines the location of the map. These are the coordinates of the UW Seattle campus
 const position: LatLngExpression = [UW_LATITUDE_CENTER, UW_LONGITUDE_CENTER];
@@ -29,9 +29,23 @@ interface MapProps {
    * Array of Edges to be converted to MapLine components
    */
   edges: Edge[];
+
+  startPoint: Point | null;
+
+  destPoint: Point | null;
+
+  drawColor: string;
 }
 
 class Map extends Component<MapProps, {}> {
+
+  makeCircle(center: Point | null) {
+    if(center === null) {
+      return null;
+    } else {
+      return <MapCircle x={center.x} y={center.y} radius={50} color={this.props.drawColor} />;
+    }
+  }
   render() {
     return (
       <div id="map">
@@ -43,7 +57,7 @@ class Map extends Component<MapProps, {}> {
           {this.props.edges.map(
             (edge: Edge, i: number) => (
               <MapLine
-                color={edge.color}
+                color={this.props.drawColor}
                 x1={edge.x1}
                 y1={edge.y1}
                 x2={edge.x2}
@@ -52,15 +66,11 @@ class Map extends Component<MapProps, {}> {
               />
             )
           )}
-          <MapCircle
-            x={2360}
-            y={1100}
-            radius={37.5}
-            color={"red"}
-          />
+          {this.makeCircle(this.props.startPoint)}
+          {this.makeCircle(this.props.destPoint)}
+          <MapCircle x={1500} y={1500} radius={50} color={this.props.drawColor}/>
         </MapContainer>
       </div>
-        // Circle is at communications building!
     );
   }
 }

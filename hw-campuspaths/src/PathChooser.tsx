@@ -9,7 +9,7 @@ interface PathChooserProps {
    * Called when a new Edge[] is ready and 'Draw' is clicked
    * Replaces state in App component
    */ 
-  onChange(startPoint: Point | null, destPoint: Point | null, lines: Edge[]): void;
+  onChange(startPoint: Point | null, destPoint: Point | null, lines: Edge[], drawColor: string): void;
 }
 
 /**
@@ -106,11 +106,21 @@ class PathChooser extends Component<PathChooserProps, PathChooserState> {
     let i: number = 0;
     while(i < directions.path.length) {
       const seg: Segment = directions.path[i];
-      edges.push({x1: seg.start.x, y1: seg.start.y, x2: seg.end.x,
-                  y2: seg.end.y, color: this.state.color});
+      edges.push({x1: seg.start.x, y1: seg.start.y,
+                  x2: seg.end.x, y2: seg.end.y});
       i++;
     }
-    this.props.onChange(null, null, edges);
+    this.props.onChange({x: directions.start.x, y: directions.start.y},
+                        null, edges, this.state.color);
+  }
+
+  // Benign so far.
+  markBuilding(building: string) {
+    if(building = "") {
+      return;
+    } else {
+      return;
+    }
   }
 
   /**
@@ -140,7 +150,9 @@ class PathChooser extends Component<PathChooserProps, PathChooserState> {
             <select
               id={"start-select"}
               value={this.state.start}
-              onChange={(event: any) => {this.setState({start: event.target.value});}}>
+              onChange={(event: any) =>
+                {this.setState({start: event.target.value});
+                }}>
               <option value={""}>Starting Building</option>
               {this.buildingSelection()}
             </select>
@@ -168,7 +180,7 @@ class PathChooser extends Component<PathChooserProps, PathChooserState> {
             Find Path
           </button>
           <button onClick={() => {
-            this.props.onChange(null, null, []);
+            this.props.onChange(null, null, [], "");
             this.setState({start: "", end: "", color: ""});}}>
             Reset
           </button>

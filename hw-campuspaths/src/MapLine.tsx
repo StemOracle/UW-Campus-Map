@@ -31,9 +31,6 @@ interface MapLineProps {
  * longitude, which the React Leaflet map uses
  */
 class MapLine extends Component<MapLineProps, {}> {
-  constructor(props: any) {
-    super(props);
-  }
 
   render() {
     return (

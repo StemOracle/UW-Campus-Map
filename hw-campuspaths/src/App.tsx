@@ -29,12 +29,15 @@ interface AppState {
   /**
    * Point coordinate of starting building
    */
-  startPoint: { x1: number, y1: number } | null;
+  startPoint: Point | null;
 
   /**
    * Point coordinate of destination building
    */
-  destPoint: { x2: number, y2: number } | null;
+  destPoint: Point | null;
+
+
+  drawColor: string;
 }
 
 /**
@@ -49,7 +52,8 @@ class App extends Component<{}, AppState> {
     this.state = {
       edges: [],
       startPoint: null,
-      destPoint: null
+      destPoint: null,
+      drawColor: ""
     };
   }
 
@@ -58,16 +62,21 @@ class App extends Component<{}, AppState> {
       <div id="app">
         <Map
           edges={this.state.edges}
+          startPoint={this.state.startPoint}
+          destPoint={this.state.destPoint}
+          drawColor={this.state.drawColor}
         />
         <div>
-          <h1 id="app-title">Choose Your Path!</h1>
+          <h1 id="app-title">Find Path Between Buildings</h1>
           <p>
             Choose a starting building and a destination building on the UW campus. <br/>
-            With the color of your choice,
-            I will display the shortest path between the two buildings.
+            This will display the shortest path between the two buildings.
           </p>
           <PathChooser
-            onChange={(startPoint: Point, destPoint: Point, edges: Edge[]) => {this.setState({edges: edges});}}
+            onChange={(startPoint: Point, destPoint: Point, edges: Edge[], drawColor: string) => {
+              this.setState({startPoint: startPoint,
+                                   edges: edges,
+                                   drawColor: drawColor});}}
           />
         </div>
       </div>

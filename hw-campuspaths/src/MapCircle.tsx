@@ -13,14 +13,10 @@ interface MapCircleProps {
 }
 
 class MapCircle extends Component<MapCircleProps, {}> {
-  constructor(props: any) {
-    super(props);
-  }
-
   render() {
     return (
       <Circle
-        color={this.props.color}
+        pathOptions={{color: this.props.color}}
         center={[yToLat(this.props.y), xToLon(this.props.x)]}
         radius={this.props.radius}
       />
