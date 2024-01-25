@@ -53,11 +53,12 @@ class PathChooser extends Component<PathChooserProps, PathChooserState> {
    * @spec.requires valid buildings must be chosen, a color must be specified,
    * and a path must exist between the buildings. No behavior otherwise */
   async pathBetweenBuildings(start: string, end: string) {
+    let col: string = this.state.color;
     // If not enough info given, benignly return
     if(this.state.start === "" || this.state.end === "") {
       alert("Please select a starting building and destination building."); return;
     } else if(this.state.color === "") {
-      alert("Please confirm a color."); return;
+      col = "red";
     }
 
     let pathString = await fetch(this.HOSTNAME + this.PORT + "/findPath?start="
@@ -75,7 +76,7 @@ class PathChooser extends Component<PathChooserProps, PathChooserState> {
       const seg: Segment = castedPath.path[i];
       edges.push({x1: seg.start.x, y1: seg.start.y, x2: seg.end.x, y2: seg.end.y});
     }
-    this.props.onChange(undefined, undefined, edges, this.state.color);
+    this.props.onChange(undefined, undefined, edges, col);
   }
 
   async markBuilding(buildName: string, destFlag: boolean) {
@@ -149,7 +150,7 @@ class PathChooser extends Component<PathChooserProps, PathChooserState> {
           </button>
           <button onClick={() => {
             this.props.onChange(null, null, [], "");
-            this.setState({start: "", end: "", color: ""});}}>
+            this.setState({start: "", end: "", color: "red"});}}>
             Reset
           </button>
         </div>

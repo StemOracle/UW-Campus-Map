@@ -21,19 +21,15 @@ import { Edge, Point } from "./Interfaces";
 // Defines the location of the map. These are the coordinates of the UW Seattle campus
 const position: LatLngExpression = [UW_LATITUDE_CENTER, UW_LONGITUDE_CENTER];
 
-/**
- * Properties of this component
- */
+/** Properties of this component */
 interface MapProps {
-  /**
-   * Array of Edges to be converted to MapLine components
-   */
+  /** Makes up path between buildings */
   edges: Edge[];
-
+  /** Point coordinate of starting building */
   startPoint: Point | null;
-
+  /** Point coordinate of destination building */
   destPoint: Point | null;
-
+  /** Color of marked starting, dest building, and path between them */
   drawColor: string;
 }
 
@@ -47,6 +43,11 @@ class Map extends Component<MapProps, {}> {
       col = "red";
     }
     return <MapCircle x={center.x} y={center.y} radius={42.5} color={col} />;
+  }
+
+  // Benign so far
+  makeLines() {
+    let col: string = this.props.drawColor;
   }
 
   render() {
