@@ -12,13 +12,13 @@
 import React, {Component} from 'react';
 import Map from "./Map";
 import PathChooser from "./PathChooser";
-import { Point, Edge } from "./Interfaces";
+import { Point, Segment } from "./Interfaces";
 import "./App.css";
 
 /** State of this component */
 interface AppState {
   /** Makes up path between buildings */
-  edges: Edge[];
+  segs: Segment[];
   /** Point coordinate of starting building */
   startPoint: Point | null;
   /** Point coordinate of destination building */
@@ -34,7 +34,7 @@ class App extends Component<{}, AppState> {
     // No props here!
     super(props);
     this.state = {
-      edges: [],
+      segs: [],
       startPoint: null,
       destPoint: null,
       drawColor: ""
@@ -45,7 +45,7 @@ class App extends Component<{}, AppState> {
     return (
       <div id="app">
         <Map
-          edges={this.state.edges}
+          segs={this.state.segs}
           startPoint={this.state.startPoint}
           destPoint={this.state.destPoint}
           drawColor={this.state.drawColor}
@@ -59,11 +59,11 @@ class App extends Component<{}, AppState> {
           <PathChooser
             onChange={(startPoint: Point | null | undefined,
                        destPoint: Point | null | undefined,
-                       edges: Edge[] | undefined,
+                       segs: Segment[] | undefined,
                        drawColor: string | undefined) => {
               if(startPoint !== undefined) {this.setState({startPoint: startPoint});}
               if(destPoint !== undefined) {this.setState({destPoint: destPoint});}
-              if(edges !== undefined) {this.setState({edges: edges});}
+              if(segs !== undefined) {this.setState({segs: segs});}
               if(drawColor !== undefined) {this.setState({drawColor: drawColor});}}}
           />
         </div>
