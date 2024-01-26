@@ -33,13 +33,15 @@ interface MapProps {
   drawColor: string;
 }
 
-function ZoomToFit(p1: Point, p2: Point) {
-  /* I'll have to fix this later.
+function Benign(props: {p1: Point | null, p2: Point | null}) {
   const map = useMap();
-  if(startPoint !== null && destPoint !== null) {
-    map.fitBounds([[yToLat(startPoint.y), xToLon(startPoint.x)], [yToLat(destPoint.y), xToLon(destPoint.x)]]);
-  } */
-  return;
+  if(props.p1 === null || props.p2 === null) { return null; }
+  let x1: number = xToLon(props.p1.x), y1: number = yToLat(props.p1.y);
+  let x2: number = xToLon(props.p2.x), y2: number = yToLat(props.p2.y);
+  if(x1 > x2) { let swap: number = x1; x1 = x2; x2 = swap }
+  if(y1 > y2) { let swap: number = y1; y1 = y2; y2 = swap }
+  map.fitBounds([[y1, x1], [y2, x2]]);
+  return null;
 }
 
 class Map extends Component<MapProps, {}> {
@@ -56,31 +58,31 @@ class Map extends Component<MapProps, {}> {
     let lines: JSX.Element[] = [];
     for(let i: number = 0; i < this.props.segs.length; i += 1) {
       let seg: Segment = this.props.segs[i];
-      lines.push(<MapLine
+      lines.push(
+        <MapLine
           x1={seg.start.x}
           y1={seg.start.y}
           x2={seg.end.x}
           y2={seg.end.y}
           color={col} />);
     }
-    if(this.props.startPoint != null && this.props.destPoint != null) {
-      ZoomToFit(this.props.startPoint, this.props.destPoint); }
+    lines.push(<Benign p1={this.props.startPoint} p2={this.props.destPoint}/>);
     return lines;
   }
 
   render() {
     return (
-      <div id="map">
-        <MapContainer center={position} zoom={15} scrollWheelZoom={false}>
-          <TileLayer
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          />
-          {this.makeLines()}
-          {this.makeCircle(this.props.startPoint)}
-          {this.makeCircle(this.props.destPoint)}
-        </MapContainer>
-      </div>
+        <div id="map">
+          <MapContainer center={position} zoom={15} scrollWheelZoom={false}>
+            <TileLayer
+                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            />
+            {this.makeLines()}
+            {this.makeCircle(this.props.startPoint)}
+            {this.makeCircle(this.props.destPoint)}
+          </MapContainer>
+        </div>
     );
   }
 }
