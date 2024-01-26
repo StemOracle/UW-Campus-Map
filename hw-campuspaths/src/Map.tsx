@@ -66,7 +66,7 @@ class Map extends Component<MapProps, {}> {
           y2={seg.end.y}
           color={col} />);
     }
-    lines.push(<Benign p1={this.props.startPoint} p2={this.props.destPoint}/>);
+    // if(lines.length > 0) { lines.push(<Benign p1={this.props.startPoint} p2={this.props.destPoint}/>); }
     return lines;
   }
 
@@ -75,9 +75,8 @@ class Map extends Component<MapProps, {}> {
         <div id="map">
           <MapContainer center={position} zoom={15} scrollWheelZoom={false}>
             <TileLayer
-                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            />
+              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
             {this.makeLines()}
             {this.makeCircle(this.props.startPoint)}
             {this.makeCircle(this.props.destPoint)}

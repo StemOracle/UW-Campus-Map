@@ -81,3 +81,7 @@ file was empty.
     font-weight: bold;
     margin: 10px;
 }
+
+#marker {
+  color: blue;
+}

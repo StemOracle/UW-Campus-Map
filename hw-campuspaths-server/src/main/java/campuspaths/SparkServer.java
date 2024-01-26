@@ -42,7 +42,7 @@ public class SparkServer {
     });
 
 
-    // Get the path between two campus buildings.
+    // Get path between two campus buildings.
     // Expected query params: "/findPath?start=string&end=string",
     // where start and end are short names of campus buildings.
     Spark.get("/findPath", new Route() {
@@ -54,6 +54,9 @@ public class SparkServer {
       }
     });
 
+    // Get Point coordinate of campus building.
+    // Expected query param: "/lookupBuilding?shortName=string"
+    // shortName is short name of campus building in question
     Spark.get("/lookupBuilding", new Route() {
       @Override
       public Object handle(Request req, Response resp) throws Exception {

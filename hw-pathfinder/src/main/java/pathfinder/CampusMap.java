@@ -18,39 +18,25 @@ import graph.Graph;
 import java.util.*;
 
 
-/**
- * An immutable CampusMap that allows pathfinding between campus buildings
- */
+/** An immutable CampusMap that allows pathfinding between campus buildings */
 public class CampusMap implements ModelAPI {
-    
     // AF: buildCords -> coordinate position of each building.
     // campus -> graph with building positions as nodes and distances as edges.
-   
+
     // RI: No nulls anywhere, except potentially the return of findShortestPath.
     // Keys of buildCords must equal short name of corresponding CampusBuilding.
-   
-    /**
-     * Maps a campus building's short name to its corresponding CampusBuilding instance
-     */	
+
+    /** Maps a campus building's short name to its corresponding CampusBuilding instance */
     private Map<String, CampusBuilding> buildCords;
 
-
-    /**
-     * Graph with coordinate Points as nodes and path distances as edges
-     */
+    /** Graph with coordinate Points as nodes and path distances as edges */
     private Graph<Point, Double> campus;
 
-
-    /**
-     * For debug purposes only
-     */
+    /** For debug purposes only */
     private static final boolean DEBUG = false;
 
-
-    /**
-     * Creates new instance of a CampusMap
-     * Do note that CampusBuildings will not be only nodes of map/graph
-     */
+    /** Creates new instance of a CampusMap
+     * Do note that CampusBuildings will not be only nodes of map/graph */
     public CampusMap() {
         // Prepare Graph object
         this.campus = new Graph<Point, Double>();
@@ -75,12 +61,10 @@ public class CampusMap implements ModelAPI {
 	    }
     }
 
-
     @Override
     public boolean shortNameExists(String shortName) {
         return (this.buildCords.keySet()).contains(shortName);
     }
-
 
     @Override
     public String longNameForShort(String shortName) {
@@ -121,11 +105,9 @@ public class CampusMap implements ModelAPI {
 	    }
     }
 
-	/**
-	 * Returns Point coordinate of building if found, null if name not recognized
+	/** Returns Point coordinate of building if found, null if name not recognized
 	 * @param buildingName
-	 * @return Point coordinate of building if found, null if name not recognized
-	 */
+	 * @return Point coordinate of building if found, null if name not recognized */
 	public Point lookupBuilding(String buildingName) {
 		CampusBuilding build = buildCords.get(buildingName);
 		if(build == null) {
@@ -135,11 +117,9 @@ public class CampusMap implements ModelAPI {
 		}
 	}
     
-    /**
-     * Checks if RI has been violated
+    /** Checks if RI has been violated
      * Executes smoothly if not
-     * @throws AssertionError if RI violated
-     */
+     * @throws AssertionError if RI violated */
     private void checkRep() {
         assert this.buildCords != null;
 	    assert this.campus != null;
