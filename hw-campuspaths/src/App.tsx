@@ -25,8 +25,9 @@ interface AppState {
   dest: Point | null;
   /** Color of marked starting, dest building, and path between them */
   col: string;
-  /** True iff pathfinding and must zoom to fit found path */
-  willDraw: boolean;
+  /** True iff pathfinding and must zoom, false iff selecting buildings and must unzoom
+   * Undefined if neither */
+  zoomFlag: number;
 }
 
 /** Visualizes UW Seattle Campus finds shortest path between two select buildings */
@@ -40,7 +41,7 @@ class App extends Component<{}, AppState> {
       start: null,
       dest: null,
       col: "",
-      willDraw: false
+      zoomFlag: 0
     };
   }
 
@@ -52,7 +53,7 @@ class App extends Component<{}, AppState> {
           start={this.state.start}
           dest={this.state.dest}
           col={this.state.col}
-          willDraw={this.state.willDraw}
+          zoomFlag={this.state.zoomFlag}
         />
         <div>
           <h1 id="app-title">Find Path Between Buildings</h1>
@@ -62,14 +63,14 @@ class App extends Component<{}, AppState> {
           </p>
           <PathChooser
             markBuild={(pt: Point, isStart: boolean) => {
-              if(isStart) {this.setState({start: pt, willDraw: false});}
-              else {this.setState({dest: pt, willDraw: false});}}}
+              if(isStart) {this.setState({start: pt, zoomFlag: 0});}
+              else {this.setState({dest: pt, zoomFlag: 0});}}}
             pathfind={(segs: Segment[], col: string) => {
-              this.setState({segs: segs, col: col, willDraw: true});}}
+              this.setState({segs: segs, col: col, zoomFlag: 1});}}
             setCol={(col: string) => {
-              this.setState({col: col, willDraw: false})}}
+              this.setState({col: col, zoomFlag: 2})}}
             reset={() => {
-              this.setState({start: null, dest: null, segs: [], col: "", willDraw: false});}}
+              this.setState({start: null, dest: null, segs: [], col: "", zoomFlag: 0});}}
           />
         </div>
       </div>

@@ -107,15 +107,16 @@ class PathChooser extends Component<PathChooserProps, PathChooserState> {
       <div id="path-chooser">
         <div id="select-start">
           <label htmlFor="start-select">Start:</label><br/>
-            <select
+          <select
               id={"start-select"}
               value={this.state.start}
               onChange={(event: any) => {
                 this.setState({start: event.target.value});
-                this.markBuilding(event.target.value, true);}}>
-              <option value={""}>Starting Building</option>
-              {this.buildingSelection()}
-            </select>
+                this.markBuilding(event.target.value, true);
+              }}>
+            <option value={""}>Starting Building</option>
+            {this.buildingSelection()}
+          </select>
         </div>
         <div id="select-destination">
           <label htmlFor="dest-select">Destination:</label><br/>

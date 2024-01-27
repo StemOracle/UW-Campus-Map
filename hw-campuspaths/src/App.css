@@ -36,6 +36,8 @@ file was empty.
 #path-chooser {
     text-align: center;
     margin: 5px;
+    font-family: arial;
+    font-size: 20px;
 }
 
 /* Sets color of buttons in PathChooser component to be violet.
@@ -53,16 +55,16 @@ file was empty.
 #path-chooser select {
     margin: 3px 5px;
     background-color: #86FF76;
-    border-color: green;
+    border-color: darkgreen;
 }
 
 /* Sets color of textarea in PathChooser component to be aquamarine.
  * Sets its border to be blue.
  * Margins to prevent it from being too squished with other components. */
 #path-chooser textarea {
-    margin: 2px 5px;
+    margin: 3px 5px;
     background-color: aquamarine;
-    border-color: blue;
+    border-color: darkblue;
 }
 
 /* Aligns text of paragraph in App component to center. */
@@ -80,8 +82,4 @@ file was empty.
     font-size: 30px;
     font-weight: bold;
     margin: 10px;
-}
-
-#marker {
-  color: blue;
 }

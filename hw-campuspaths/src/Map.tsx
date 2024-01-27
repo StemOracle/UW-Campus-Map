@@ -34,17 +34,14 @@ interface MapProps {
   /** Color of marked starting, dest building, and path between them */
   col: string;
   /** True iff pathfinding and must zoom to fit found path */
-  willDraw: boolean;
+  zoomFlag: number;
 }
 
 function Zoom(props: {p1: Point | null, p2: Point | null}): null {
   const map = useMap();
   if(props.p1 === null || props.p2 === null) { return null; }
-  let x1: number = xToLon(props.p1.x), y1: number = yToLat(props.p1.y);
-  let x2: number = xToLon(props.p2.x), y2: number = yToLat(props.p2.y);
-  if(x1 > x2) { let swap: number = x1; x1 = x2; x2 = swap }
-  if(y1 > y2) { let swap: number = y1; y1 = y2; y2 = swap }
-  map.fitBounds([[y1, x1], [y2, x2]]);
+  map.fitBounds([[yToLat(props.p1.y), xToLon(props.p1.x)],
+                 [yToLat(props.p2.y), xToLon(props.p2.x)]]);
   return null;
 }
 
@@ -71,9 +68,10 @@ class Map extends Component<MapProps, {}> {
       lines.push(
         <MapLine x1={seg.start.x} y1={seg.start.y} x2={seg.end.x} y2={seg.end.y} color={col} />);
     }
-    if(this.props.willDraw) {
+    // If willZoom isn't binary, neither zoom nor unzoom
+    if(this.props.zoomFlag == 1) {
       lines.push(<Zoom p1={this.props.start} p2={this.props.dest} />);
-    } else {
+    } else if(this.props.zoomFlag == 0) {
       lines.push(<UnZoom />);
     }
     return lines;
