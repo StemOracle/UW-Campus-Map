@@ -3,12 +3,14 @@ import { Point, Segment, Path } from './Interfaces'
 
 /** Properties of this component */
 interface PathChooserProps {
-  /** Called when drawing a path, changing color, or marking buildings */
-  onChange(startPoint: Point | null | undefined,
-           destPoint: Point | null | undefined,
-           segs: Segment[] | undefined,
-           drawColor: string | undefined,
-           isPathfinding: boolean): void;
+  /** Marks selected buildings */
+  markBuild(pt: Point, isStart: boolean): void;
+  /** Draws path between selected buildings */
+  pathfind(segs: Segment[], col: string): void;
+  /** Changes color of path and marked buildings */
+  setCol(col: string): void;
+  /** Resets entire application */
+  reset(): void;
 }
 
 /** State of this component */
@@ -49,8 +51,6 @@ class PathChooser extends Component<PathChooserProps, PathChooserState> {
   }
 
   /** Finds shortest path between building labeled start and building labeled end
-   * @param start name of starting building on the UW campus
-   * @param end name of destination building on the UW campus
    * @spec.requires valid buildings must be chosen, a color must be specified,
    * and a path must exist between the buildings. No behavior otherwise */
   async pathBetweenBuildings() {
@@ -76,19 +76,15 @@ class PathChooser extends Component<PathChooserProps, PathChooserState> {
     for(let i: number = 0; i < castedPath.path.length; i+= 1) {
       segs.push(castedPath.path[i]);
     }
-    this.props.onChange(undefined, undefined, segs, col, true);
+    this.props.pathfind(segs, col);
   }
 
-  async markBuilding(buildName: string, destFlag: boolean) {
+  async markBuilding(buildName: string, isStart: boolean) {
     let pointString: Response = await fetch(this.HOSTNAME + this.PORT
                                             + "/lookupBuilding?shortName=" + buildName);
     let parsedPoint = await pointString.json();
     let castedPoint: Point = parsedPoint as Point;
-    if(destFlag) {
-      this.props.onChange(undefined, castedPoint, undefined, undefined, false);
-    } else {
-      this.props.onChange(castedPoint, undefined, undefined, undefined, false);
-    }
+    this.props.markBuild(castedPoint, isStart);
   }
 
   /** Gives select component options for each building of UW campus
@@ -116,7 +112,7 @@ class PathChooser extends Component<PathChooserProps, PathChooserState> {
               value={this.state.start}
               onChange={(event: any) => {
                 this.setState({start: event.target.value});
-                this.markBuilding(event.target.value, false);}}>
+                this.markBuilding(event.target.value, true);}}>
               <option value={""}>Starting Building</option>
               {this.buildingSelection()}
             </select>
@@ -128,25 +124,31 @@ class PathChooser extends Component<PathChooserProps, PathChooserState> {
               value={this.state.end}
               onChange={(event: any) => {
                 this.setState({end: event.target.value});
-                this.markBuilding(event.target.value, true);}}>
+                this.markBuilding(event.target.value, false);}}>
               <option value={""}>Destination Building</option>
               {this.buildingSelection()}
             </select>
         </div>
-          <div id="enter-color">
-            <label htmlFor="color-text">Color:</label><br/>
-              <textarea id={"color-text"} rows={1} cols={10} value={this.state.color}
-                onChange={(event: any) => {
-                  this.setState({color: event.target.value});}}/>
-              <button onClick={() => {
-                this.props.onChange(undefined, undefined, undefined, this.state.color, false);}}>✔</button>
-          </div>
-          <div id="options">
-            <button onClick={() => {
-              this.pathBetweenBuildings();}}>Find Path</button>
-            <button onClick={() => {
-              this.props.onChange(null, null, [], "", false);
-              this.setState({start: "", end: "", color: ""});}}>Reset</button>
+        <div id="enter-color">
+          <label htmlFor="color-text">Color:</label><br/>
+          <textarea id={"color-text"} rows={1} cols={10} value={this.state.color}
+            onChange={(event: any) => {
+              this.setState({color: event.target.value});}}/>
+          <button onClick={() => {
+            this.props.setCol(this.state.color);}}>
+            ✔
+          </button>
+        </div>
+        <div id="options">
+          <button onClick={() => {
+            this.pathBetweenBuildings();}}>
+            Find Path
+          </button>
+          <button onClick={() => {
+              this.props.reset();
+              this.setState({start: "", end: "", color: ""});}}>
+            Reset
+          </button>
         </div>
       </div>
     );

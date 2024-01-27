@@ -28,13 +28,13 @@ interface MapProps {
   /** Makes up path between buildings */
   segs: Segment[];
   /** Point coordinate of starting building */
-  startPoint: Point | null;
+  start: Point | null;
   /** Point coordinate of destination building */
-  destPoint: Point | null;
+  dest: Point | null;
   /** Color of marked starting, dest building, and path between them */
-  drawColor: string;
+  col: string;
   /** True iff pathfinding and must zoom to fit found path */
-  isPathfinding: boolean;
+  willDraw: boolean;
 }
 
 function Zoom(props: {p1: Point | null, p2: Point | null}) {
@@ -50,14 +50,14 @@ function Zoom(props: {p1: Point | null, p2: Point | null}) {
 
 class Map extends Component<MapProps, {}> {
   makeCircle(center: Point | null): JSX.Element | null {
-    let col: string = this.props.drawColor;
+    let col: string = this.props.col;
     if(center === null) { return null; }
     else if (col === "") { col = "red"; }
     return <MapCircle x={center.x} y={center.y} radius={42.5} color={col} />;
   }
 
   makeLines(): JSX.Element[] {
-    let col: string = this.props.drawColor;
+    let col: string = this.props.col;
     if(col === "") { col = "red"; }
     let lines: JSX.Element[] = [];
     for(let i: number = 0; i < this.props.segs.length; i += 1) {
@@ -65,8 +65,8 @@ class Map extends Component<MapProps, {}> {
       lines.push(
         <MapLine x1={seg.start.x} y1={seg.start.y} x2={seg.end.x} y2={seg.end.y} color={col} />);
     }
-    if(this.props.isPathfinding) {
-      lines.push(<Zoom p1={this.props.startPoint} p2={this.props.destPoint} />);
+    if(this.props.willDraw) {
+      lines.push(<Zoom p1={this.props.start} p2={this.props.dest} />);
     }
     return lines;
   }
@@ -79,8 +79,8 @@ class Map extends Component<MapProps, {}> {
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
             {this.makeLines()}
-            {this.makeCircle(this.props.startPoint)}
-            {this.makeCircle(this.props.destPoint)}
+            {this.makeCircle(this.props.start)}
+            {this.makeCircle(this.props.dest)}
           </MapContainer>
         </div>
     );

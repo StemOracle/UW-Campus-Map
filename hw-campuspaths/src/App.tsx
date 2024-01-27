@@ -20,13 +20,13 @@ interface AppState {
   /** Makes up path between buildings */
   segs: Segment[];
   /** Point coordinate of starting building */
-  startPoint: Point | null;
+  start: Point | null;
   /** Point coordinate of destination building */
-  destPoint: Point | null;
+  dest: Point | null;
   /** Color of marked starting, dest building, and path between them */
-  drawColor: string;
+  col: string;
   /** True iff pathfinding and must zoom to fit found path */
-  isPathfinding: boolean;
+  willDraw: boolean;
 }
 
 /** Visualizes UW Seattle Campus finds shortest path between two select buildings */
@@ -37,10 +37,10 @@ class App extends Component<{}, AppState> {
     super(props);
     this.state = {
       segs: [],
-      startPoint: null,
-      destPoint: null,
-      drawColor: "",
-      isPathfinding: false
+      start: null,
+      dest: null,
+      col: "",
+      willDraw: false
     };
   }
 
@@ -49,10 +49,10 @@ class App extends Component<{}, AppState> {
       <div id="app">
         <Map
           segs={this.state.segs}
-          startPoint={this.state.startPoint}
-          destPoint={this.state.destPoint}
-          drawColor={this.state.drawColor}
-          isPathfinding={this.state.isPathfinding}
+          start={this.state.start}
+          dest={this.state.dest}
+          col={this.state.col}
+          willDraw={this.state.willDraw}
         />
         <div>
           <h1 id="app-title">Find Path Between Buildings</h1>
@@ -61,17 +61,15 @@ class App extends Component<{}, AppState> {
             This will display the shortest path between the two buildings.
           </p>
           <PathChooser
-            onChange={(startPoint: Point | null | undefined,
-                       destPoint: Point | null | undefined,
-                       segs: Segment[] | undefined,
-                       drawColor: string | undefined,
-                       isPathfinding: boolean) => {
-              this.setState({isPathfinding: false});
-              if(startPoint !== undefined) {this.setState({startPoint: startPoint});}
-              if(destPoint !== undefined) {this.setState({destPoint: destPoint});}
-              if(segs !== undefined) {this.setState({segs: segs});}
-              if(drawColor !== undefined) {this.setState({drawColor: drawColor});}
-              this.setState({isPathfinding: isPathfinding});}}
+            markBuild={(pt: Point, isStart: boolean) => {
+              if(isStart) {this.setState({start: pt, willDraw: false});}
+              else {this.setState({dest: pt, willDraw: false});}}}
+            pathfind={(segs: Segment[], col: string) => {
+              this.setState({segs: segs, col: col, willDraw: true});}}
+            setCol={(col: string) => {
+              this.setState({col: col, willDraw: false})}}
+            reset={() => {
+              this.setState({start: null, dest: null, segs: [], col: "", willDraw: false});}}
           />
         </div>
       </div>
