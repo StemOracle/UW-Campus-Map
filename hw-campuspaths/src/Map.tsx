@@ -37,7 +37,7 @@ interface MapProps {
   willDraw: boolean;
 }
 
-function Zoom(props: {p1: Point | null, p2: Point | null}) {
+function Zoom(props: {p1: Point | null, p2: Point | null}): null {
   const map = useMap();
   if(props.p1 === null || props.p2 === null) { return null; }
   let x1: number = xToLon(props.p1.x), y1: number = yToLat(props.p1.y);
@@ -45,6 +45,12 @@ function Zoom(props: {p1: Point | null, p2: Point | null}) {
   if(x1 > x2) { let swap: number = x1; x1 = x2; x2 = swap }
   if(y1 > y2) { let swap: number = y1; y1 = y2; y2 = swap }
   map.fitBounds([[y1, x1], [y2, x2]]);
+  return null;
+}
+
+function UnZoom() {
+  const map = useMap();
+  map.setView(position, defZoom);
   return null;
 }
 
@@ -67,6 +73,8 @@ class Map extends Component<MapProps, {}> {
     }
     if(this.props.willDraw) {
       lines.push(<Zoom p1={this.props.start} p2={this.props.dest} />);
+    } else {
+      lines.push(<UnZoom />);
     }
     return lines;
   }
@@ -74,7 +82,7 @@ class Map extends Component<MapProps, {}> {
   render() {
     return (
         <div id="map">
-          <MapContainer center={position} zoom={defZoom} scrollWheelZoom={false}>
+          <MapContainer center={position} zoom={defZoom} scrollWheelZoom={true}>
             <TileLayer
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />

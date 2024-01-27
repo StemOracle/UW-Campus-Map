@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import { Point, Segment, Path } from './Interfaces'
 
 /** Properties of this component */

@@ -8,10 +8,9 @@ will be considered for extra credit.
 
 ADDITIONAL FEATURE #1:
 Upon selecting a building, its location will immediately be marked with a circle.
-By default, the circle color will be red. However, if a color is specified,
-the circles and the eventual path between them will both be that color.
-I initially tried using the Marker component, but the marker icon didn't appear correctly.
+By default, the circle color is red but can be changed by specifying a color.
+I did try using the Marker component, but the marker icon didn't appear correctly.
 
 ADDITIONAL FEATURE #2:
 When finding a path between two buildings, the map will automatically zoom in on the path.
-Currently, resetting doesn't reset zoom to the default position.
+Resetting or picking a new building will reset the zoom and position of the map.
