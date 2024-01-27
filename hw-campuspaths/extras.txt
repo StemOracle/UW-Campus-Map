@@ -14,3 +14,4 @@ I did try using the Marker component, but the marker icon didn't appear correctl
 ADDITIONAL FEATURE #2:
 When finding a path between two buildings, the map will automatically zoom in on the path.
 Resetting or picking a new building will reset the zoom and position of the map.
+Selecting a color will neither zoom nor unzoom the map.

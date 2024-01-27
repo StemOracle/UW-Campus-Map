@@ -37,6 +37,9 @@ interface MapProps {
   zoomFlag: number;
 }
 
+/** If both points non-null, zooms map to fit both
+ * @param props two possibly null points
+ * @return null; produces potential side effects but benign return */
 function Zoom(props: {p1: Point | null, p2: Point | null}): null {
   const map = useMap();
   if(props.p1 === null || props.p2 === null) { return null; }
@@ -45,6 +48,8 @@ function Zoom(props: {p1: Point | null, p2: Point | null}): null {
   return null;
 }
 
+/** Unzooms map back to default state
+ * @return null; produces side effects but benign return */
 function UnZoom() {
   const map = useMap();
   map.setView(position, defZoom);

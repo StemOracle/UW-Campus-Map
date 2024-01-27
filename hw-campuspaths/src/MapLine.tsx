@@ -11,10 +11,7 @@
 
 import React, { Component } from "react";
 import { Polyline } from "react-leaflet";
-import {
-  xToLon,
-  yToLat
-} from "./Constants";
+import { xToLon, yToLat } from "./Constants";
 
 interface MapLineProps {
   color: string; // color of line
