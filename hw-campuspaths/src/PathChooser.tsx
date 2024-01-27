@@ -7,7 +7,8 @@ interface PathChooserProps {
   onChange(startPoint: Point | null | undefined,
            destPoint: Point | null | undefined,
            segs: Segment[] | undefined,
-           drawColor: string | undefined): void;
+           drawColor: string | undefined,
+           isPathfinding: boolean): void;
 }
 
 /** State of this component */
@@ -75,18 +76,18 @@ class PathChooser extends Component<PathChooserProps, PathChooserState> {
     for(let i: number = 0; i < castedPath.path.length; i+= 1) {
       segs.push(castedPath.path[i]);
     }
-    this.props.onChange(undefined, undefined, segs, col);
+    this.props.onChange(undefined, undefined, segs, col, true);
   }
 
   async markBuilding(buildName: string, destFlag: boolean) {
-    let pointString = await fetch(this.HOSTNAME + this.PORT
+    let pointString: Response = await fetch(this.HOSTNAME + this.PORT
                                             + "/lookupBuilding?shortName=" + buildName);
     let parsedPoint = await pointString.json();
-    let castedPoint = parsedPoint as Point;
+    let castedPoint: Point = parsedPoint as Point;
     if(destFlag) {
-      this.props.onChange(undefined, castedPoint, undefined, undefined);
+      this.props.onChange(undefined, castedPoint, undefined, undefined, false);
     } else {
-      this.props.onChange(castedPoint, undefined, undefined, undefined);
+      this.props.onChange(castedPoint, undefined, undefined, undefined, false);
     }
   }
 
@@ -138,13 +139,13 @@ class PathChooser extends Component<PathChooserProps, PathChooserState> {
                 onChange={(event: any) => {
                   this.setState({color: event.target.value});}}/>
               <button onClick={() => {
-                this.props.onChange(undefined, undefined, undefined, this.state.color);}}>✔</button>
+                this.props.onChange(undefined, undefined, undefined, this.state.color, false);}}>✔</button>
           </div>
           <div id="options">
             <button onClick={() => {
               this.pathBetweenBuildings();}}>Find Path</button>
             <button onClick={() => {
-              this.props.onChange(null, null, [], "");
+              this.props.onChange(null, null, [], "", false);
               this.setState({start: "", end: "", color: ""});}}>Reset</button>
         </div>
       </div>

@@ -24,12 +24,10 @@ interface MapLineProps {
   y2: number; // y coordinate of end point
 }
 
-/**
- * A component that will render a line on the React Leaflet map of color from
+/** A component that will render a line on the React Leaflet map of color from
  * point x1,y1 to x2,y2. This line will convert from the assignment's coordinate
  * system (where 0,0 is the top-left of the UW campus) to latitude and
- * longitude, which the React Leaflet map uses
- */
+ * longitude, which the React Leaflet map uses */
 class MapLine extends Component<MapLineProps, {}> {
 
   render() {

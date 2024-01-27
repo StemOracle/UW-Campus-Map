@@ -20,6 +20,8 @@ import { Point, Segment } from "./Interfaces";
 
 // Defines the location of the map. These are the coordinates of the UW Seattle campus
 const position: LatLngExpression = [UW_LATITUDE_CENTER, UW_LONGITUDE_CENTER];
+// Default zoom of map
+const defZoom: number = 15;
 
 /** Properties of this component */
 interface MapProps {
@@ -31,9 +33,11 @@ interface MapProps {
   destPoint: Point | null;
   /** Color of marked starting, dest building, and path between them */
   drawColor: string;
+  /** True iff pathfinding and must zoom to fit found path */
+  isPathfinding: boolean;
 }
 
-function Benign(props: {p1: Point | null, p2: Point | null}) {
+function Zoom(props: {p1: Point | null, p2: Point | null}) {
   const map = useMap();
   if(props.p1 === null || props.p2 === null) { return null; }
   let x1: number = xToLon(props.p1.x), y1: number = yToLat(props.p1.y);
@@ -48,7 +52,7 @@ class Map extends Component<MapProps, {}> {
   makeCircle(center: Point | null): JSX.Element | null {
     let col: string = this.props.drawColor;
     if(center === null) { return null; }
-    else if (this.props.drawColor === "") { col = "red"; }
+    else if (col === "") { col = "red"; }
     return <MapCircle x={center.x} y={center.y} radius={42.5} color={col} />;
   }
 
@@ -59,21 +63,18 @@ class Map extends Component<MapProps, {}> {
     for(let i: number = 0; i < this.props.segs.length; i += 1) {
       let seg: Segment = this.props.segs[i];
       lines.push(
-        <MapLine
-          x1={seg.start.x}
-          y1={seg.start.y}
-          x2={seg.end.x}
-          y2={seg.end.y}
-          color={col} />);
+        <MapLine x1={seg.start.x} y1={seg.start.y} x2={seg.end.x} y2={seg.end.y} color={col} />);
     }
-    // if(lines.length > 0) { lines.push(<Benign p1={this.props.startPoint} p2={this.props.destPoint}/>); }
+    if(this.props.isPathfinding) {
+      lines.push(<Zoom p1={this.props.startPoint} p2={this.props.destPoint} />);
+    }
     return lines;
   }
 
   render() {
     return (
         <div id="map">
-          <MapContainer center={position} zoom={15} scrollWheelZoom={false}>
+          <MapContainer center={position} zoom={defZoom} scrollWheelZoom={false}>
             <TileLayer
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />

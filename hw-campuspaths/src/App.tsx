@@ -25,19 +25,22 @@ interface AppState {
   destPoint: Point | null;
   /** Color of marked starting, dest building, and path between them */
   drawColor: string;
+  /** True iff pathfinding and must zoom to fit found path */
+  isPathfinding: boolean;
 }
 
 /** Visualizes UW Seattle Campus finds shortest path between two select buildings */
 class App extends Component<{}, AppState> {
 
   constructor(props: any) {
-    // No props here!
+    // No props
     super(props);
     this.state = {
       segs: [],
       startPoint: null,
       destPoint: null,
-      drawColor: ""
+      drawColor: "",
+      isPathfinding: false
     };
   }
 
@@ -49,6 +52,7 @@ class App extends Component<{}, AppState> {
           startPoint={this.state.startPoint}
           destPoint={this.state.destPoint}
           drawColor={this.state.drawColor}
+          isPathfinding={this.state.isPathfinding}
         />
         <div>
           <h1 id="app-title">Find Path Between Buildings</h1>
@@ -60,11 +64,14 @@ class App extends Component<{}, AppState> {
             onChange={(startPoint: Point | null | undefined,
                        destPoint: Point | null | undefined,
                        segs: Segment[] | undefined,
-                       drawColor: string | undefined) => {
+                       drawColor: string | undefined,
+                       isPathfinding: boolean) => {
+              this.setState({isPathfinding: false});
               if(startPoint !== undefined) {this.setState({startPoint: startPoint});}
               if(destPoint !== undefined) {this.setState({destPoint: destPoint});}
               if(segs !== undefined) {this.setState({segs: segs});}
-              if(drawColor !== undefined) {this.setState({drawColor: drawColor});}}}
+              if(drawColor !== undefined) {this.setState({drawColor: drawColor});}
+              this.setState({isPathfinding: isPathfinding});}}
           />
         </div>
       </div>
