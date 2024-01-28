@@ -13,20 +13,25 @@ import React, { Component } from "react";
 import { Polyline } from "react-leaflet";
 import { xToLon, yToLat } from "./Constants";
 
+/** Properties of this component */
 interface MapLineProps {
-  color: string; // color of line
-  x1: number; // x coordinate of start point
-  y1: number; // y coordinate of start point
-  x2: number; // x coordinate of end point
-  y2: number; // y coordinate of end point
+  /** Color of line */
+  color: string;
+  /** X-coordinate of start point */
+  x1: number;
+  /** Y-coordinate of start point */
+  y1: number;
+  /** X-coordinate of end point */
+  x2: number;
+  /** Y-coordinate of end point */
+  y2: number;
 }
 
 /** A component that will render a line on the React Leaflet map of color from
- * point x1,y1 to x2,y2. This line will convert from the assignment's coordinate
+ * point x1,y1 to x2,y2. This line will convert from friendly coordinate
  * system (where 0,0 is the top-left of the UW campus) to latitude and
  * longitude, which the React Leaflet map uses */
 class MapLine extends Component<MapLineProps, {}> {
-
   render() {
     return (
       <Polyline

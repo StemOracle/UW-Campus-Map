@@ -12,32 +12,36 @@
 import React, {Component} from 'react';
 import Map from "./Map";
 import PathChooser from "./PathChooser";
-import { Point, Segment } from "./Interfaces";
+import { Point, Path } from "./Interfaces";
 import "./App.css";
+
+const emptyPath: Path = {cost: 0, start: {x: 0, y: 0}, path: []};
 
 /** State of this component */
 interface AppState {
-  /** Makes up path between buildings */
-  segs: Segment[];
+  /** Path between two select buildings */
+  path: Path;
   /** Point coordinate of starting building */
   start: Point | null;
   /** Point coordinate of destination building */
   dest: Point | null;
   /** Color of marked starting, dest building, and path between them */
   col: string;
-  /** True iff pathfinding and must zoom, false iff selecting buildings and must unzoom
-   * Undefined if neither */
+  /** 0 if pathfinding and must zoom, 1 if selecting buildings and must unzoom
+   * Neither if neither */
   zoomFlag: number;
 }
 
-/** Visualizes UW Seattle Campus finds shortest path between two select buildings */
+/** Visualizes UW Seattle Campus and allows pathfinding between two select
+ * buildings. Path and building markers drawn in color of user's choice. */
 class App extends Component<{}, AppState> {
 
   constructor(props: any) {
     // No props
     super(props);
     this.state = {
-      segs: [],
+      // Empty path
+      path: emptyPath,
       start: null,
       dest: null,
       col: "",
@@ -49,7 +53,7 @@ class App extends Component<{}, AppState> {
     return (
       <div id="app">
         <Map
-          segs={this.state.segs}
+          path={this.state.path}
           start={this.state.start}
           dest={this.state.dest}
           col={this.state.col}
@@ -65,12 +69,12 @@ class App extends Component<{}, AppState> {
             markBuild={(pt: Point, isStart: boolean) => {
               if(isStart) {this.setState({start: pt, zoomFlag: 0});}
               else {this.setState({dest: pt, zoomFlag: 0});}}}
-            pathfind={(segs: Segment[], col: string) => {
-              this.setState({segs: segs, col: col, zoomFlag: 1});}}
+            pathfind={(path: Path, col: string) => {
+              this.setState({path: path, col: col, zoomFlag: 1});}}
             setCol={(col: string) => {
               this.setState({col: col, zoomFlag: 2})}}
             reset={() => {
-              this.setState({start: null, dest: null, segs: [], col: "", zoomFlag: 0});}}
+              this.setState({start: null, dest: null, path: emptyPath, col: "", zoomFlag: 0});}}
           />
         </div>
       </div>

@@ -14,6 +14,10 @@ interface MapCircleProps {
     radius: number
 }
 
+/** A component that will render a circle on the React Leaflet map of color
+ * centered at point x,y. Center coordinates will convert from friendly coordinate
+ * system (where 0,0 is the top-left of the UW campus) to latitude and
+ * longitude, which the React Leaflet map uses */
 class MapCircle extends Component<MapCircleProps, {}> {
   render() {
     return (

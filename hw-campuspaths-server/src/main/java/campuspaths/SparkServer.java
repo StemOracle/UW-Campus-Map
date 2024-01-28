@@ -43,8 +43,8 @@ public class SparkServer {
 
 
     // Get path between two campus buildings.
-    // Expected query params: "/findPath?start=string&end=string",
-    // where start and end are short names of campus buildings.
+    // Expected query params: "/findPath?start=string&end=string"
+    // start and end are short names of campus buildings.
     Spark.get("/findPath", new Route() {
       @Override
       public Object handle(Request req, Response resp) throws Exception {

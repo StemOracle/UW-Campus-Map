@@ -16,7 +16,7 @@ import "leaflet/dist/leaflet.css";
 import MapLine from "./MapLine";
 import MapCircle from "./MapCircle";
 import { UW_LATITUDE_CENTER, UW_LONGITUDE_CENTER, yToLat, xToLon } from "./Constants";
-import { Point, Segment } from "./Interfaces";
+import { Point, Segment, Path } from "./Interfaces";
 
 // Defines the location of the map. These are the coordinates of the UW Seattle campus
 const position: LatLngExpression = [UW_LATITUDE_CENTER, UW_LONGITUDE_CENTER];
@@ -25,8 +25,8 @@ const defZoom: number = 15;
 
 /** Properties of this component */
 interface MapProps {
-  /** Makes up path between buildings */
-  segs: Segment[];
+  /** Path between two select buildings */
+  path: Path;
   /** Point coordinate of starting building */
   start: Point | null;
   /** Point coordinate of destination building */
@@ -37,14 +37,20 @@ interface MapProps {
   zoomFlag: number;
 }
 
-/** If both points non-null, zooms map to fit both
+/** If both points non-null, zooms map to tightly fit both
  * @param props two possibly null points
  * @return null; produces potential side effects but benign return */
 function Zoom(props: {p1: Point | null, p2: Point | null}): null {
   const map = useMap();
+  // This should never be the case when pathfinding.
   if(props.p1 === null || props.p2 === null) { return null; }
-  map.fitBounds([[yToLat(props.p1.y), xToLon(props.p1.x)],
-                 [yToLat(props.p2.y), xToLon(props.p2.x)]]);
+  // Once we know which is less and more, can pad bounds out slightly.
+  let x1: number = props.p1.x, y1: number = props.p1.y;
+  let x2: number = props.p2.x, y2: number = props.p2.y;
+  if(x1 > x2) { let swap: number = x1; x1 = x2; x2 = swap; }
+  if(y1 > y2) { let swap: number = y1; y1 = y2; y2 = swap; }
+  map.fitBounds([[yToLat(y1-42.5), xToLon(x1-42.5)],
+                 [yToLat(y2+42.5), xToLon(x2+42.5)]]);
   return null;
 }
 
@@ -56,7 +62,13 @@ function UnZoom() {
   return null;
 }
 
+/** React Leaflet map focused on UW Seattle campus. Campus buildings can be
+ * selected (and marked) on it and a path can be drawn between them. */
 class Map extends Component<MapProps, {}> {
+
+  /** Returns MapCircle centered at select building in given color, null if null center
+   * @param center center of circle to be drawn, draws nothing if null
+   * @return MapCircle centered at select building in given color, null if null center */
   makeCircle(center: Point | null): JSX.Element | null {
     let col: string = this.props.col;
     if(center === null) { return null; }
@@ -64,19 +76,21 @@ class Map extends Component<MapProps, {}> {
     return <MapCircle x={center.x} y={center.y} radius={42.5} color={col} />;
   }
 
+  /** Draws path between two select buildings with provided color */
   makeLines(): JSX.Element[] {
     let col: string = this.props.col;
     if(col === "") { col = "red"; }
     let lines: JSX.Element[] = [];
-    for(let i: number = 0; i < this.props.segs.length; i += 1) {
-      let seg: Segment = this.props.segs[i];
+    let segs: Segment[] = this.props.path.path;
+    for(let i: number = 0; i < segs.length; i += 1) {
+      let seg: Segment = segs[i];
       lines.push(
         <MapLine x1={seg.start.x} y1={seg.start.y} x2={seg.end.x} y2={seg.end.y} color={col} />);
     }
-    // If willZoom isn't binary, neither zoom nor unzoom
-    if(this.props.zoomFlag == 1) {
+    // If zoomFlag isn't binary, neither zoom nor unzoom
+    if(this.props.zoomFlag === 1) {
       lines.push(<Zoom p1={this.props.start} p2={this.props.dest} />);
-    } else if(this.props.zoomFlag == 0) {
+    } else if(this.props.zoomFlag === 0) {
       lines.push(<UnZoom />);
     }
     return lines;

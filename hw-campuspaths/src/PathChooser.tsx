@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import { Point, Segment, Path } from './Interfaces'
+import { Point, Path } from './Interfaces'
 
 /** Properties of this component */
 interface PathChooserProps {
   /** Marks selected buildings */
   markBuild(pt: Point, isStart: boolean): void;
   /** Draws path between selected buildings */
-  pathfind(segs: Segment[], col: string): void;
+  pathfind(path: Path, col: string): void;
   /** Changes color of path and marked buildings */
   setCol(col: string): void;
   /** Resets entire application */
@@ -25,34 +25,43 @@ interface PathChooserState {
   buildMap: object;
 }
 
-/** Text field that allows the user to enter the list of edges
- * Also buttons allowing user to interact with app */
+/** Slew of options including select menues for campus buildings;
+ * button to circle two select buildings and find path between them;
+ * text field to specify color of path and circled buildings, and button
+ * that resets the entire app. */
 class PathChooser extends Component<PathChooserProps, PathChooserState> {
   /** URL of Spark backend */
   private readonly HOSTNAME: string = "http://localhost:";
   private readonly PORT: string = "4567";
 
   constructor(props: PathChooserProps) {
-    // Well-defined onChange function expected as props
+    // Well-defined onChange, pathfind, setCol, and reset functions expected as props
     super(props);
     this.state = {start: "", end: "", color: "", buildMap: {}};
   }
 
   /** Sets up this component */
-  componentDidMount() {
+  componentDidMount(): void {
     this.getBuildings();
   }
 
   /** Fetches object that maps all UW campus building short names to long names */
   async getBuildings() {
-    let buildsString = await fetch(this.HOSTNAME + this.PORT + "/listBuildings");
-    let parsedBuilds = await buildsString.json();
-    this.setState({buildMap: parsedBuilds});
+    // If try fails, our server isn't running
+    try {
+      let buildsString = await fetch(this.HOSTNAME + this.PORT + "/listBuildings");
+      // Something went wrong if this check fails.
+      if(!buildsString.ok) { alert("Error retrieving buildings."); return; }
+      let parsedBuilds = await buildsString.json();
+      this.setState({buildMap: parsedBuilds});
+    } catch (e) {
+      alert("Error: Server down for maintenance.");
+    }
   }
 
   /** Finds shortest path between building labeled start and building labeled end
-   * @spec.requires valid buildings must be chosen, a color must be specified,
-   * and a path must exist between the buildings. No behavior otherwise */
+   * @spec.requires valid buildings must be chosen, color must be specified,
+   * and a path must exist between buildings. No behavior otherwise */
   async pathBetweenBuildings() {
     let col: string = this.state.color;
     // If not enough info given, benignly return
@@ -62,29 +71,36 @@ class PathChooser extends Component<PathChooserProps, PathChooserState> {
       col = "red";
     }
 
-    let pathString = await fetch(this.HOSTNAME + this.PORT + "/findPath?start="
-                                               + this.state.start + "&end=" + this.state.end);
-    let parsedPath = await pathString.json();
-    // If no path found, benignly return
-    if(parsedPath === null) {
-      alert("No path found between buildings " + this.state.start + " and " + this.state.end); return;
-    }
-    let castedPath: Path = parsedPath as Path;
-    let segs: Segment[] = [];
-
-    // All Segments of directions are converted to an edge and pushed to edges
-    for(let i: number = 0; i < castedPath.path.length; i+= 1) {
-      segs.push(castedPath.path[i]);
-    }
-    this.props.pathfind(segs, col);
+    // If try fails, our server isn't running
+    try {
+      let pathString = await fetch(this.HOSTNAME + this.PORT + "/findPath?start="
+        + this.state.start + "&end=" + this.state.end);
+      // Something went wrong if this check fails.
+      if(!pathString.ok) { alert("Error finding path between select buildings."); return; }
+      let parsedPath = await pathString.json();
+      // If no path found, benignly return
+      if (parsedPath === null) {
+        alert("No path found between buildings " + this.state.start + " and " + this.state.end);
+        return;
+      }
+      this.props.pathfind(parsedPath as Path, col);
+    } catch (e) { alert("Error: Server down for maintenance."); }
   }
 
+  /** Draws circle around select building in select color
+   * @param buildName name of select building
+   * @param isStart true iff select building is start building (not destination) */
   async markBuilding(buildName: string, isStart: boolean) {
-    let pointString: Response = await fetch(this.HOSTNAME + this.PORT
-                                            + "/lookupBuilding?shortName=" + buildName);
-    let parsedPoint = await pointString.json();
-    let castedPoint: Point = parsedPoint as Point;
-    this.props.markBuild(castedPoint, isStart);
+    // If try fails, our server isn't running
+    try {
+      let pointString: Response = await fetch(this.HOSTNAME + this.PORT
+        + "/lookupBuilding?shortName=" + buildName);
+      // Something went wrong if this check fails.
+      if(!pointString.ok) { alert("Error finding select building."); return; }
+      let parsedPoint = await pointString.json();
+      let castedPoint: Point = parsedPoint as Point;
+      this.props.markBuild(castedPoint, isStart);
+    } catch (e) { alert("Error: Server down for maintenance."); }
   }
 
   /** Gives select component options for each building of UW campus
@@ -137,19 +153,16 @@ class PathChooser extends Component<PathChooserProps, PathChooserState> {
               this.setState({color: event.target.value});}}/>
           <button onClick={() => {
             this.props.setCol(this.state.color);}}>
-            ✔
-          </button>
+            ✔</button>
         </div>
         <div id="options">
           <button onClick={() => {
             this.pathBetweenBuildings();}}>
-            Find Path
-          </button>
+            Find Path</button>
           <button onClick={() => {
               this.props.reset();
               this.setState({start: "", end: "", color: ""});}}>
-            Reset
-          </button>
+            Reset</button>
         </div>
       </div>
     );

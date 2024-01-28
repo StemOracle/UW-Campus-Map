@@ -111,7 +111,7 @@ public class CampusMap implements ModelAPI {
 	public Point lookupBuilding(String buildingName) {
 		CampusBuilding build = buildCords.get(buildingName);
 		if(build == null) {
-          return null;
+            return null;
 		} else {
 			return new Point(build.getX(), build.getY());
 		}
