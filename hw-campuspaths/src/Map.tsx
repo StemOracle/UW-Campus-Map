@@ -49,16 +49,16 @@ function Zoom(props: {p1: Point | null, p2: Point | null}): null {
   let x2: number = props.p2.x, y2: number = props.p2.y;
   if(x1 > x2) { let swap: number = x1; x1 = x2; x2 = swap; }
   if(y1 > y2) { let swap: number = y1; y1 = y2; y2 = swap; }
-  map.fitBounds([[yToLat(y1-42.5), xToLon(x1-42.5)],
-                 [yToLat(y2+42.5), xToLon(x2+42.5)]]);
+  map.fitBounds([
+    [yToLat(y1-42.5), xToLon(x1-42.5)],
+    [yToLat(y2+42.5), xToLon(x2+42.5)]]);
   return null;
 }
 
 /** Unzooms map back to default state
  * @return null; produces side effects but benign return */
 function UnZoom() {
-  const map = useMap();
-  map.setView(position, defZoom);
+  useMap().setView(position, defZoom);
   return null;
 }
 

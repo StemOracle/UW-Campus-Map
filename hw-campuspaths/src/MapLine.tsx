@@ -41,8 +41,7 @@ class MapLine extends Component<MapLineProps, {}> {
         // points on the line we draw on the map
         positions={[
           [yToLat(this.props.y1), xToLon(this.props.x1)],
-          [yToLat(this.props.y2), xToLon(this.props.x2)],
-        ]}
+          [yToLat(this.props.y2), xToLon(this.props.x2)]]}
       />
     );
   }
