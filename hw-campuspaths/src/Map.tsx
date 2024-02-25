@@ -71,15 +71,20 @@ class Map extends Component<MapProps, {}> {
    * @return MapCircle centered at select building in given color, null if null center */
   makeCircle(center: Point | null): JSX.Element | null {
     let col: string = this.props.col;
-    if(center === null) { return null; }
-    else if (col === "") { col = "red"; }
+    if(center === null) {
+      return null;
+    } else if (col === "") {
+      col = "red";
+    }
     return <MapCircle x={center.x} y={center.y} radius={42.5} color={col} />;
   }
 
   /** Draws path between two select buildings with provided color */
   makeLines(): JSX.Element[] {
     let col: string = this.props.col;
-    if(col === "") { col = "red"; }
+    if(col === "") {
+      col = "red";
+    }
     let lines: JSX.Element[] = [];
     let segs: Segment[] = this.props.path.path;
     for(let i: number = 0; i < segs.length; i += 1) {

@@ -47,11 +47,14 @@ class PathChooser extends Component<PathChooserProps, PathChooserState> {
 
   /** Fetches object that maps all UW campus building short names to long names */
   async getBuildings() {
-    // If try fails, our server isn't running
+    // If try fails, the backend server isn't running.
     try {
       let buildsString = await fetch(this.HOSTNAME + this.PORT + "/listBuildings");
       // Something went wrong if this check fails.
-      if(!buildsString.ok) { alert("Error retrieving buildings."); return; }
+      if(!buildsString.ok) {
+        alert("Error retrieving buildings.");
+        return;
+      }
       let parsedBuilds = await buildsString.json();
       this.setState({buildMap: parsedBuilds});
     } catch (e) {
@@ -64,43 +67,53 @@ class PathChooser extends Component<PathChooserProps, PathChooserState> {
    * and a path must exist between buildings. No behavior otherwise */
   async pathBetweenBuildings() {
     let col: string = this.state.color;
-    // If not enough info given, benignly return
+    // If not enough info given, do nothing.
     if(this.state.start === "" || this.state.end === "") {
       alert("Please select a starting building and destination building."); return;
     } else if(this.state.color === "") {
       col = "red";
     }
 
-    // If try fails, our server isn't running
+    // If try fails, the backend server isn't running.
     try {
       let pathString = await fetch(this.HOSTNAME + this.PORT + "/findPath?start="
         + this.state.start + "&end=" + this.state.end);
       // Something went wrong if this check fails.
-      if(!pathString.ok) { alert("Error finding path between select buildings."); return; }
+      if(!pathString.ok) {
+        alert("Error finding path between select buildings.");
+        return;
+      }
       let parsedPath = await pathString.json();
-      // If no path found, benignly return
+      // If no path found, do nothing.
       if (parsedPath === null) {
         alert("No path found between buildings " + this.state.start + " and " + this.state.end);
         return;
       }
       this.props.pathfind(parsedPath as Path, col);
-    } catch (e) { alert("Error: Server down for maintenance."); }
+    } catch (e) {
+      alert("Error: Server down for maintenance.");
+    }
   }
 
   /** Draws circle around select building in select color
    * @param buildName name of select building
    * @param isStart true iff select building is start building (not destination) */
   async markBuilding(buildName: string, isStart: boolean) {
-    // If try fails, our server isn't running
+    // If try fails, backend server isn't running.
     try {
       let pointString: Response = await fetch(this.HOSTNAME + this.PORT
         + "/lookupBuilding?shortName=" + buildName);
       // Something went wrong if this check fails.
-      if(!pointString.ok) { alert("Error finding select building."); return; }
+      if(!pointString.ok) {
+        alert("Error finding select building.");
+        return;
+      }
       let parsedPoint = await pointString.json();
       let castedPoint: Point = parsedPoint as Point;
       this.props.markBuild(castedPoint, isStart);
-    } catch (e) { alert("Error: Server down for maintenance."); }
+    } catch (e) {
+      alert("Error: Server down for maintenance.");
+    }
   }
 
   /** Gives select component options for each building of UW campus
